@@ -25,8 +25,17 @@ function checkTriggers() {
 }
 
 function firstBeatTrigger() {
-  if (game.player.beats == 1) {
+  if (game.player.beats >= 1) {
 		appendToOutputContainer("You make your first beat.");
+    triggerFnSet.add(hundredthBeatTrigger);
+    return true;
+	}
+  return false;
+}
+
+function hundredthBeatTrigger() {
+  if (game.player.lifetimeBeats >= 100) {
+		appendToOutputContainer("You make your hundredth beat, you feel like you are getting better at this");
     return true;
 	}
   return false;
