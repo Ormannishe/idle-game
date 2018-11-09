@@ -1,5 +1,3 @@
-var firstBeat = true;
-var firstSample = true;
 var newLaptop = false;
 
 // A trigger function usually does a check
@@ -27,18 +25,16 @@ function checkTriggers() {
 }
 
 function firstBeatTrigger() {
-  if (game.player.beats == 1 && firstBeat) {
+  if (game.player.beats == 1) {
 		appendToOutputContainer("You make your first beat.");
-		firstBeat = false;
     return true;
 	}
   return false;
 }
 
 function firstSampleTrigger() {
-	if (game.player.beats >= game.sampleCost && firstSample) {
+	if (game.player.beats >= game.sampleCost) {
 		appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
-		firstSample = false;
 		game.tasks.push("makeFirstSample");
     return true;
 	}
