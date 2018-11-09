@@ -68,7 +68,7 @@ function updateTasks() {
 			html += "<button onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
 		}
 
-		document.getElementById('taskContainer').innerHTML = "<p>Tasks</p>" + html;
+		document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
 	}
 }
 

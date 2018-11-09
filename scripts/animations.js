@@ -1,4 +1,5 @@
 var beatInterval;
+var tickInterval;
 var beatAnimationDirection = "up";
 
 function toggleItemTab(evt, tab) {
@@ -52,6 +53,16 @@ function animateBeat() {
     beatImg.src = nextImg;
 }
 
+function naturalTick() {
+    if (activeTask != undefined) {
+        var progress = document.getElementById('taskProgress');
+        updateProgress(progress, (progress.value + 1), progress.max, taskCompleteFn);
+    }
+
+    updateView();
+}
+
 function startAnimations() {
     beatInterval = setInterval(animateBeat, 10);
+    tickInterval = setInterval(naturalTick, 1000);
 }

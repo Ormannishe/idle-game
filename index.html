@@ -36,25 +36,22 @@
   						<p>All</p>
   					</div>
   					<div id='money' class='resourceRow'>
-				 		<p>Money: 0</p>
+				 		<p>Money</p>
+				 		<p>0</p>
 				 		<p>-</p>
 				 		<p>-</p>
 				 		<p>-</p>
 				 		<p>-</p>
 				 	</div>
 				 	<div id='beats' class='resourceRow'>
-				 		<p>Beats: 0</p>
+				 		<p>Beats</p>
+				 		<p>0</p>
 				 		<p>-</p>
 				 		<p>-</p>
 				 		<p>-</p>
 				 		<p>-</p>
 				 	</div>
 				 	<div id='samples' class='resourceRow'>
-				 		<p>Samples: 0</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 		<p>-</p>
 				 	</div>
 				</div>
 
@@ -72,7 +69,13 @@
 				<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
 			</div>
 			<div id='taskContainer' class='row'>
-				<p>Tasks</p>
+				<div id='tasks'>
+					<p>Tasks</p>
+				</div>
+				<div id='taskProgressContainer'>
+					<p id='taskLabel'>Some Task</p>
+					<progress id='taskProgress' value='0', max='10'></progress>
+				</div>
 			</div>
 			<div id='skillsContainer' class='row'>
 				<p>Skills</p>
