@@ -65,4 +65,3 @@ function removeTask(taskName) {
 	var taskIndex = game.tasks.indexOf(taskName);
 	game.tasks.splice(taskIndex, 1);
 }
-
