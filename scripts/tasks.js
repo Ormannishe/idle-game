@@ -43,7 +43,9 @@ The function name for ALL tasks MUST be a camel-case version of the title you wa
 // Use this to debug whatever you want
 function test() {
 	game.player.beats += 10;
+  game.player.lifetimeBeats += 10;
 	game.player.money += 100;
+  game.player.lifetimeMoney += 100;
 }
 
 function makeFirstSample() {
