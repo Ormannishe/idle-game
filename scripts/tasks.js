@@ -11,7 +11,9 @@ function doTask(task) {
 function test() {
 	// Use this to debug whatever you want
 	game.player.beats += 10;
+  game.player.lifetimeBeats += 10;
 	game.player.money += 100;
+  game.player.lifetimeMoney += 100;
 }
 
 function makeFirstSample() {
