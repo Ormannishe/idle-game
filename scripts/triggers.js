@@ -14,21 +14,16 @@ function exampleTrigger() {
   }
   return false;
 }
-
  */
 
 var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, newLaptopTrigger]);
 
 function checkTriggers() {
-
   triggerFnSet.forEach(function(triggerFn) {
     if (triggerFn()) {
       triggerFnSet.delete(triggerFn);
     }
   });
-  // firstBeatTrigger()
-  // firstSampleTrigger()
-  // newLaptopTrigger()
 }
 
 function firstBeatTrigger() {
