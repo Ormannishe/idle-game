@@ -1,6 +1,6 @@
 // TODO: Add tabs to beatContainer to be unlocked (for different instruments)
 // TODO: Add bells and whistles to beatContainer that can be unlocked (ie. something to alter beat tempo)
-// TODO: Add Achievements
+// TODO: Add Achievements and Stats
 // TODO: Make Songs and Albums and other cool resources
 // TODO: Make Sample/Song/Album quality scale with skills
 
@@ -87,6 +87,7 @@ function updateSkills() {
 
 function clickBeat() {
 	// TODO: only up the progress bar if the beat was made on the correct frame(s) (you must click to the beat!)
+	//		 maybe player gets a beat bonus for not clicking  off-beat (x1, x2, x3)
 	// TODO: .... add beat (which leads to a whole slew of additional work so...)
 	var progress = document.getElementById('beatProgress');
 

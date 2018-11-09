@@ -2,14 +2,46 @@ var activeTask;
 var taskCompleteFn;
 
 function doTask(task) {
-	// TODO: Add real tasks (events which complete over time)
-	// TODO: Add more upgrades (tasks that trigger immediately)
 	task();
 	updateView();
 }
 
+function startActiveTask(taskName, timeToComplete, completeFn) {
+	var container = document.getElementById('taskProgressContainer');
+	var label = document.getElementById('taskLabel');
+	var progress = document.getElementById('taskProgress');
+
+	activeTask = taskName;
+	taskCompleteFn = completeFn;
+	label.innerHTML = taskName;
+	progress.value = 0;
+	progress.max = timeToComplete;
+	taskProgressContainer.style.display = "block";
+}
+
+function stopActiveTask() {
+	var progress = document.getElementById('taskProgress');
+
+	activeTask = undefined;
+	taskProgressContainer.style.display = "none";
+}
+
+function removeTask(taskName) {
+	var taskIndex = game.tasks.indexOf(taskName);
+	game.tasks.splice(taskIndex, 1);
+}
+
+/* ------ TASKS ------
+There are two types of Tasks:
+
+1. Upgrades - These are tasks that execute and complete instantly, usually providing some kind of immediate bonus.
+2. Active Tasks - These tasks complete over time. The Player can only work on one active task at a time.
+
+The function name for ALL tasks MUST be a camel-case version of the title you want on the associated button.
+*/
+
+// Use this to debug whatever you want
 function test() {
-	// Use this to debug whatever you want
 	game.player.beats += 10;
 	game.player.money += 100;
 }
@@ -35,33 +67,15 @@ function buyNewLaptop() {
 }
 
 function longTask() {
-	startActiveTask("Long Task", 100, stopActiveTask);
-	removeTask("longTask");
+	if (activeTask == undefined) {
+		startActiveTask("Long Task", 100, stopActiveTask);
+		removeTask("longTask");
+	}
 }
 
-function startActiveTask(taskName, timeToComplete, completeFn) {
-	var container = document.getElementById('taskProgressContainer');
-	var label = document.getElementById('taskLabel');
-	var progress = document.getElementById('taskProgress');
-
-	activeTask = taskName;
-	taskCompleteFn = completeFn;
-	label.innerHTML = taskName;
-	progress.value = 0;
-	progress.max = timeToComplete;
-	taskProgressContainer.style.display = "block";
-}
-
-function stopActiveTask() {
-	var container = document.getElementById('taskProgressContainer');
-	var label = document.getElementById('taskLabel');
-	var progress = document.getElementById('taskProgress');
-
-	activeTask = undefined;
-	taskProgressContainer.style.display = "none";
-}
-
-function removeTask(taskName) {
-	var taskIndex = game.tasks.indexOf(taskName);
-	game.tasks.splice(taskIndex, 1);
+function otherTask() {
+	if (activeTask == undefined) {
+		startActiveTask("Other Task", 10, stopActiveTask);
+		removeTask("otherTask");
+	}
 }
