@@ -1,0 +1,8 @@
+#outputContainer {
+    overflow:scroll;
+    overflow-x:hidden;
+}
+
+#outputContainer > p {
+  margin-top: 3px;
+}

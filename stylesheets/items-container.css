@@ -1,0 +1,81 @@
+.tab, .active-tab {
+  color: white;
+  float: left;
+  border: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 12px;
+  width: 33.3333333%;
+}
+
+.tab, .active-tab:focus {
+  outline: 0;
+}
+
+.active-tab {
+  background-color: var(--my-background-color);
+}
+
+.tab {
+  background-color: #444444
+}
+
+.tab:hover {
+  background-color: #555555;
+}
+
+.tabcontent {
+  padding-left: 6px;
+  display: block;
+}
+
+/* Hide non-active tabs by default */
+#songs, #albums {
+  display: none;
+}
+
+#resourceHeader {
+  margin-top: 35px;
+  color: white;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+#resourceHeader > p {
+  float: left;
+  width: 16.666666%;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.resourceRow {
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+}
+
+.resourceRow > p {
+  float: left;
+  width: 16.666666%;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  cursor: pointer;
+}
+
+.resourceRow:hover {
+  background-color: #555555
+}
+
+#money {
+  color: #00bb00;
+}
+
+#beats {
+  color: #5555ff;
+}
+
+#samples {
+  color: #bb0000;
+  display: none;
+}

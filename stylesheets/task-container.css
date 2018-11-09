@@ -1,0 +1,17 @@
+#taskContainer > button {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 6px;
+  color: white;
+  border: 1px solid orange;
+  background-color: var(--my-background-color);
+}
+
+#taskContainer > button:focus {
+  outline: 0;
+}
+
+#taskContainer > button:hover {
+  cursor: pointer;
+}

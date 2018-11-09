@@ -1,0 +1,62 @@
+#beatImgContainer {
+  height: 75%;
+  width: 100%;
+  border: 1px solid black;
+  background-color: black;
+}
+
+#beatImgContainer > img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+#beatButtonContainer {
+  background-color: black;
+  height: 18%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#beatButtonContainer > button {
+  border-radius: 50%;
+  border: none;
+  background-color: red;
+  width: 6%;
+  height: 60%;
+}
+
+#beatButtonContainer > button:focus {
+  outline: 0;
+}
+
+#beatButtonContainer > button:hover {
+  cursor: pointer;
+}
+
+#progressContainer {
+  background-color: black;
+  height: 8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#progressContainer > progress[value] {
+  width: 50%;
+  height: 80%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#progressContainer > progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+#progressContainer > progress[value]::-webkit-progress-value {
+  background-color: #33cc33;
+}

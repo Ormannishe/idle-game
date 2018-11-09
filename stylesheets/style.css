@@ -1,0 +1,45 @@
+* {
+  font-size: 14px;
+  font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", "Consolas", "Courier New", Courier, monospace, "Times New Roman";
+}
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  vertical-align: top; }
+
+:root {
+  --my-background-color: #333333;
+  --my-highlight-color: #fff;
+  --my-prompt-color: #f92672; }
+
+body {
+  background-color: var(--my-background-color);
+}
+
+.column {
+  float: left;
+  width: 50%;
+  height: 100%;
+}
+
+.row {
+  width: 100%;
+  border: 1px solid black;
+}
+
+#clickContainer, #itemsContainer {
+  float: left;
+  height: 50%;
+}
+
+#outputContainer, #taskContainer, #skillsContainer {
+  float: right;
+  height: 33.33333%;
+  padding-left: 6px;
+  padding-top: 6px;
+  color: white;
+}

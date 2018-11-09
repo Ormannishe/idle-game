@@ -1,0 +1,115 @@
+<html>
+	<head>
+		<title>Idle Game</title>
+		<link rel='stylesheet', href='stylesheets/style.css'></link>
+		<link rel='stylesheet', href='stylesheets/click-container.css'></link>
+		<link rel='stylesheet', href='stylesheets/items-container.css'></link>
+		<link rel='stylesheet', href='stylesheets/output-container.css'></link>
+		<link rel='stylesheet', href='stylesheets/task-container.css'></link>
+		<link rel='stylesheet', href='stylesheets/skills-container.css'></link>
+	</head>
+	<body>
+		<div class='column'>
+			<div id='clickContainer' class='row'>
+				<div id='beatImgContainer'>
+					<img id='beatImg' src='images/digital-sound-display1.png'></img>
+				</div>
+				<div id='beatButtonContainer'>
+					<button id='makeBeat' type='button' onclick='clickBeat()'></button>
+				</div>
+				<div id='progressContainer'>
+					<progress id='beatProgress' value='0' max='1'></progress>
+				</div>
+			</div>
+			<div id='itemsContainer' class='row'>
+				<button class="active-tab" onclick="toggleItemTab(event, 'resources')">Resources</button>
+  				<button class="tab" onclick="toggleItemTab(event, 'songs')">Songs</button>
+  				<button class="tab" onclick="toggleItemTab(event, 'albums')">Albums</button>
+
+  				<div id="resources" class="tabcontent">
+  					<div id='resourceHeader'>
+  						<p>Resource</p>
+  						<p>Amount</p>
+  						<p>x1</p>
+  						<p>x10</p>
+  						<p>x100</p>
+  						<p>All</p>
+  					</div>
+  					<div id='money' class='resourceRow'>
+				 		<p>Money: 0</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 	</div>
+				 	<div id='beats' class='resourceRow'>
+				 		<p>Beats: 0</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 	</div>
+				 	<div id='samples' class='resourceRow'>
+				 		<p>Samples: 0</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 		<p>-</p>
+				 	</div>
+				</div>
+
+				<div id="songs" class="tabcontent">
+				 	<p>None :(</p>
+				</div>
+
+				<div id="albums" class="tabcontent">
+				 	<p>None :(</p>
+				</div>
+			</div>
+		</div>
+		<div class='column'>
+			<div id='outputContainer' class='row'>
+				<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
+			</div>
+			<div id='taskContainer' class='row'>
+				<p>Tasks</p>
+			</div>
+			<div id='skillsContainer' class='row'>
+				<p>Skills</p>
+				<div class='skill'>
+					<img src='images/laptop.png'></img>
+					<p id='laptopSkill'>1</p>
+					<progress id='laptopProgress' value='0' max='1'></progress>
+				</div>
+				<div class='skill'>
+					<img src='images/microphone.png'></img>
+					<p id='vocalSkill'>1</p>
+					<progress id='vocalProgress' value='0' max='1'></progress>
+				</div>
+				<div class='skill'>
+					<img src='images/keyboard.png'></img>
+					<p id='keyboardSkill'>1</p>
+					<progress id='keyboardProgress' value='0' max='1'></progress>
+				</div>
+				<div class='skill'>
+					<img src='images/guitar.png'></img>
+					<p id='guitarSkill'>1</p>
+					<progress id='guitarProgress' value='0' max='1'></progress>
+				</div>
+				<div class='skill'>
+					<img src='images/drums.png'></img>
+					<p id='drumSkill'>1</p>
+					<progress id='drumProgress' value='0' max='1'></progress>
+				</div>
+			</div>
+		</div>
+	</body>	
+	<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+	<script src='scripts/main.js'></script>
+	<script src='scripts/game.js'></script>
+	<script src='scripts/animations.js'></script>
+	<script src='scripts/triggers.js'></script>
+	<script src='scripts/player.js'></script>
+	<script src='scripts/tasks.js'></script>
+	<script src='scripts/song.js'></script>
+</html>
