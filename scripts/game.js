@@ -20,10 +20,8 @@ function round(value, decimals) {
 }
 
 function makeBeat() {
-  game.player.beats++;
-  game.player.lifetimeBeats++;
-  game.player.laptopXp += game.xpPerBeat;
-  levelUp();
+  game.player.addBeat(1);
+  game.player.addXp('laptop', game.xpPerBeat);
 }
 
 function makeSample(numToMake) {
@@ -37,19 +35,8 @@ function makeSample(numToMake) {
   if (game.player.beats >= totalCost) {
     game.player.beats -= totalCost;
     game.player.samples += numToMake;
-    game.player.laptopXp += (game.xpPerSample * numToMake);
-
-    levelUp();
+    game.player.addXp('laptop', game.xpPerSample * numToMake);
   }
 
   updateView();
-}
-
-function levelUp() {
-  while (game.laptopXpToNextLevel <= game.player.laptopXp) {
-    game.player.laptopXp = game.player.laptopXp - game.laptopXpToNextLevel;
-    game.player.laptopSkill++;
-    game.laptopXpToNextLevel = Math.round(game.laptopXpToNextLevel * game.nextLevelXpRatio);
-    appendToOutputContainer("Your Laptop level has raised to " + game.player.laptopSkill + "!");
-  }
 }
