@@ -1,20 +1,5 @@
-var newLaptop = false;
-
-// A trigger function usually does a check
-// and performs an action if said check is true
-// It will return true if action happened and false otherwise
-// Example
-/*
-function exampleTrigger() {
-  if (some conditions) {
-    trigger actions
-    return true;
-  }
-  return false;
-}
- */
-
 var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger]);
+var newLaptop = false;
 
 function checkTriggers() {
   triggerFnSet.forEach(function(triggerFn) {
@@ -23,6 +8,20 @@ function checkTriggers() {
     }
   });
 }
+
+/* ------ TRIGGERS ------
+A Trigger Function typically performs a check and executes an action if said check is true.
+It should return 'true' if the task was executed and false otherwise.
+
+Ex.
+function exampleTrigger() {
+  if (some conditions) {
+    trigger actions
+    return true;
+  }
+  return false;
+}
+*/
 
 function firstBeatTrigger() {
   if (game.player.beats >= 1) {
