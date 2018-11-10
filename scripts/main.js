@@ -35,7 +35,7 @@ function updateResourcesTab() {
 function getResourceNumbers(numReqResource, cost, onClickFn) {
 	var oneTime = "<p>-</p>";
 	var tenTimes = "<p>-</p>";
-	var hundredTimes = "<p>-</p>"; 
+	var hundredTimes = "<p>-</p>";
 	var allTimes = "<p>-</p>";
 	var maxResource = Math.floor(numReqResource / cost);
 
@@ -85,7 +85,7 @@ function updateTasks() {
 			var taskName = splitTaskName.replace(/^./, function(str){ return str.toUpperCase(); });
 
 			// tasks[i] must be the name of the function to execute.
-			// Function name should be a camel-case version of string you want on the button 
+			// Function name should be a camel-case version of string you want on the button
 			html += "<button onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
 		}
 
@@ -94,16 +94,16 @@ function updateTasks() {
 }
 
 function updateSkills() {
-	document.getElementById('laptopSkill').innerHTML = "<p>" + game.player.laptopSkill + "</p>";
-	document.getElementById('vocalSkill').innerHTML = "<p>" + game.player.vocalSkill + "</p>";
-	document.getElementById('keyboardSkill').innerHTML = "<p>" + game.player.keyboardSkill + "</p>";
-	document.getElementById('guitarSkill').innerHTML = "<p>" + game.player.guitarSkill + "</p>";
-	document.getElementById('drumSkill').innerHTML = "<p>" + game.player.drumSkill + "</p>";
+	document.getElementById('laptopSkill').innerHTML = "<p>" + game.player.skills.laptop.level + "</p>";
+	document.getElementById('vocalSkill').innerHTML = "<p>" +game.player.skills.vocal.level + "</p>";
+	document.getElementById('keyboardSkill').innerHTML = "<p>" + game.player.skills.keyboard.level + "</p>";
+	document.getElementById('guitarSkill').innerHTML = "<p>" + game.player.skills.guitar.level + "</p>";
+	document.getElementById('drumSkill').innerHTML = "<p>" + game.player.skills.drum.level + "</p>";
 
-	updateProgress(document.getElementById('laptopProgress'), game.player.laptopXp, game.laptopXpToNextLevel);
-	updateProgress(document.getElementById('vocalProgress'), game.player.vocalXp, game.vocalXpToNextLevel);
-	updateProgress(document.getElementById('keyboardProgress'), game.player.keyboardXp, game.keyboardXpToNextLevel);
-	updateProgress(document.getElementById('guitarProgress'), game.player.guitarXp, game.guitarXpToNextLevel);
+	updateProgress(document.getElementById('laptopProgress'), game.player.skills.laptop.xp, game.player.skills.laptop.toNextLevel);
+	updateProgress(document.getElementById('vocalProgress'), game.player.skills.vocal.xp, game.player.skills.vocal.toNextLevel);
+	updateProgress(document.getElementById('keyboardProgress'), game.player.skills.keyboard.xp, game.player.skills.keyboard.toNextLevel);
+	updateProgress(document.getElementById('guitarProgress'), game.player.skills.guitar.xp, game.player.skills.guitar.toNextLevel);
 }
 
 function clickBeat() {
