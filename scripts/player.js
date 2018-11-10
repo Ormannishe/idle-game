@@ -2,8 +2,11 @@ function Player() {
   this.name = "Michael Jackson";
   this.instruments = ["Laptop"];
   this.money = 0;
+  this.lifetimeMoney = 0;
   this.beats = 0;
+  this.lifetimeBeats = 0;
   this.samples = 0;
+  this.lifetimeSamples = 0;
   this.songs = [];
   this.albums = [];
   this.laptopXp = 0;

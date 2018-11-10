@@ -16,6 +16,7 @@ function Game() {
 
 function makeBeat() {
   game.player.beats++;
+  game.player.lifetimeBeats++;
   game.player.laptopXp += game.xpPerBeat;
 
   if (game.laptopXpToNextLevel <= game.player.laptopXp) {
