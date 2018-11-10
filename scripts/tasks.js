@@ -7,16 +7,30 @@ function doTask(task) {
 }
 
 function startActiveTask(taskName, timeToComplete, completeFn) {
-	var container = document.getElementById('taskProgressContainer');
-	var label = document.getElementById('taskLabel');
-	var progress = document.getElementById('taskProgress');
+	if (activeTask == undefined) {
+		var container = document.getElementById('taskProgressContainer');
+		var label = document.getElementById('taskLabel');
+		var progress = document.getElementById('taskProgress');
 
-	activeTask = taskName;
-	taskCompleteFn = completeFn;
-	label.innerHTML = taskName;
-	progress.value = 0;
-	progress.max = timeToComplete;
-	taskProgressContainer.style.display = "block";
+		activeTask = taskName;
+		taskCompleteFn = function() {
+			if (completeFn) {
+				completeFn();
+			}
+
+			stopActiveTask();
+		};
+
+		label.innerHTML = taskName;
+		progress.value = 0;
+		progress.max = timeToComplete;
+		taskProgressContainer.style.display = "block";
+
+		return true;
+	}
+
+	appendToOutputContainer("You can only work on one active task at a time!");
+	return false;
 }
 
 function stopActiveTask() {
@@ -52,18 +66,23 @@ function makeFirstSample() {
 	if (game.player.beats >= game.beatsPerSample) {
 		makeSample(1);
 		document.getElementById('samples').style.display = "block";
-		appendToOutputContainer("You combine some beats to make your first sample! Your eyes glow with pride as you take one more step toward your first song.");
+		appendToOutputContainer("You've created your first musical sample! Your eyes glow with pride as you take one more step toward your destiny.");
 		removeTask("makeFirstSample");
 	}
 }
 
 function makeFirstSong() {
-	if (game.player.samples >= 10) {
-		// TODO: Let use enter song name
-		makeSong("My First Song");
-		document.getElementById('songs').style.display = "block";
-		appendToOutputContainer("You combine some samples to make your first song!");
-		removeTask("makeFirstSong");
+	if (game.player.samples >= game.samplesPerSong) {
+		// TODO: Let user enter song name
+		var activeFn = function() {
+			makeSong("My First Song");
+			appendToOutputContainer("You've created your first song. The start of a legacy!");
+			document.getElementById('songsTab').style.display = "inline";
+		};
+
+		if (startActiveTask("Make First Song", 10, activeFn)) {
+			removeTask("makeFirstSong");
+		}
 	}
 }
 
@@ -79,8 +98,6 @@ function buyNewLaptop() {
 }
 
 function longTask() {
-	if (activeTask == undefined) {
-		startActiveTask("Long Task", 100, stopActiveTask);
+	if (startActiveTask("Long Task", 100))
 		removeTask("longTask");
-	}
 }

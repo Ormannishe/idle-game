@@ -14,7 +14,7 @@ function exampleTrigger() {
 }
  */
 
-var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, newLaptopTrigger]);
+var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger]);
 
 function checkTriggers() {
   triggerFnSet.forEach(function(triggerFn) {
@@ -26,7 +26,7 @@ function checkTriggers() {
 
 function firstBeatTrigger() {
   if (game.player.beats >= 1) {
-		appendToOutputContainer("You make your first beat.");
+		appendToOutputContainer("You've created your first beat. A building block to something greater.");
     triggerFnSet.add(hundredthBeatTrigger);
     return true;
 	}
@@ -35,7 +35,7 @@ function firstBeatTrigger() {
 
 function hundredthBeatTrigger() {
   if (game.player.lifetimeBeats >= 100) {
-		appendToOutputContainer("You make your hundredth beat, you feel like you are getting better at this");
+		appendToOutputContainer("You make your hundredth beat, you feel like you're getting better at this");
     return true;
 	}
   return false;
@@ -47,6 +47,15 @@ function firstSampleTrigger() {
 		game.tasks.push("makeFirstSample");
     return true;
 	}
+  return false;
+}
+
+function firstSongTrigger() {
+  if (game.player.samples >= game.samplesPerSong) {
+    appendToOutputContainer("With a handful of samples, you feel like you might have enough material to make a full song!");
+    game.tasks.push("makeFirstSong");
+    return true;
+  }
   return false;
 }
 

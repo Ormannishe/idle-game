@@ -22,9 +22,11 @@
 				</div>
 			</div>
 			<div id='itemsContainer' class='row'>
-				<button class="active-tab" onclick="toggleItemTab(event, 'resources')">Resources</button>
-  				<button class="tab" onclick="toggleItemTab(event, 'songs')">Songs</button>
-  				<button class="tab" onclick="toggleItemTab(event, 'albums')">Albums</button>
+				<div id='itemsTabContainer'>
+					<button class="active-tab" onclick="toggleItemTab(event, 'resources')">Resources</button>
+  					<button id="songsTab" class="tab" onclick="toggleItemTab(event, 'songs')">Songs</button>
+  					<button id="albumsTab" class="tab" onclick="toggleItemTab(event, 'albums')">Albums</button>
+  				</div>
 
   				<div id="resources" class="tabcontent">
   					<div id='resourceHeader'>
