@@ -1,3 +1,7 @@
+/* 
+  ------ CSS For Tabs ------
+*/
+
 .tab, .active-tab {
   color: white;
   float: left;
@@ -27,12 +31,17 @@
 .tabcontent {
   padding-left: 6px;
   display: block;
+  height: 90%;
 }
 
 /* Hide non-active tabs by default */
 #songs, #albums {
   display: none;
 }
+
+/* 
+  ------ CSS For Resource Tab ------
+*/
 
 #resourceHeader {
   margin-top: 35px;
@@ -79,3 +88,36 @@
   color: #bb0000;
   display: none;
 }
+
+/* 
+  ------ CSS For Songs Tab ------
+*/
+
+#songs {
+  overflow:scroll;
+  overflow-x:hidden;
+}
+
+.songRow {
+  margin-top: 6px;
+  color: white;
+  overflow: hidden;
+  width: 99%;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed white;
+}
+
+.songTitle {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-left: 6px;
+}
+
+.songContent {
+  padding-left: 20px;
+}
+
+.songContent > p {
+  margin-bottom: 6px;
+}
+

@@ -47,11 +47,21 @@ function test() {
 }
 
 function makeFirstSample() {
-	if (game.player.beats >= game.sampleCost) {
+	if (game.player.beats >= game.beatsPerSample) {
 		makeSample(1);
 		document.getElementById('samples').style.display = "block";
 		appendToOutputContainer("You combine some beats to make your first sample! Your eyes glow with pride as you take one more step toward your first song.");
 		removeTask("makeFirstSample");
+	}
+}
+
+function makeFirstSong() {
+	if (game.player.samples >= 10) {
+		// TODO: Let use enter song name
+		makeSong("My First Song");
+		document.getElementById('songs').style.display = "block";
+		appendToOutputContainer("You combine some samples to make your first song!");
+		removeTask("makeFirstSong");
 	}
 }
 
@@ -70,12 +80,5 @@ function longTask() {
 	if (activeTask == undefined) {
 		startActiveTask("Long Task", 100, stopActiveTask);
 		removeTask("longTask");
-	}
-}
-
-function otherTask() {
-	if (activeTask == undefined) {
-		startActiveTask("Other Task", 10, stopActiveTask);
-		removeTask("otherTask");
 	}
 }

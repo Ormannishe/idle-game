@@ -16,15 +16,16 @@ function init() {
 
 function updateView() {
 	checkTriggers();
-	updateResources();
+	updateResourcesTab();
+	updateSongsTab();
 	updateTasks();
 	updateSkills();
 }
 
-function updateResources() {
+function updateResourcesTab() {
 	// TODO: Add more resources
 	var defaultSuffix = "<p>-</p><p>-</p><p>-</p><p>-</p>";
-	var sampleSuffix = getResourceNumbers(game.player.beats, game.sampleCost, "makeSample");
+	var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
 
 	document.getElementById('money').innerHTML = "<p>Money</p><p>" + game.player.money + "</p>" + defaultSuffix;
 	document.getElementById('beats').innerHTML = "<p>Beats</p><p>" + game.player.beats + "</p>" +defaultSuffix;
@@ -50,6 +51,26 @@ function getResourceNumbers(numReqResource, cost, onClickFn) {
 		hundredTimes = "<p onclick=" + onClickFn + "(100)>100</p>";
 
 	return oneTime + tenTimes + hundredTimes + allTimes;
+}
+
+function updateSongsTab() {
+	var html = "";
+
+	game.player.songs.forEach(function(song) {
+		var songRow = "<div class='songRow'>" +
+						"<p class='songTitle'>" + song.name + "</p>" +
+						"<div class='songContent'" +
+						   "<p>Quality: " + song.quality + "</p>" +
+						   "<p>Popularity: " + song.popularity + "</p>" +
+						   "<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
+						   "<p>Total Earnings: " + song.totalEarnings + "</p>" +
+						"</div>" +
+					  "</div>";
+
+		html += songRow;
+	});
+
+	document.getElementById('songs').innerHTML = html;
 }
 
 function updateTasks() {

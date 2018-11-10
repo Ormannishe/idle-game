@@ -33,7 +33,7 @@ function firstBeatTrigger() {
 }
 
 function firstSampleTrigger() {
-	if (game.player.beats >= game.sampleCost) {
+	if (game.player.beats >= game.beatsPerSample) {
 		appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
 		game.tasks.push("makeFirstSample");
     return true;
