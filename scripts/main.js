@@ -27,7 +27,7 @@ function updateResourcesTab() {
 	var defaultSuffix = "<p>-</p><p>-</p><p>-</p><p>-</p>";
 	var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
 
-	document.getElementById('money').innerHTML = "<p>Money</p><p>" + game.player.money + "</p>" + defaultSuffix;
+	document.getElementById('money').innerHTML = "<p>Money</p><p>$" + round(game.player.money, 2) + "</p>" + defaultSuffix;
 	document.getElementById('beats').innerHTML = "<p>Beats</p><p>" + game.player.beats + "</p>" +defaultSuffix;
 	document.getElementById('samples').innerHTML = "<p>Samples</p><p>" + game.player.samples + "</p>" + sampleSuffix;
 }
@@ -63,7 +63,7 @@ function updateSongsTab() {
 						   "<p>Quality: " + song.quality + "</p>" +
 						   "<p>Popularity: " + song.popularity + "</p>" +
 						   "<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
-						   "<p>Total Earnings: " + song.totalEarnings + "</p>" +
+						   "<p>Total Earnings: $" + round(song.totalEarnings, 2) + "</p>" +
 						"</div>" +
 					  "</div>";
 

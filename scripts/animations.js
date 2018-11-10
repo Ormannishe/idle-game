@@ -59,6 +59,8 @@ function naturalTick() {
         updateProgress(progress, (progress.value + 1), progress.max, taskCompleteFn);
     }
 
+    adjustSongStats();
+
     updateView();
 }
 

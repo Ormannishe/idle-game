@@ -57,9 +57,9 @@ The function name for ALL tasks MUST be a camel-case version of the title you wa
 // Use this to debug whatever you want
 function test() {
 	game.player.beats += 10;
-  game.player.lifetimeBeats += 10;
+  	game.player.lifetimeBeats += 10;
 	game.player.money += 100;
-  game.player.lifetimeMoney += 100;
+  	game.player.lifetimeMoney += 100;
 }
 
 function makeFirstSample() {
@@ -73,16 +73,32 @@ function makeFirstSample() {
 
 function makeFirstSong() {
 	if (game.player.samples >= game.samplesPerSong) {
-		// TODO: Let user enter song name
+		var songName = prompt("Please enter your song name:", "Sandstorm");
+
 		var activeFn = function() {
-			makeSong("My First Song");
+			makeSong(songName);
 			appendToOutputContainer("You've created your first song. The start of a legacy!");
 			document.getElementById('songsTab').style.display = "inline";
 		};
 
 		if (startActiveTask("Make First Song", 10, activeFn)) {
 			removeTask("makeFirstSong");
+			game.player.tasks.push("makeNewSong");
 		}
+	}
+}
+
+function makeNewSong() {
+	if (game.player.samples >= game.samplesPerSong) {
+		var songName = prompt("Please enter your song name:", "Sandstorm");
+
+		var activeFn = function() {
+			makeSong(songName);
+			appendToOutputContainer("You've created a new song!");
+			document.getElementById('songsTab').style.display = "inline";
+		};
+
+		startActiveTask("Make First Song", 10, activeFn)
 	}
 }
 

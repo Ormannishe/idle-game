@@ -6,6 +6,7 @@ function Game() {
   this.samplesPerSong = 10;
   this.xpPerBeat = 10;
   this.xpPerSample = 50;
+  this.xpPerSong = 250;
   this.laptopXpToNextLevel = 100;
   this.vocalXpToNextLevel = 100;
   this.keyboardXpToNextLevel = 100;
@@ -14,16 +15,15 @@ function Game() {
   this.nextLevelXpRatio = 1.2;
 };
 
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 function makeBeat() {
   game.player.beats++;
   game.player.lifetimeBeats++;
   game.player.laptopXp += game.xpPerBeat;
-
-  if (game.laptopXpToNextLevel <= game.player.laptopXp) {
-    game.player.laptopXp = game.player.laptopXp - game.laptopXpToNextLevel;
-    game.player.laptopSkill++;
-    game.laptopXpToNextLevel = Math.round(game.laptopXpToNextLevel * game.nextLevelXpRatio);
-  }
+  levelUp();
 }
 
 function makeSample(numToMake) {
@@ -39,23 +39,17 @@ function makeSample(numToMake) {
     game.player.samples += numToMake;
     game.player.laptopXp += (game.xpPerSample * numToMake);
 
-    if (game.laptopXpToNextLevel <= game.player.laptopXp) {
-      game.player.laptopXp = game.player.laptopXp - game.laptopXpToNextLevel;
-      game.player.laptopSkill++;
-      game.laptopXpToNextLevel = Math.round(game.laptopXpToNextLevel * game.nextLevelXpRatio);
-    }
+    levelUp();
   }
 
   updateView();
 }
 
-function makeSong(songName) {
-  if (game.player.samples >= game.samplesPerSong) {
-    // TODO: Calculate this based on skill level
-    var quality = 10;
-    var newSong = new Song(songName, quality);
-    
-    game.player.songs.push(newSong);
+function levelUp() {
+  while (game.laptopXpToNextLevel <= game.player.laptopXp) {
+    game.player.laptopXp = game.player.laptopXp - game.laptopXpToNextLevel;
+    game.player.laptopSkill++;
+    game.laptopXpToNextLevel = Math.round(game.laptopXpToNextLevel * game.nextLevelXpRatio);
+    appendToOutputContainer("Your Laptop level has raised to " + game.player.laptopSkill + "!");
   }
-
 }
