@@ -9,6 +9,7 @@ var game;
 function init() {
 	// TODO: Check for a save
 	game = new Game();
+	initToolTipText();
 	startAnimations();
 	updateView();
 	console.log("Initialized!");
@@ -86,7 +87,7 @@ function updateTasks() {
 
 			// tasks[i] must be the name of the function to execute.
 			// Function name should be a camel-case version of string you want on the button
-			html += "<button onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
+			html += "<button tooltip='" + buildTooltip(tasks[i]) + "' onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
 		}
 
 		document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
