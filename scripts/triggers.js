@@ -1,4 +1,4 @@
-var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger]);
+var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, djBirthdayTrigger, newLaptopTrigger]);
 var newLaptop = false;
 
 function checkTriggers() {
@@ -53,6 +53,14 @@ function firstSongTrigger() {
   if (game.player.samples >= game.samplesPerSong) {
     appendToOutputContainer("With a handful of samples, you feel like you might have enough material to make a full song!");
     game.tasks.push("makeFirstSong");
+    return true;
+  }
+  return false;
+}
+
+function djBirthdayTrigger() {
+  if (game.player.lifetimeBeats >= 30) {
+    game.tasks.push("djBirthdayParty");
     return true;
   }
   return false;

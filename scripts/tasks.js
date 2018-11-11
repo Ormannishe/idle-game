@@ -67,6 +67,9 @@ function makeFirstSample() {
 		appendToOutputContainer("You've created your first musical sample! Your eyes glow with pride as you take one more step toward your destiny.");
 		removeTask("makeFirstSample");
 	}
+	else {
+		appendToOutputContainer("You don't have enough beats make a sample!");
+	}
 }
 
 function makeFirstSong() {
@@ -83,6 +86,9 @@ function makeFirstSong() {
 			removeTask("makeFirstSong");
 			game.tasks.push("makeNewSong");
 		}
+	}
+	else {
+		appendToOutputContainer("You don't have enough samples to make a song!");
 	}
 }
 
@@ -102,6 +108,23 @@ function makeNewSong() {
 	}
 }
 
+function djBirthdayParty() {
+	if (game.player.beats >= 30) {
+		game.player.beats -= 30;
+
+		var activeFn = function() {
+			game.player.addXp("laptop", 250);
+			game.player.addMoney(50);
+			appendToOutputContainer("You earn a quick 50 bucks DJing at a birthday party.");
+		};
+
+		startActiveTask("DJ Birthday Party", 120, activeFn)
+	}
+	else {
+		appendToOutputContainer("You don't have enough beats to DJ!");
+	}
+}
+
 function buyNewLaptop() {
 	if (game.player.money >= 500) {
 		var beatProgress = document.getElementById('beatProgress');
@@ -111,9 +134,7 @@ function buyNewLaptop() {
 		updateProgress(beatProgress, beatProgress.value, game.clicksPerBeat, makeBeat);
 		removeTask("buyNewLaptop");
 	}
-}
-
-function longTask() {
-	if (startActiveTask("Long Task", 100))
-		removeTask("longTask");
+	else {
+		appendToOutputContainer("You don't have enough money to purchase a new laptop!");
+	}
 }
