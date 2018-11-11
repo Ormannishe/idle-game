@@ -8,6 +8,7 @@
   height: 30px;
   margin-top: 6px;
   margin-right: 6px;
+  font-size: 12px;
   color: white;
   border: 1px solid orange;
   background-color: var(--my-background-color);

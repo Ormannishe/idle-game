@@ -75,23 +75,20 @@ function updateSongsTab() {
 }
 
 function updateTasks() {
+	var html = "";
 	var tasks = game.tasks;
 
-	if (tasks.length > 0) {
-		var html = "";
+	for (var i = 0; i < tasks.length; i++) {
+		// Cryptic Regex to make a nice name for the button
+		var splitTaskName = tasks[i].replace(/([A-Z])/g, ' $1')
+		var taskName = splitTaskName.replace(/^./, function(str){ return str.toUpperCase(); });
 
-		for (var i = 0; i < tasks.length; i++) {
-			// Cryptic Regex to make a nice name for the button
-			var splitTaskName = tasks[i].replace(/([A-Z])/g, ' $1')
-			var taskName = splitTaskName.replace(/^./, function(str){ return str.toUpperCase(); });
-
-			// tasks[i] must be the name of the function to execute.
-			// Function name should be a camel-case version of string you want on the button
-			html += "<button tooltip='" + buildTooltip(tasks[i]) + "' onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
-		}
-
-		document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
+		// tasks[i] must be the name of the function to execute.
+		// Function name should be a camel-case version of string you want on the button
+		html += "<button tooltip='" + buildTooltip(tasks[i]) + "' onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
 	}
+
+	document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
 }
 
 function updateSkills() {
