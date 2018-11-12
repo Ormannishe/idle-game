@@ -1,4 +1,4 @@
-var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, djBirthdayTrigger, newLaptopTrigger]);
+var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger]);
 var newLaptop = false;
 
 function checkTriggers() {
@@ -27,6 +27,7 @@ function firstBeatTrigger() {
   if (game.player.beats >= 1) {
 		appendToOutputContainer("You've created your first beat. A building block to something greater.");
     triggerFnSet.add(hundredthBeatTrigger);
+    triggerFnSet.add(djBirthdayTrigger);
     return true;
 	}
   return false;

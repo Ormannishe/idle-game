@@ -57,7 +57,7 @@ The function name for ALL tasks MUST be a camel-case version of the title you wa
 // Use this to debug whatever you want
 function test() {
 	game.player.addBeat(10);
-  	game.player.addMoney(100);
+  game.player.addMoney(100);
 }
 
 function makeFirstSample() {
@@ -121,7 +121,7 @@ function djBirthdayParty() {
 		startActiveTask("DJ Birthday Party", 120, activeFn)
 	}
 	else {
-		appendToOutputContainer("You don't have enough beats to DJ!");
+		appendToOutputContainer("You don't have enough beats to DJ! You need 30 beats!");
 	}
 }
 
