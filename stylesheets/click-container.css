@@ -1,8 +1,71 @@
+#clickContainer {
+  background-color: #222222;
+}
+
+#instrumentContainer {
+  overflow: hidden;
+}
+
+/* 
+  ------ CSS For Instrument Tabs ------
+*/
+
+.instrument, .activeInstrument {
+  color: white;
+  float: left;
+  border: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 12px;
+  width: 20%;
+}
+
+.instrument, .activeInstrument:focus {
+  outline: 0;
+}
+
+.activeInstrument {
+  background-color: var(--my-background-color);
+}
+
+.instrument {
+  background-color: #444444
+}
+
+.instrument:hover {
+  background-color: #555555;
+}
+
+.instrumentContent {
+  padding-left: 6px;
+  display: block;
+  background-color: var(--my-background-color);
+  border: 1px solid var(--my-background-color);
+  height: 93%;
+  color: white;
+}
+
+/* Hide song and album tabs by default */
+#vocalTab, #keyboardTab, #guitarTab, #drumTab {
+  display: none;
+}
+
+/* Hide non-active tab content by default */
+#vocal {
+  display: none;
+}
+
+
+/* 
+  ------ CSS For Laptop Tab ------
+*/
+
 #beatImgContainer {
-  height: 75%;
-  width: 100%;
-  border: 1px solid black;
+  height: 80%;
+  width: 80%;
   background-color: black;
+  margin: 0 auto;
+  margin-top: 3px;
 }
 
 #beatImgContainer > img {
@@ -12,20 +75,21 @@
 }
 
 #beatButtonContainer {
+  height: 10%;
+  width: 80%;
   background-color: black;
-  height: 18%;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  margin: 0 auto;
 }
 
 #beatButtonContainer > button {
-  border-radius: 50%;
+  border-radius: 5%;
   border: none;
-  background-color: red;
-  width: 6%;
-  height: 60%;
+  background-color: #5555ff;
+  width: 15%;
+  height: 85%;
 }
 
 #beatButtonContainer > button:focus {
@@ -37,11 +101,13 @@
 }
 
 #progressContainer {
-  background-color: black;
   height: 8%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 #progressContainer > progress[value] {

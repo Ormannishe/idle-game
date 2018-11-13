@@ -1,4 +1,4 @@
-var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger]);
+var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger, unlockVocalsTrigger]);
 var newLaptop = false;
 
 function checkTriggers() {
@@ -74,5 +74,14 @@ function newLaptopTrigger() {
 		newLaptop = true;
     return true;
 	}
+  return false;
+}
+
+function unlockVocalsTrigger() {
+  if (game.player.skills["laptop"].level >= 10) {
+    appendToOutputContainer("Maybe it's time to pick up another skill?");
+    game.tasks.push("buyMicrophone");
+    return true;
+  }
   return false;
 }

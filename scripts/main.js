@@ -92,11 +92,11 @@ function updateTasks() {
 }
 
 function updateSkills() {
-	document.getElementById('laptopSkill').innerHTML = "<p>" + game.player.skills.laptop.level + "</p>";
-	document.getElementById('vocalSkill').innerHTML = "<p>" +game.player.skills.vocal.level + "</p>";
-	document.getElementById('keyboardSkill').innerHTML = "<p>" + game.player.skills.keyboard.level + "</p>";
-	document.getElementById('guitarSkill').innerHTML = "<p>" + game.player.skills.guitar.level + "</p>";
-	document.getElementById('drumSkill').innerHTML = "<p>" + game.player.skills.drum.level + "</p>";
+	document.getElementById('laptopLevel').innerHTML = "<p>" + game.player.skills.laptop.level + "</p>";
+	document.getElementById('vocalLevel').innerHTML = "<p>" +game.player.skills.vocal.level + "</p>";
+	document.getElementById('keyboardLevel').innerHTML = "<p>" + game.player.skills.keyboard.level + "</p>";
+	document.getElementById('guitarLevel').innerHTML = "<p>" + game.player.skills.guitar.level + "</p>";
+	document.getElementById('drumLevel').innerHTML = "<p>" + game.player.skills.drum.level + "</p>";
 
 	updateProgress(document.getElementById('laptopProgress'), game.player.skills.laptop.xp, game.player.skills.laptop.toNextLevel);
 	updateProgress(document.getElementById('vocalProgress'), game.player.skills.vocal.xp, game.player.skills.vocal.toNextLevel);

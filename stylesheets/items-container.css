@@ -5,6 +5,7 @@
 #itemsTabContainer {
   width: 100%;
   overflow: hidden;
+  background-color: #222222;
 }
 
 .tab, .active-tab {
@@ -36,7 +37,7 @@
 .tabcontent {
   padding-left: 6px;
   display: block;
-  height: 90%;
+  height: 93%;
 }
 
 /* Hide song and album tabs by default */
