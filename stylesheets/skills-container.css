@@ -29,3 +29,8 @@
 .skill > progress[value]::-webkit-progress-value {
   background-color: #33cc33;
 }
+
+/* Hide all skills be default except laptop skill */
+#vocalSkill, #keyboardSkill, #guitarSkill, #drumSkill {
+  display: none;
+}

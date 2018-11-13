@@ -138,3 +138,16 @@ function buyNewLaptop() {
 		appendToOutputContainer("You don't have enough money to purchase a new laptop!");
 	}
 }
+
+function buyMicrophone() {
+	if (game.player.money >= 1000) {
+		game.player.money -= 1000;
+		appendToOutputContainer("You purchase a microphone. Maybe your voice will add another element to your music.");
+		document.getElementById('vocalTab').style.display = "inline";
+		document.getElementById('vocalSkill').style.display = "inline";
+		removeTask("buyMicrophone");
+	}
+	else {
+		appendToOutputContainer("You don't have enough money to purchase a microphone!");
+	}
+}

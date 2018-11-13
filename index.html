@@ -11,15 +11,25 @@
 	<body>
 		<div class='column'>
 			<div id='clickContainer' class='row'>
-				<div id='beatImgContainer'>
-					<img id='beatImg' src='images/digital-sound-display1.png'></img>
+				<div id='instrumentContainer'>
+					<button class="activeInstrument" onclick="toggleInstrument(event, 'laptop')">Laptop</button>
+  					<button id="vocalTab" class="instrument" onclick="toggleInstrument(event, 'vocal')">Vocal</button>
+  					<button id="keyboardTab" class="instrument" onclick="toggleInstrument(event, 'keyboard')">Keyboard</button>
+  					<button id="guitarTab" class="instrument" onclick="toggleInstrument(event, 'guitar')">Guitar</button>
+  					<button id="drumTab" class="instrument" onclick="toggleInstrument(event, 'drum')">Drum</button>
+  				</div>
+  				<div id='laptop' class='instrumentContent'>
+					<div id='beatImgContainer'>
+						<img id='beatImg' src='images/digital-sound-display1.png'></img>
+					</div>
+					<div id='beatButtonContainer'>
+						<button id='makeBeat' type='button' onclick='clickBeat()'>Make Beat</button>
+					</div>
+					<div id='progressContainer'>
+						<progress id='beatProgress' value='0' max='1'></progress>
+					</div>
 				</div>
-				<div id='beatButtonContainer'>
-					<button id='makeBeat' type='button' onclick='clickBeat()'></button>
-				</div>
-				<div id='progressContainer'>
-					<progress id='beatProgress' value='0' max='1'></progress>
-				</div>
+				<div id='vocal' class='instrumentContent'>Under Construction!</div>
 			</div>
 			<div id='itemsContainer' class='row'>
 				<div id='itemsTabContainer'>
@@ -80,29 +90,29 @@
 			</div>
 			<div id='skillsContainer' class='row'>
 				<p>Skills</p>
-				<div class='skill'>
+				<div id='laptopSkill' class='skill'>
 					<img src='images/laptop.png'></img>
-					<p id='laptopSkill'>1</p>
+					<p id='laptopLevel'>1</p>
 					<progress id='laptopProgress' value='0' max='1'></progress>
 				</div>
-				<div class='skill'>
+				<div id='vocalSkill' class='skill'>
 					<img src='images/microphone.png'></img>
-					<p id='vocalSkill'>1</p>
+					<p id='vocalLevel'>1</p>
 					<progress id='vocalProgress' value='0' max='1'></progress>
 				</div>
-				<div class='skill'>
+				<div id='keyboardSkill' class='skill'>
 					<img src='images/keyboard.png'></img>
-					<p id='keyboardSkill'>1</p>
+					<p id='keyboardLevel'>1</p>
 					<progress id='keyboardProgress' value='0' max='1'></progress>
 				</div>
-				<div class='skill'>
+				<div id='guitarSkill' class='skill'>
 					<img src='images/guitar.png'></img>
-					<p id='guitarSkill'>1</p>
+					<p id='guitarLevel'>1</p>
 					<progress id='guitarProgress' value='0' max='1'></progress>
 				</div>
-				<div class='skill'>
+				<div id='drumSkill' class='skill'>
 					<img src='images/drums.png'></img>
-					<p id='drumSkill'>1</p>
+					<p id='drumLevel'>1</p>
 					<progress id='drumProgress' value='0' max='1'></progress>
 				</div>
 			</div>

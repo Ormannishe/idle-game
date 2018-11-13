@@ -25,6 +25,29 @@ function toggleItemTab(evt, tab) {
     evt.currentTarget.className = "active-tab";
 }
 
+function toggleInstrument(evt, instrument) {
+    // TODO: This function can probably be combined with toggleItemTab and made generic
+    var instrumentContent, activeInstrument;
+
+    // Hide all instrumentContent
+    instrumentContent = document.getElementsByClassName("instrumentContent");
+
+    for (var i = 0; i < instrumentContent.length; i++) {
+        instrumentContent[i].style.display = "none";
+    }
+
+    // Set the active instrument to non-active
+    activeInstrument = document.getElementsByClassName("activeInstrument")
+
+    for (var i = 0; i < activeInstrument.length; i++) {
+        activeInstrument[i].className = "instrument";
+    }
+
+    // Show the new instrument content, and make the new instrument 'active'
+    document.getElementById(instrument).style.display = "block";
+    evt.currentTarget.className = "activeInstrument";
+}
+
 function animateBeat() {
     // TODO: Make animation less awful
     // TODO: Put images on sprite sheet
