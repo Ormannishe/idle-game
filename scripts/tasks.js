@@ -76,15 +76,16 @@ function makeFirstSong() {
 	if (game.player.samples >= game.samplesPerSong) {
 		var songName = prompt("Please enter your song name:", "Sandstorm");
 
-		var activeFn = function() {
-			makeSong(songName);
-			appendToOutputContainer("You've created your first song. The start of a legacy!");
-			document.getElementById('songsTab').style.display = "inline";
-		};
+		if (songName !== null) {
+			var activeFn = function() {
+				makeSong(songName);
+				appendToOutputContainer("You've created your first song. The start of a legacy!");
+				document.getElementById('songsTab').style.display = "inline";
+			};
 
-		if (startActiveTask("Make First Song", 10, activeFn)) {
-			removeTask("makeFirstSong");
-			game.tasks.push("makeNewSong");
+			if (startActiveTask("Make First Song", 10, activeFn)) {
+				removeTask("makeFirstSong");
+			}
 		}
 	}
 	else {
@@ -96,12 +97,14 @@ function makeNewSong() {
 	if (game.player.samples >= game.samplesPerSong) {
 		var songName = prompt("Please enter your song name:", "Sandstorm");
 
-		var activeFn = function() {
-			makeSong(songName);
-			appendToOutputContainer("You've created a new song!");
-		};
+		if (songName !== null) {
+			var activeFn = function() {
+				makeSong(songName);
+				appendToOutputContainer("You've created a new song!");
+			};
 
-		startActiveTask("Make New Song", 10, activeFn)
+			startActiveTask("Make New Song", 10, activeFn)
+		}
 	}
 	else {
 		appendToOutputContainer("You don't have enough samples to make a new song!");
