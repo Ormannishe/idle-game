@@ -55,6 +55,7 @@ function getResourceNumbers(numReqResource, cost, onClickFn) {
 }
 
 function updateSongsTab() {
+	var totalRevenue = 0;
 	var html = "";
 
 	game.player.songs.forEach(function(song) {
@@ -68,8 +69,15 @@ function updateSongsTab() {
 						"</div>" +
 					  "</div>";
 
+		totalRevenue += song.moneyPerSec;
 		html += songRow;
 	});
+
+	html  = "<div id='songsHeader'>" +
+				"<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
+				"<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
+			"</div>" +
+			html;
 
 	document.getElementById('songs').innerHTML = html;
 }

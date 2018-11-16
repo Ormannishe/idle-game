@@ -7,12 +7,6 @@ function Game() {
   this.xpPerBeat = 10;
   this.xpPerSample = 50;
   this.xpPerSong = 250;
-  this.laptopXpToNextLevel = 100;
-  this.vocalXpToNextLevel = 100;
-  this.keyboardXpToNextLevel = 100;
-  this.guitarXpToNextLevel = 100;
-  this.drumXpToNextLevel = 100;
-  this.nextLevelXpRatio = 1.2;
 };
 
 function round(value, decimals) {
