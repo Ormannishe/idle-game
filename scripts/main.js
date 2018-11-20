@@ -1,4 +1,3 @@
-// TODO: Add tabs to beatContainer to be unlocked (for different instruments)
 // TODO: Add bells and whistles to beatContainer that can be unlocked (ie. something to alter beat tempo)
 // TODO: Add Achievements and Stats
 // TODO: Make Songs and Albums and other cool resources
@@ -112,13 +111,61 @@ function updateSkills() {
 	updateProgress(document.getElementById('guitarProgress'), game.player.skills.guitar.xp, game.player.skills.guitar.toNextLevel);
 }
 
-function clickBeat() {
-	// TODO: only up the progress bar if the beat was made on the correct frame(s) (you must click to the beat!)
-	//		 maybe player gets a beat bonus for not clicking  off-beat (x1, x2, x3)
-	// TODO: .... add beat (which leads to a whole slew of additional work so...)
-	var progress = document.getElementById('beatProgress');
+function getOffsets(e) {
+  var offsets = e.getBoundingClientRect();
 
-	updateProgress(progress, (progress.value + 1), game.clicksPerBeat, makeBeat);
+  return {
+    left: offsets.left + window.scrollX,
+    right: offsets.right + window.scrollY
+  };
+}
+
+function clickBeat() {
+	/*
+		Advances the progress bar if the user has clicked the 'Make Beat' button.
+		Amount of progress is determined by how well the user lined up the marker with the different 'tiers' of zones.
+
+		Green = +3 (and adds to the multiplier)
+		Yellow = +2 (and maintains the multuplier)
+		Orange = +1  (and removes from the multiplier)
+		Red = 0	(and resets the multiplier)
+	*/
+	var progressAmount = 0;
+	var progress = document.getElementById('beatProgress');
+	var markerOffsets = getOffsets(document.querySelector('#marker'));
+	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
+	var firstYellowOffsets = getOffsets(document.getElementsByClassName('yellowZone')[0]);
+	var secondYellowOffsets = getOffsets(document.getElementsByClassName('yellowZone')[1]);
+	var firstOrangeOffsets = getOffsets(document.getElementsByClassName('orangeZone')[0]);
+	var secondOrangeOffsets = getOffsets(document.getElementsByClassName('orangeZone')[1])
+
+
+	if (markerOffsets.left > greenOffsets.left && markerOffsets.left < greenOffsets.right) {
+		progressAmount = 3;
+
+		if (game.player.beatMultiplier < 10)
+			game.player.beatMultiplier++;
+	}
+	else if ((markerOffsets.left > firstYellowOffsets.left && markerOffsets.left < firstYellowOffsets.right) ||
+			 (markerOffsets.left > secondYellowOffsets.left && markerOffsets.left < secondYellowOffsets.right)) {
+		progressAmount = 2;
+	}
+	else if ((markerOffsets.left > firstOrangeOffsets.left && markerOffsets.left < firstOrangeOffsets.right) ||
+			 (markerOffsets.left > secondOrangeOffsets.left && markerOffsets.left < secondOrangeOffsets.right)) {
+		progressAmount = 1;
+		
+		if (game.player.beatMultiplier > 1)
+			game.player.beatMultiplier--;
+	}
+	else {
+		game.player.beatMultiplier = 1;
+	}
+
+	progressAmount *= game.player.beatMultiplier;
+
+	console.log(progressAmount);
+
+	updateProgress(progress, (progress.value + progressAmount), game.clicksPerBeat, makeBeat);
 	updateView();
 }
 

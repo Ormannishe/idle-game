@@ -61,27 +61,69 @@
 */
 
 #beatImgContainer {
-  height: 80%;
+  height: 70%;
   width: 80%;
   background-color: black;
   margin: 0 auto;
-  margin-top: 3px;
+  margin-top: 10px;
+  border: 1px solid transparent;
 }
 
-#beatImgContainer > img {
-  height: 100%;
+#marker {
+  position: relative;
+  width: 4%;
+  height: 7%;
+  margin-top: 18%;
+  left: 1%;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 15px solid white;
+}
+
+#zones {
   width: 100%;
-  object-fit: contain;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.greenZone {
+  width: 10%;
+  height: 5%;
+  background-color: #00cc44;
+  border: 1px solid #009933;
+}
+
+.yellowZone {
+  width: 12%;
+  height: 5%;
+  background-color: #ffff33;
+  border: 1px solid #cccc00;
+}
+
+.orangeZone {
+  width: 15%;
+  height: 5%;
+  background-color: #ffad33;
+  border: 1px solid #cc7a00;
+}
+
+.redZone {
+  width: 15%;
+  height: 5%;
+  background-color: #ff5c33;
+  border: 1px solid #cc2900;
 }
 
 #beatButtonContainer {
   height: 10%;
   width: 80%;
-  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 #beatButtonContainer > button {
@@ -106,8 +148,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #progressContainer > progress[value] {
