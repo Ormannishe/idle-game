@@ -133,19 +133,19 @@ function clickBeat() {
 	var progressAmount = 0;
 	var progress = document.getElementById('beatProgress');
 	var markerOffsets = getOffsets(document.querySelector('#marker'));
+  var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
 	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
-	var firstYellowOffsets = getOffsets(document.getElementsByClassName('yellowZone')[0]);
-	var secondYellowOffsets = getOffsets(document.getElementsByClassName('yellowZone')[1]);
+	var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
+	var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
 
 	// Determine how much to advance the progress bar. Calculate new multiplier.
-	if (markerOffsets.left >= greenOffsets.left && markerOffsets.right <= greenOffsets.right) {
+	if (markerPoint >= greenOffsets.left && markerPoint <= greenOffsets.right) {
 		progressAmount = game.player.beatMultiplier;
 
 		if (game.player.beatMultiplier < 10)
 			game.player.beatMultiplier++;
 	}
-	else if ((markerOffsets.left >= firstYellowOffsets.left && markerOffsets.right <= secondYellowOffsets.right) ||
-			 (markerOffsets.left >= secondYellowOffsets.left && markerOffsets.right <= firstYellowOffsets.right)) {
+	else if (markerPoint >= leftYellowPoint && markerPoint <= rightYellowPoint) {
 		progressAmount = Math.ceil(game.player.beatMultiplier / 2);
 
 		if (game.player.beatMultiplier > 1)
@@ -159,7 +159,7 @@ function clickBeat() {
 	var multDiv = document.getElementById('multiplier');
 	var r = 250 - (game.player.beatMultiplier - 1) * 30;
 	var g = 250 - Math.abs(game.player.beatMultiplier - 5) * 30;
-	var b = (game.player.beatMultiplier - 5) * 50; 
+	var b = (game.player.beatMultiplier - 5) * 50;
 
 	multDiv.innerHTML = "x" + game.player.beatMultiplier;
 	multDiv.style.fontSize = 15 + game.player.beatMultiplier;
