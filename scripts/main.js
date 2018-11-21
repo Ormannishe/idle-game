@@ -28,7 +28,7 @@ function updateResourcesTab() {
 	var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
 
 	document.getElementById('money').innerHTML = "<p>Money</p><p>$" + round(game.player.money, 2) + "</p>" + defaultSuffix;
-	document.getElementById('beats').innerHTML = "<p>Beats</p><p>" + game.player.beats + "</p>" +defaultSuffix;
+	document.getElementById('beats').innerHTML = "<p>Beats</p><p>" + game.player.beats + "</p>" + defaultSuffix;
 	document.getElementById('samples').innerHTML = "<p>Samples</p><p>" + game.player.samples + "</p>" + sampleSuffix;
 }
 
@@ -125,35 +125,29 @@ function clickBeat() {
 		Advances the progress bar if the user has clicked the 'Make Beat' button.
 		Amount of progress is determined by how well the user lined up the marker with the different 'tiers' of zones.
 
-		Green = +3 (and adds to the multiplier)
-		Yellow = +2 (and maintains the multuplier)
-		Orange = +1  (and removes from the multiplier)
-		Red = 0	(and resets the multiplier)
+		Green = multiplier amount (and adds to the multiplier)
+		Yellow = 1/2 multiplier amount (and removes from the multuplier)
+		Red = 0 (and resets the multiplier)
 	*/
+
 	var progressAmount = 0;
 	var progress = document.getElementById('beatProgress');
 	var markerOffsets = getOffsets(document.querySelector('#marker'));
 	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
 	var firstYellowOffsets = getOffsets(document.getElementsByClassName('yellowZone')[0]);
 	var secondYellowOffsets = getOffsets(document.getElementsByClassName('yellowZone')[1]);
-	var firstOrangeOffsets = getOffsets(document.getElementsByClassName('orangeZone')[0]);
-	var secondOrangeOffsets = getOffsets(document.getElementsByClassName('orangeZone')[1])
 
-
-	if (markerOffsets.left > greenOffsets.left && markerOffsets.left < greenOffsets.right) {
-		progressAmount = 3;
+	// Determine how much to advance the progress bar. Calculate new multiplier.
+	if (markerOffsets.left >= greenOffsets.left && markerOffsets.right <= greenOffsets.right) {
+		progressAmount = game.player.beatMultiplier;
 
 		if (game.player.beatMultiplier < 10)
 			game.player.beatMultiplier++;
 	}
-	else if ((markerOffsets.left > firstYellowOffsets.left && markerOffsets.left < firstYellowOffsets.right) ||
-			 (markerOffsets.left > secondYellowOffsets.left && markerOffsets.left < secondYellowOffsets.right)) {
-		progressAmount = 2;
-	}
-	else if ((markerOffsets.left > firstOrangeOffsets.left && markerOffsets.left < firstOrangeOffsets.right) ||
-			 (markerOffsets.left > secondOrangeOffsets.left && markerOffsets.left < secondOrangeOffsets.right)) {
-		progressAmount = 1;
-		
+	else if ((markerOffsets.left >= firstYellowOffsets.left && markerOffsets.right <= secondYellowOffsets.right) ||
+			 (markerOffsets.left >= secondYellowOffsets.left && markerOffsets.right <= firstYellowOffsets.right)) {
+		progressAmount = Math.ceil(game.player.beatMultiplier / 2);
+
 		if (game.player.beatMultiplier > 1)
 			game.player.beatMultiplier--;
 	}
@@ -161,10 +155,17 @@ function clickBeat() {
 		game.player.beatMultiplier = 1;
 	}
 
-	progressAmount *= game.player.beatMultiplier;
+	// Update multiplier
+	var multDiv = document.getElementById('multiplier');
+	var r = 250 - (game.player.beatMultiplier - 1) * 30;
+	var g = 250 - Math.abs(game.player.beatMultiplier - 5) * 30;
+	var b = (game.player.beatMultiplier - 5) * 50; 
 
-	console.log(progressAmount);
+	multDiv.innerHTML = "x" + game.player.beatMultiplier;
+	multDiv.style.fontSize = 15 + game.player.beatMultiplier;
+	multDiv.style.color = "rgb(" + r + "," + g + "," + b + ")";
 
+	// Update progress bar
 	updateProgress(progress, (progress.value + progressAmount), game.clicksPerBeat, makeBeat);
 	updateView();
 }
@@ -173,7 +174,7 @@ function updateProgress(progress, value, max, triggerFn) {
 	progress.max = max;
 
 	if (value >= max) {
-		progress.value = 0;
+		progress.value = value - max;
 
 		if (triggerFn != undefined)
 			triggerFn();

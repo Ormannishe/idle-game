@@ -19,17 +19,23 @@
   					<button id="drumTab" class="instrument" onclick="toggleInstrument(event, 'drum')">Drum</button>
   				</div>
   				<div id='laptop' class='instrumentContent'>
-					<div id='beatImgContainer'>
+  					<div id='tempoSelector'>
+  						<p>Tempo</p>
+  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(5)">
+  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(10)">
+  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(15)" checked="checked">
+  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(25)">
+					</div>
+					<div id='beatContainer'>
 						<div id='marker'></div>
 						<div id='zones'>
 							<div class='redZone'></div>
-							<div class='orangeZone'></div>
 							<div class='yellowZone'></div>
 							<div class='greenZone'></div>
 							<div class='yellowZone'></div>
-							<div class='orangeZone'></div>
 							<div class='redZone'></div>
 						</div>
+						<div id='multiplier'>x1</div>
 					</div>
 					<div id='beatButtonContainer'>
 						<button id='makeBeat' type='button' onclick='clickBeat()'>Make Beat</button>

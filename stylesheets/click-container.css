@@ -60,10 +60,9 @@
   ------ CSS For Laptop Tab ------
 */
 
-#beatImgContainer {
-  height: 70%;
+#beatContainer {
+  height: 60%;
   width: 80%;
-  background-color: black;
   margin: 0 auto;
   margin-top: 10px;
   border: 1px solid transparent;
@@ -89,31 +88,52 @@
 }
 
 .greenZone {
-  width: 10%;
+  width: 15%;
   height: 5%;
   background-color: #00cc44;
   border: 1px solid #009933;
 }
 
 .yellowZone {
-  width: 12%;
+  width: 18%;
   height: 5%;
   background-color: #ffff33;
   border: 1px solid #cccc00;
 }
 
-.orangeZone {
-  width: 15%;
-  height: 5%;
-  background-color: #ffad33;
-  border: 1px solid #cc7a00;
-}
-
 .redZone {
-  width: 15%;
+  width: 22%;
   height: 5%;
   background-color: #ff5c33;
   border: 1px solid #cc2900;
+}
+
+#multiplier {
+  font-size: 16px;
+  color: rgb(250, 130, 0);
+  text-align: center;
+  margin-top: 5%;
+  overflow: hidden;
+}
+
+#tempoSelector {
+  height: 40%;
+  width: 5%;
+  overflow: hidden;
+  border: 3px solid #222222;
+  float: right;
+  margin-right: 2.5%;
+  margin-top: 10%;
+  text-align: center;
+}
+
+#tempoSelector > p {
+  margin-top: 3px;
+  font-size: 9px;
+}
+
+#tempoSelector > input {
+  margin: 9px 9px 9px 9px;
 }
 
 #beatButtonContainer {
@@ -123,13 +143,13 @@
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  margin-top: 10px;
 }
 
 #beatButtonContainer > button {
   border-radius: 5%;
-  border: none;
-  background-color: #5555ff;
+  border: 1px solid white;
+  color: white;
+  background-color: #222222;
   width: 15%;
   height: 85%;
 }
@@ -140,6 +160,7 @@
 
 #beatButtonContainer > button:hover {
   cursor: pointer;
+  background-color: #333333;
 }
 
 #progressContainer {

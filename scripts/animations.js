@@ -75,6 +75,11 @@ function animateBeat() {
     marker.style.left = left + "%";
 }
 
+function adjustTempo(n) {
+    clearInterval(beatInterval);
+    beatInterval = setInterval(animateBeat, n);
+}
+
 function naturalTick() {
     if (activeTask != undefined) {
         var progress = document.getElementById('taskProgress');
@@ -87,6 +92,6 @@ function naturalTick() {
 }
 
 function startAnimations() {
-    beatInterval = setInterval(animateBeat, 20);
+    beatInterval = setInterval(animateBeat, 15);
     tickInterval = setInterval(naturalTick, 1000);
 }
