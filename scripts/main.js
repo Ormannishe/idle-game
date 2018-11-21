@@ -139,13 +139,13 @@ function clickBeat() {
 	var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
 
 	// Determine how much to advance the progress bar. Calculate new multiplier.
-	if (markerPoint >= greenOffsets.left && markerPoint <= greenOffsets.right) {
+	if (greenOffsets.left <= markerPoint && markerPoint <= greenOffsets.right) {
 		progressAmount = game.player.beatMultiplier;
 
 		if (game.player.beatMultiplier < 10)
 			game.player.beatMultiplier++;
 	}
-	else if (markerPoint >= leftYellowPoint && markerPoint <= rightYellowPoint) {
+	else if (leftYellowPoint <= markerPoint && markerPoint <= rightYellowPoint) {
 		progressAmount = Math.ceil(game.player.beatMultiplier / 2);
 
 		if (game.player.beatMultiplier > 1)
