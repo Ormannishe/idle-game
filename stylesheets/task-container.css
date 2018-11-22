@@ -10,9 +10,9 @@
   margin-right: 20px;
   margin-bottom: 6px;
   font-size: 12px;
+  border: 1px solid white;
   color: white;
-  border: 1px solid orange;
-  background-color: var(--my-background-color);
+  background-color: #222222;
 }
 
 #tasks > button:focus {
@@ -21,6 +21,7 @@
 
 #tasks > button:hover {
   cursor: pointer;
+  background-color: #333333;
 }
 
 #taskProgressContainer {

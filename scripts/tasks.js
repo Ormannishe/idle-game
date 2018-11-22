@@ -113,7 +113,9 @@ function makeNewSong() {
 
 function djBirthdayParty() {
 	if (game.player.beats >= 30) {
-		game.player.beats -= 30;
+
+		if (activeTask == undefined)
+			game.player.beats -= 20;
 
 		var activeFn = function() {
 			game.player.addXp("laptop", 250);
@@ -132,7 +134,7 @@ function buyNewLaptop() {
 	if (game.player.money >= 500) {
 		var beatProgress = document.getElementById('beatProgress');
 
-		game.clicksPerBeat = 5;
+		game.clicksPerBeat = Math.round(game.clicksPerBeat * 0.75);
 		game.player.money -= 500;
 		updateProgress(beatProgress, beatProgress.value, game.clicksPerBeat, makeBeat);
 		removeTask("buyNewLaptop");

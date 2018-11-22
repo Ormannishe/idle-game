@@ -1,6 +1,6 @@
 function Game() {
   this.player = new Player();
-  this.tasks = [];
+  this.tasks = ["test"];
   this.clicksPerBeat = 30;
   this.beatsPerSample = 10;
   this.samplesPerSong = 10;

@@ -133,7 +133,7 @@ function clickBeat() {
 	var progressAmount = 0;
 	var progress = document.getElementById('beatProgress');
 	var markerOffsets = getOffsets(document.querySelector('#marker'));
-  var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
+  	var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
 	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
 	var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
 	var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
@@ -152,6 +152,7 @@ function clickBeat() {
 			game.player.beatMultiplier--;
 	}
 	else {
+		progressAmount = 0.1;
 		game.player.beatMultiplier = 1;
 	}
 
@@ -173,15 +174,14 @@ function clickBeat() {
 function updateProgress(progress, value, max, triggerFn) {
 	progress.max = max;
 
-	if (value >= max) {
-		progress.value = value - max;
+	while (value >= max) {
+		value = value - max;
 
 		if (triggerFn != undefined)
 			triggerFn();
 	}
-	else {
+
 		progress.value = value;
-	}
 }
 
 function appendToOutputContainer(message) {

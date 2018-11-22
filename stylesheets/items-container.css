@@ -119,10 +119,10 @@
   margin-top: 6px;
   margin-right: 6px;
   font-size: 12px;
+  border: 1px solid white;
   color: white;
-  border: 1px solid orange;
+  background-color: #222222;
   float: right;
-  background-color: var(--my-background-color);
 }
 
 #songsHeader > button:focus {
@@ -131,6 +131,7 @@
 
 #songsHeader > button:hover {
   cursor: pointer;
+  background-color: #333333;
 }
 
 #songsHeader > p {

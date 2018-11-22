@@ -60,7 +60,7 @@ function firstSongTrigger() {
 }
 
 function djBirthdayTrigger() {
-  if (game.player.lifetimeBeats >= 30) {
+  if (game.player.skills["laptop"].level >= 5) {
     game.tasks.push("djBirthdayParty");
     return true;
   }
@@ -68,7 +68,7 @@ function djBirthdayTrigger() {
 }
 
 function newLaptopTrigger() {
-	if (game.player.money >= 500 && newLaptop == false) {
+	if (game.player.money >= 400 && newLaptop == false) {
 		appendToOutputContainer("Maybe a new laptop will help create beats faster...");
 		game.tasks.push("buyNewLaptop");
 		newLaptop = true;
