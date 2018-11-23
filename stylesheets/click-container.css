@@ -146,12 +146,12 @@
 }
 
 #beatButtonContainer > button {
-  border-radius: 5%;
   border: 1px solid white;
   color: white;
   background-color: #222222;
   width: 15%;
   height: 85%;
+  font-size: 12px;
 }
 
 #beatButtonContainer > button:focus {
