@@ -58,20 +58,20 @@ function updateSongsTab() {
 		var songRow = "<div class='songRow'>" +
 										"<p class='songTitle'>" + song.name + "</p>" +
 										"<div class='songContent'" +
-						   				"<p>Quality: " + song.quality + "</p>" +
-						   				"<p>Popularity: " + song.popularity + "</p>" +
-						   				"<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
-						   				"<p>Total Earnings: $" + round(song.totalEarnings, 2) + "</p>" +
-										"</div>" +
-					  			"</div>";
+											"<p>Quality: " + song.quality + "</p>" +
+											"<p>Popularity: " + song.popularity + "</p>" +
+											"<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
+											"<p>Total Earnings: $" + round(song.totalEarnings, 2) + "</p>" +
+											"</div>" +
+										"</div>";
 
 		totalRevenue += song.moneyPerSec;
 		html += songRow;
 	});
 
 	html = "<div id='songsHeader'>" +
-				   "<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
-				 	 "<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
+					 "<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
+					 "<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
 				 "</div>" +
 				 html;
 
