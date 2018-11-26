@@ -3,7 +3,6 @@ var tickInterval;
 var markerReverse = false;
 
 function toggleItemTab(evt, tab) {
-	// TODO: Add tab content for money generating resources (ie. songs, albums, brand, other media/products)
     var tabContent, activeTabs;
 
     // Hide all tabcontent
@@ -49,10 +48,10 @@ function toggleInstrument(evt, instrument) {
 }
 
 function animateBeat() {
-    /* 
-    Animate the moving marker for the laptop minigame by altering the 'left' css attribute of the 'marker' element.
-    When we've exceeded a maximum 'left' value, reverse the direction of movement.
-    */ 
+    /*
+      Animate the moving marker for the laptop minigame by altering the 'left' css attribute of the 'marker' element.
+      When we've exceeded a maximum 'left' value, reverse the direction of movement.
+    */
 
     var marker = document.getElementById("marker");
     var left = parseFloat(marker.style.left);
@@ -83,11 +82,10 @@ function adjustTempo(n) {
 function naturalTick() {
     if (activeTask != undefined) {
         var progress = document.getElementById('taskProgress');
-        updateProgress(progress, (progress.value + 1), progress.max, taskCompleteFn);
+        updateProgress(progress, progress.value + 1, progress.max, taskCompleteFn);
     }
 
     adjustSongStats();
-
     updateView();
 }
 

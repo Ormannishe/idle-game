@@ -14,7 +14,7 @@ function makeSong(songName, skills) {
 		It's quality is calculated below as such:
 
 		Song Quality = The average skill level of the skills involved, plus 1 for each skill,
-					   with a random modifier between 50% and 150% (rounded up)
+					         with a random modifier between 50% and 150% (rounded up)
 	*/
 
 	if (game.player.samples >= game.samplesPerSong && skills.length > 0) {
@@ -44,7 +44,7 @@ function adjustSongStats() {
 		Song Popularity has a 10% chance to decrease by a random amount up to (1 / quality) * 100.
 		(Higher quality songs decrease in popularity slower)
 
-		A modifier is then applied on top of the base 10% chances. A bonus of up to 50% can be applied to the gain chance or 
+		A modifier is then applied on top of the base 10% chances. A bonus of up to 50% can be applied to the gain chance or
 		lose chance based on the song's current popularity and max popularity.
 
 		Song Revenue is always a fraction of it's popularity (TODO: fraction increases via different medias)
@@ -69,7 +69,7 @@ function adjustSongStats() {
 		if (gainChance > Math.random() && song.popularity < song.maxPopularity) {
 			song.popularity += Math.ceil(song.quality * Math.random());
 		}
-		
+
 		// Calculate popularity lost
 		if (loseChance > Math.random() && song.popularity > maxLoss) {
 			song.popularity -= Math.ceil(maxLoss * Math.random());

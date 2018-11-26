@@ -1,7 +1,5 @@
-// TODO: Add bells and whistles to beatContainer that can be unlocked (ie. something to alter beat tempo)
 // TODO: Add Achievements and Stats
-// TODO: Make Songs and Albums and other cool resources
-// TODO: Make Sample/Song/Album quality scale with skills
+// TODO: Make Albums and other cool resources
 
 var game;
 
@@ -23,7 +21,6 @@ function updateView() {
 }
 
 function updateResourcesTab() {
-	// TODO: Add more resources
 	var defaultSuffix = "<p>-</p><p>-</p><p>-</p><p>-</p>";
 	var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
 
@@ -59,24 +56,24 @@ function updateSongsTab() {
 
 	game.player.songs.forEach(function(song) {
 		var songRow = "<div class='songRow'>" +
-						"<p class='songTitle'>" + song.name + "</p>" +
-						"<div class='songContent'" +
-						   "<p>Quality: " + song.quality + "</p>" +
-						   "<p>Popularity: " + song.popularity + "</p>" +
-						   "<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
-						   "<p>Total Earnings: $" + round(song.totalEarnings, 2) + "</p>" +
-						"</div>" +
-					  "</div>";
+										"<p class='songTitle'>" + song.name + "</p>" +
+										"<div class='songContent'" +
+						   				"<p>Quality: " + song.quality + "</p>" +
+						   				"<p>Popularity: " + song.popularity + "</p>" +
+						   				"<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
+						   				"<p>Total Earnings: $" + round(song.totalEarnings, 2) + "</p>" +
+										"</div>" +
+					  			"</div>";
 
 		totalRevenue += song.moneyPerSec;
 		html += songRow;
 	});
 
-	html  = "<div id='songsHeader'>" +
-				"<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
-				"<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
-			"</div>" +
-			html;
+	html = "<div id='songsHeader'>" +
+				   "<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
+				 	 "<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
+				 "</div>" +
+				 html;
 
 	document.getElementById('songs').innerHTML = html;
 }
@@ -116,7 +113,7 @@ function getOffsets(e) {
 
   return {
     left: offsets.left + window.scrollX,
-    right: offsets.right + window.scrollY
+    right: offsets.right + window.scrollX
   };
 }
 
@@ -127,13 +124,13 @@ function clickBeat() {
 
 		Green = multiplier amount (and adds to the multiplier)
 		Yellow = 1/2 multiplier amount (and removes from the multuplier)
-		Red = 0 (and resets the multiplier)
+		Red = 0.1 (and resets the multiplier)
 	*/
 
 	var progressAmount = 0;
 	var progress = document.getElementById('beatProgress');
 	var markerOffsets = getOffsets(document.querySelector('#marker'));
-  	var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
+  var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
 	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
 	var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
 	var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
