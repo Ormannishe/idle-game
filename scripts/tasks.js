@@ -78,7 +78,7 @@ function makeFirstSong() {
 
 		if (songName !== null) {
 			var activeFn = function() {
-				makeSong(songName);
+				makeSong(songName, ["laptop"]);
 				appendToOutputContainer("You've created your first song. The start of a legacy!");
 				document.getElementById('songsTab').style.display = "inline";
 			};
@@ -99,7 +99,7 @@ function makeNewSong() {
 
 		if (songName !== null) {
 			var activeFn = function() {
-				makeSong(songName);
+				makeSong(songName, ["laptop"]);
 				appendToOutputContainer("You've created a new song!");
 			};
 
