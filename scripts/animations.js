@@ -1,6 +1,6 @@
 var beatInterval;
 var tickInterval;
-var beatAnimationDirection = "up";
+var markerReverse = false;
 
 function toggleItemTab(evt, tab) {
 	// TODO: Add tab content for money generating resources (ie. songs, albums, brand, other media/products)
@@ -49,31 +49,35 @@ function toggleInstrument(evt, instrument) {
 }
 
 function animateBeat() {
-    // TODO: Make animation less awful
-    // TODO: Put images on sprite sheet
-    // TODO: Make animation direction not backwards (ie. reverse file numbering)
-    // TODO: Track Current Image Number - beats must be gathered on certain frame(s)
-    var beatImg = document.getElementById("beatImg");
-    var currImgNumber = parseInt(beatImg.src.replace(/[^0-9]/g, ''));
-    var nextImg;
+    /* 
+    Animate the moving marker for the laptop minigame by altering the 'left' css attribute of the 'marker' element.
+    When we've exceeded a maximum 'left' value, reverse the direction of movement.
+    */ 
 
-    // If you've reached the final image, reverse the animation direction and wait briefly before triggering the next animation.
-    if (currImgNumber >= 16) {
-        beatAnimationDirection = "down";
-        clearInterval(beatInterval);
-        setTimeout(function(){beatInterval = setInterval(animateBeat, 15);}, 800)
+    var marker = document.getElementById("marker");
+    var left = parseFloat(marker.style.left);
 
-    }
-    else if (currImgNumber <= 1) {
-        beatAnimationDirection = "up";
+    if (isNaN(left)) {
+        marker.style.left = "2%";
+        return;
     }
 
-    if (beatAnimationDirection == "up")
-        nextImg = "images/digital-sound-display" + (currImgNumber + 1) + ".png";
-    else if (beatAnimationDirection == "down")
-        nextImg = "images/digital-sound-display" + (currImgNumber - 1) + ".png";
+    if (markerReverse)
+        left -= 1;
+    else
+        left += 1;
 
-    beatImg.src = nextImg;
+    if (left >= 94)
+        markerReverse = true;
+    else if (left <= 1)
+        markerReverse = false;
+
+    marker.style.left = left + "%";
+}
+
+function adjustTempo(n) {
+    clearInterval(beatInterval);
+    beatInterval = setInterval(animateBeat, n);
 }
 
 function naturalTick() {
@@ -88,6 +92,6 @@ function naturalTick() {
 }
 
 function startAnimations() {
-    beatInterval = setInterval(animateBeat, 10);
+    beatInterval = setInterval(animateBeat, 15);
     tickInterval = setInterval(naturalTick, 1000);
 }

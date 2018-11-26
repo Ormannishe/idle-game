@@ -103,12 +103,13 @@ function addMakeFirstSongTask() {
     },
     function() {
       var songName = prompt("Please enter your song name:", "Sandstorm");
-
-      startActiveTask("Make First Song", 10, function() {
-        makeSong(songName);
-        appendToOutputContainer("You've created your first song. The start of a legacy!");
-        document.getElementById('songsTab').style.display = "inline";
-      });
+      if (songName !== null) {
+        startActiveTask("Make First Song", 10, function() {
+          makeSong(songName, ["laptop"]);
+          appendToOutputContainer("You've created your first song. The start of a legacy!");
+          document.getElementById('songsTab').style.display = "inline";
+        });
+      }
     },
     function() {
       removeTask("Make First Song");
@@ -144,11 +145,12 @@ function addMakeNewSongTask() {
     },
     function() {
       var songName = prompt("Please enter your song name:", "Sandstorm");
-
-      startActiveTask("Making New Song", 10, function() {
-        makeSong(songName);
-        appendToOutputContainer("You've created a new song!");
-      });
+      if (songName !== null) {
+        startActiveTask("Making New Song", 10, function() {
+          makeSong(songName, ["laptop"]);
+          appendToOutputContainer("You've created a new song!");
+        });
+      }
     },
     function() {
       removeTask("Make First Song");
@@ -178,7 +180,7 @@ function makeDJAtBirthdayPartyTask() {
       return game.player.beats >= 30;
     },
     function() {
-      game.player.beats -= 30;
+      game.player.beats -= 20;
 
       startActiveTask("DJing at a birthday party", 10, function() {
         game.player.addXp("laptop", 250);
@@ -231,7 +233,7 @@ function buyNewLaptop() {
   if (game.player.money >= 500) {
     var beatProgress = document.getElementById('beatProgress');
 
-    game.clicksPerBeat = 5;
+    game.clicksPerBeat = Math.round(game.clicksPerBeat * 0.75);
     game.player.money -= 500;
     updateProgress(beatProgress, beatProgress.value, game.clicksPerBeat, makeBeat);
     removeTask("buyNewLaptop");

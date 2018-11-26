@@ -109,6 +109,40 @@
   overflow-x:hidden;
 }
 
+#songsHeader {
+  overflow: hidden;
+}
+
+#songsHeader > button {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 6px;
+  font-size: 12px;
+  border: 1px solid white;
+  color: white;
+  background-color: #222222;
+  float: right;
+}
+
+#songsHeader > button:focus {
+  outline: 0;
+}
+
+#songsHeader > button:hover {
+  cursor: pointer;
+  background-color: #333333;
+}
+
+#songsHeader > p {
+  width: 80%;
+  font-size: 12px;
+  float: left;
+  color: #00bb00;
+  margin-top: 15px;
+  padding-left: 6px;
+}
+
 .songRow {
   margin-top: 6px;
   color: white;
