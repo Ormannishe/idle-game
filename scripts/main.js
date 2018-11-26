@@ -130,7 +130,7 @@ function clickBeat() {
 	var progressAmount = 0;
 	var progress = document.getElementById('beatProgress');
 	var markerOffsets = getOffsets(document.querySelector('#marker'));
-  var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
+	var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
 	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
 	var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
 	var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
