@@ -59,7 +59,7 @@ class Player {
   addXp(skill, n) {
     this.skills[skill].xp += n;
     while (this.skills[skill].toNextLevel <= this.skills[skill].xp) {
-   	  this.skills[skill].xp = this.skills[skill].xp - this.skills[skill].toNextLevel;
+      this.skills[skill].xp = this.skills[skill].xp - this.skills[skill].toNextLevel;
       this.skills[skill].level++;
       this.skills[skill].toNextLevel = Math.round(this.skills[skill].toNextLevel * this.skills[skill].nextLevelXpRatio);
       appendToOutputContainer("Your " + skill + " skill has reached level " + this.skills[skill].level + "!");
