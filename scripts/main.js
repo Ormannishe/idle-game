@@ -9,6 +9,7 @@ function init() {
 	// TODO: Check for a save
 	game = new Game();
 	initToolTipText();
+  initTasks();
 	startAnimations();
 	updateView();
 	console.log("Initialized!");
@@ -74,7 +75,7 @@ function updateSongsTab() {
 
 	html  = "<div id='songsHeader'>" +
 				"<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
-				"<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
+				"<button tooltip='" + makeNewSongTask.tooltipText + "' onclick='doTask(newSongTask)'>Make New Song</button>" +
 			"</div>" +
 			html;
 
@@ -87,12 +88,12 @@ function updateTasks() {
 
 	for (var i = 0; i < tasks.length; i++) {
 		// Cryptic Regex to make a nice name for the button
-		var splitTaskName = tasks[i].replace(/([A-Z])/g, ' $1')
-		var taskName = splitTaskName.replace(/^./, function(str){ return str.toUpperCase(); });
+		// var splitTaskName = tasks[i].replace(/([A-Z])/g, ' $1')
+		// var taskName = splitTaskName.replace(/^./, function(str){ return str.toUpperCase(); });
 
 		// tasks[i] must be the name of the function to execute.
 		// Function name should be a camel-case version of string you want on the button
-		html += "<button tooltip='" + buildTooltip(tasks[i]) + "' onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
+		html += "<button tooltip='" + tasks[i].tooltipText + "' onclick='doTask(" + tasks[i].name + ")')>" + tasks[i].name + "</button>";
 	}
 
 	document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
