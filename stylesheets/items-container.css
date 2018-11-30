@@ -1,4 +1,4 @@
-/* 
+/*
   ------ CSS For Tabs ------
 */
 
@@ -50,7 +50,7 @@
   display: none;
 }
 
-/* 
+/*
   ------ CSS For Resource Tab ------
 */
 
@@ -100,7 +100,7 @@
   display: none;
 }
 
-/* 
+/*
   ------ CSS For Songs Tab ------
 */
 
@@ -123,6 +123,8 @@
   color: white;
   background-color: #222222;
   float: right;
+  z-index: 100;
+  position: static;
 }
 
 #songsHeader > button:focus {
@@ -165,4 +167,3 @@
 .songContent > p {
   margin-bottom: 6px;
 }
-

@@ -112,7 +112,7 @@ function makeNewSong() {
 }
 
 function djBirthdayParty() {
-	if (game.player.beats >= 30) {
+	if (game.player.beats >= 20) {
 
 		if (activeTask == undefined)
 			game.player.beats -= 20;
@@ -126,7 +126,7 @@ function djBirthdayParty() {
 		startActiveTask("DJ Birthday Party", 120, activeFn)
 	}
 	else {
-		appendToOutputContainer("You don't have enough beats to DJ! You need 30 beats!");
+		appendToOutputContainer("You don't have enough beats to DJ! You need 20 beats!");
 	}
 }
 

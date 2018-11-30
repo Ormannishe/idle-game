@@ -1,17 +1,39 @@
 var toolTipText;
 
-function buildTooltip(buttonName) {
-	return toolTipText[buttonName];
-}
-
 function initToolTipText() {
 	toolTipText = {
-		test: "Gives free beats and money. Cheater.",
-		makeFirstSample: "Create your first ever sample! Requires " + game.beatsPerSample + " beats.",
-		makeFirstSong: "Active Task: Make your first ever song! Requires " + game.samplesPerSong + " samples and takes 10 seconds to complete.",
-		makeNewSong: "Active Task: Make a new song! Requires " + game.samplesPerSong + " samples and takes 10 seconds to complete.",
-		djBirthdayParty: "Active Task: DJ for a birthday party. Requires 20 beats, rewards $50 and 250 Laptop XP. Completes over 120 seconds.",
-		buyNewLaptop: "Purchase a new laptop. Costs $500. Reduces the number of clicks per beat to 25%.",
-		buyMicrophone: "Purchase a new microphone. Costs $1000. Unlocks the vocals skill."
+		test: {description: "Gives free beats and money. Cheater."},
+		makeFirstSample: {description: "Create your first ever sample!",
+											cost: {"Beats": game.beatsPerSample}},
+		makeFirstSong: {description: "Make your first ever song!",
+										cost: {"Samples": game.samplesPerSong,
+													 "Time": 10}},
+		makeNewSong: {description: "Make a new song!",
+									cost: {"Samples": game.samplesPerSong,
+												 "Time": 10}},
+		djBirthdayParty: {description: "DJ for a birthday party. Rewards $50 and 250 Laptop XP.",
+											cost: {"Beats": 20,
+														 "Time": 120}},
+		buyNewLaptop: {description: "Purchase a new laptop. Reduces the number of clicks per beat to 25%.",
+									 cost: {"Money": 500}},
+		buyMicrophone: {description: "Purchase a new microphone. Unlocks the vocals skill.",
+										cost: {"Money": 1000}}
 	}
+}
+
+function buildTooltip(buttonName) {
+	var html = "";
+
+	console.log(toolTipText[buttonName]);
+
+	html += "<div class='tooltipHeader'>" + toolTipText[buttonName].description + "</div>";
+
+	toolTipText[buttonName].cost.forEach(function(val, key) {
+		html += "<div class='tooltipPriceInfo'>" +
+							"<p class='tooltipResource'>" + key + "</p>" +
+							"<p class='tooltipCost'>" + val + "</p>" +
+						"</div>";
+	})
+
+	return html;
 }

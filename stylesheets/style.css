@@ -44,6 +44,43 @@ body {
   color: white;
 }
 
+#tooltip {
+  position: absolute;
+  z-index: 100;
+  display: none;
+  overflow: hidden;
+  background: #111111;
+  opacity: 0.95;
+  color: #ffffff;
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 200px;
+  text-align: center;
+}
+
+.tooltipHeader {
+  font-size: 12px;
+  margin: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid white;
+}
+
+.tooltipPriceInfo {
+  overflow: hidden;
+}
+
+.tooltipResource {
+  float: left;
+  font-size: 12px;
+  padding: 5px;
+}
+
+.tooltipCost {
+  float: right;
+  font-size: 12px;
+  padding: 5px;
+}
+
 [tooltip] {
   position: relative;
 }

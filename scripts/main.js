@@ -1,9 +1,13 @@
-// TODO: Add bells and whistles to beatContainer that can be unlocked (ie. something to alter beat tempo)
-// TODO: Add Achievements and Stats
-// TODO: Make Songs and Albums and other cool resources
-// TODO: Make Sample/Song/Album quality scale with skills
+// TODO: Add Achievements
+// TODO: Make Albums and other cool resources
 
 var game;
+
+/* Initialization */
+
+$(document).ready(function() {
+	init();
+});
 
 function init() {
 	// TODO: Check for a save
@@ -14,6 +18,8 @@ function init() {
 	console.log("Initialized!");
 }
 
+/* View Update Functions */
+
 function updateView() {
 	checkTriggers();
 	updateResourcesTab();
@@ -23,34 +29,12 @@ function updateView() {
 }
 
 function updateResourcesTab() {
-	// TODO: Add more resources
 	var defaultSuffix = "<p>-</p><p>-</p><p>-</p><p>-</p>";
 	var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
 
 	document.getElementById('money').innerHTML = "<p>Money</p><p>$" + round(game.player.money, 2) + "</p>" + defaultSuffix;
 	document.getElementById('beats').innerHTML = "<p>Beats</p><p>" + game.player.beats + "</p>" + defaultSuffix;
 	document.getElementById('samples').innerHTML = "<p>Samples</p><p>" + game.player.samples + "</p>" + sampleSuffix;
-}
-
-function getResourceNumbers(numReqResource, cost, onClickFn) {
-	var oneTime = "<p>-</p>";
-	var tenTimes = "<p>-</p>";
-	var hundredTimes = "<p>-</p>";
-	var allTimes = "<p>-</p>";
-	var maxResource = Math.floor(numReqResource / cost);
-
-	if (numReqResource >= cost) {
-		oneTime = "<p onclick=" + onClickFn + "()>1</p>";
-		allTimes = "<p onclick=" + onClickFn + "(" + maxResource + ")" + ">" + maxResource + "</p>";
-	}
-
-	if (numReqResource >= (cost * 10))
-		tenTimes = "<p onclick=" + onClickFn + "(10)>10</p>";
-
-	if (numReqResource >= (cost * 100))
-		hundredTimes = "<p onclick=" + onClickFn + "(100)>100</p>";
-
-	return oneTime + tenTimes + hundredTimes + allTimes;
 }
 
 function updateSongsTab() {
@@ -74,7 +58,7 @@ function updateSongsTab() {
 
 	html  = "<div id='songsHeader'>" +
 				"<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
-				"<button tooltip='" + buildTooltip("makeNewSong") + "' onclick='doTask(makeNewSong)'>Make New Song</button>" +
+				makeTaskButton("Make New Song", "makeNewSong") +
 			"</div>" +
 			html;
 
@@ -92,7 +76,7 @@ function updateTasks() {
 
 		// tasks[i] must be the name of the function to execute.
 		// Function name should be a camel-case version of string you want on the button
-		html += "<button tooltip='" + buildTooltip(tasks[i]) + "' onclick='doTask(" + tasks[i] + ")')>" + taskName + "</button>";
+		html += makeTaskButton(taskName, tasks[i]);
 	}
 
 	document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
@@ -111,14 +95,7 @@ function updateSkills() {
 	updateProgress(document.getElementById('guitarProgress'), game.player.skills.guitar.xp, game.player.skills.guitar.toNextLevel);
 }
 
-function getOffsets(e) {
-  var offsets = e.getBoundingClientRect();
-
-  return {
-    left: offsets.left + window.scrollX,
-    right: offsets.right + window.scrollY
-  };
-}
+/* Event Handlers */
 
 function clickBeat() {
 	/*
@@ -127,13 +104,13 @@ function clickBeat() {
 
 		Green = multiplier amount (and adds to the multiplier)
 		Yellow = 1/2 multiplier amount (and removes from the multuplier)
-		Red = 0 (and resets the multiplier)
+		Red = 0.1 (and resets the multiplier)
 	*/
 
 	var progressAmount = 0;
 	var progress = document.getElementById('beatProgress');
 	var markerOffsets = getOffsets(document.querySelector('#marker'));
-  	var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
+	var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
 	var greenOffsets = getOffsets(document.getElementsByClassName('greenZone')[0]);
 	var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
 	var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
@@ -171,6 +148,31 @@ function clickBeat() {
 	updateView();
 }
 
+// TODO: populate tooltip HTML using task info
+function showTooltip(obj, taskObj) {
+	var offsets = getOffsets(obj);
+	var tooltip = document.getElementById('tooltip');
+	var html = buildTooltip(taskObj);
+
+	tooltip.innerHTML = html;
+	tooltip.style.left = offsets.left - (obj.offsetWidth / 3);
+	tooltip.style.top = offsets.top + obj.offsetHeight + 5;
+	tooltip.style.display = "inline";
+}
+
+function hideTooltip() {
+	document.getElementById('tooltip').style.display = "none";
+}
+
+/* Helper Functions */
+
+function appendToOutputContainer(message) {
+	var outputContainer = document.getElementById('outputContainer');
+
+	outputContainer.innerHTML += "<p>" + message + "</p>";
+	outputContainer.scrollTop = outputContainer.scrollHeight;
+}
+
 function updateProgress(progress, value, max, triggerFn) {
 	progress.max = max;
 
@@ -184,13 +186,51 @@ function updateProgress(progress, value, max, triggerFn) {
 		progress.value = value;
 }
 
-function appendToOutputContainer(message) {
-	var outputContainer = document.getElementById('outputContainer');
+function getOffsets(e) {
+  var offsets = e.getBoundingClientRect();
 
-	outputContainer.innerHTML += "<p>" + message + "</p>";
-	outputContainer.scrollTop = outputContainer.scrollHeight;
+  return {
+    left: offsets.left + window.scrollX,
+    right: offsets.right + window.scrollX,
+		top: offsets.top + window.scrollY
+  };
 }
 
-$(document).ready(function() {
-	init();
-});
+function getResourceNumbers(numReqResource, cost, onClickFn) {
+	var oneTime = "<p>-</p>";
+	var tenTimes = "<p>-</p>";
+	var hundredTimes = "<p>-</p>";
+	var allTimes = "<p>-</p>";
+	var maxResource = Math.floor(numReqResource / cost);
+
+	if (numReqResource >= cost) {
+		oneTime = "<p onclick=" + onClickFn + "()>1</p>";
+		allTimes = "<p onclick=" + onClickFn + "(" + maxResource + ")" + ">" + maxResource + "</p>";
+	}
+
+	if (numReqResource >= (cost * 10))
+		tenTimes = "<p onclick=" + onClickFn + "(10)>10</p>";
+
+	if (numReqResource >= (cost * 100))
+		hundredTimes = "<p onclick=" + onClickFn + "(100)>100</p>";
+
+	return oneTime + tenTimes + hundredTimes + allTimes;
+}
+
+// TODO: Fix this to work with max's task changes
+function makeTaskButton(label, taskObj) {
+	var html = "<button";
+
+	// Add onclick event and tooltip mouseover events
+	if (taskObj != undefined) {
+		html += " onclick='doTask(" + taskObj + ")'";
+		html += " onmouseover='showTooltip(this, " + taskObj + ")'";
+		html += " onmouseout='hideTooltip()'";
+	}
+
+	// Add button label and closing tag
+	html +=  ">" + label + "</button>";
+
+	return html;
+
+}
