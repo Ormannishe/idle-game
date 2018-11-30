@@ -67,13 +67,6 @@ function stopActiveTask() {
 }
 
 function removeTask(taskName) {
-  // var taskIndex = game.tasks.indexOf(task);
-  // game.tasks.splice(taskIndex, 1);
-
-  // game.tasks = game.tasks.filter(function(task) {
-  //   return task.name == taskName;
-  // })
-
   game.tasks.splice(game.tasks.findIndex(task => task.name === taskName), 1)
 }
 
