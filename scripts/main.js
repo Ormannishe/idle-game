@@ -93,7 +93,7 @@ function updateTasks() {
 
     // tasks[i] must be the name of the function to execute.
     // Function name should be a camel-case version of string you want on the button
-    html += "<button tooltip='" + tasks[i].tooltipText + "' onclick='doTask(" + tasks[i].name + ")')>" + tasks[i].name + "</button>";
+    html += "<button tooltip='" + tasks[i].tooltipText + "' onclick='doTask(\"" + tasks[i].name + "\")')>" + tasks[i].name + "</button>";
   }
 
   document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;

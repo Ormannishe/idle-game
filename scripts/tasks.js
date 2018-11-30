@@ -20,8 +20,7 @@ function initTasks() {
 }
 
 function doTask(taskName) {
-  let task = games.tasks.filter(task => task.name === taskName);
-  console.log(task);
+  let task = game.tasks.filter(task => task.name === taskName)[0];
   if (task.checkFn()) {
     task.startFn(task.tickFn, task.finishFn)
   } else {
@@ -71,7 +70,7 @@ function removeTask(taskName) {
   // var taskIndex = game.tasks.indexOf(task);
   // game.tasks.splice(taskIndex, 1);
 
-  // game.tasks = games.tasks.filter(function(task) {
+  // game.tasks = game.tasks.filter(function(task) {
   //   return task.name == taskName;
   // })
 
