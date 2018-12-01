@@ -49,7 +49,7 @@ function toggleInstrument(evt, instrument) {
 }
 
 function animateBeat() {
-  /* 
+  /*
   Animate the moving marker for the laptop minigame by altering the 'left' css attribute of the 'marker' element.
   When we've exceeded a maximum 'left' value, reverse the direction of movement.
   */
@@ -83,11 +83,10 @@ function adjustTempo(n) {
 function naturalTick() {
   if (activeTask != undefined) {
     var progress = document.getElementById('taskProgress');
-    updateProgress(progress, (progress.value + 1), progress.max, taskCompleteFn);
+    updateProgress(progress, (progress.value + 1), progress.max, activeTask.finishFn);
   }
 
   adjustSongStats();
-
   updateView();
 }
 

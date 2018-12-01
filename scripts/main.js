@@ -8,8 +8,6 @@ var game;
 function init() {
   // TODO: Check for a save
   game = new Game();
-  initToolTipText();
-  initTasks();
   startAnimations();
   updateView();
   console.log("Initialized!");
@@ -57,6 +55,12 @@ function getResourceNumbers(numReqResource, cost, onClickFn) {
 function updateSongsTab() {
   var totalRevenue = 0;
   var html = "";
+	var songTask = getTask("Make New Song");
+	var newSongButton = "";
+
+	if (songTask != undefined) {
+		newSongButton = "<button tooltip='" + songTask.tooltip + "' onclick='doTask(\"Make New Song\")'>Make New Song</button>";
+	}
 
   game.player.songs.forEach(function(song) {
     var songRow = "<div class='songRow'>" +
@@ -75,7 +79,7 @@ function updateSongsTab() {
 
   html = "<div id='songsHeader'>" +
     "<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
-    "<button tooltip='" + makeNewSongTask.tooltipText + "' onclick='doTask(newSongTask)'>Make New Song</button>" +
+    newSongButton +
     "</div>" +
     html;
 
@@ -86,15 +90,9 @@ function updateTasks() {
   var html = "";
   var tasks = game.tasks;
 
-  for (var i = 0; i < tasks.length; i++) {
-    // Cryptic Regex to make a nice name for the button
-    // var splitTaskName = tasks[i].replace(/([A-Z])/g, ' $1')
-    // var taskName = splitTaskName.replace(/^./, function(str){ return str.toUpperCase(); });
-
-    // tasks[i] must be the name of the function to execute.
-    // Function name should be a camel-case version of string you want on the button
-    html += "<button tooltip='" + tasks[i].tooltipText + "' onclick='doTask(\"" + tasks[i].name + "\")')>" + tasks[i].name + "</button>";
-  }
+  tasks.forEach(function(task) {
+    html += "<button tooltip='" + task.tooltip + "' onclick='doTask(\"" + task.name + "\")')>" + task.name + "</button>";
+  });
 
   document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
 }

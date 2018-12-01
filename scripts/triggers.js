@@ -44,7 +44,7 @@ function hundredthBeatTrigger() {
 function firstSampleTrigger() {
   if (game.player.beats >= game.beatsPerSample) {
     appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
-    game.tasks.push(firstSampleTask);
+    makeFirstSampleTask();
     return true;
   }
   return false;
@@ -53,7 +53,7 @@ function firstSampleTrigger() {
 function firstSongTrigger() {
   if (game.player.samples >= game.samplesPerSong) {
     appendToOutputContainer("With a handful of samples, you feel like you might have enough material to make a full song!");
-    game.tasks.push(firstSongTask);
+    makeFirstSongTask();
     return true;
   }
   return false;
@@ -61,7 +61,7 @@ function firstSongTrigger() {
 
 function djBirthdayTrigger() {
   if (game.player.skills["laptop"].level >= 5) {
-    game.tasks.push(DJAtBirthdayPartyTask);
+    makeDJAtBirthdayPartyTask();
     return true;
   }
   return false;
@@ -70,7 +70,7 @@ function djBirthdayTrigger() {
 function newLaptopTrigger() {
   if (game.player.money >= 400 && newLaptop == false) {
     appendToOutputContainer("Maybe a new laptop will help create beats faster...");
-    game.tasks.push(buyNewLaptopTask);
+    makeBuyNewLaptopTask();
     newLaptop = true;
     return true;
   }
@@ -80,7 +80,7 @@ function newLaptopTrigger() {
 function unlockVocalsTrigger() {
   if (game.player.skills["laptop"].level >= 10) {
     appendToOutputContainer("Maybe it's time to pick up another skill?");
-    game.tasks.push(buyMicrophoneTask);
+    makeBuyMicrophoneTask();
     return true;
   }
   return false;
