@@ -1,6 +1,6 @@
 function Game() {
   this.player = new Player();
-  this.tasks = ["test", "j", " a", "m", "e", "s"];
+  this.tasks = [];
   this.clicksPerBeat = 30;
   this.beatsPerSample = 10;
   this.samplesPerSong = 10;
@@ -10,7 +10,7 @@ function Game() {
 };
 
 function round(value, decimals) {
-  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
 function makeBeat() {
