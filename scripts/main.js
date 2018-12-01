@@ -90,9 +90,10 @@ function updateTasks() {
   var html = "";
   var tasks = game.tasks;
 
-  tasks.forEach(function(task) {
-    html += "<button tooltip='" + task.tooltip + "' onclick='doTask(\"" + task.name + "\")')>" + task.name + "</button>";
-  });
+	tasks.forEach(function(task) {
+		if (task.name != "Make New Song")
+			html += "<button tooltip='" + task.tooltip + "' onclick='doTask(\"" + task.name + "\")')>" + task.name + "</button>";
+	});
 
   document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
 }
