@@ -44,7 +44,7 @@ function updateSongsTab() {
 	var newSongButton = "";
 
 	if (songTask != undefined) {
-		newSongButton = "<button tooltip='" + songTask.tooltip + "' onclick='doTask(\"Make New Song\")'>Make New Song</button>";
+		newSongButton = makeTaskButton(songTask);
 	}
 
   game.player.songs.forEach(function(song) {
@@ -77,7 +77,7 @@ function updateTasks() {
 
 	tasks.forEach(function(task) {
 		if (task.name != "Make New Song")
-			html += "<button tooltip='" + task.tooltip + "' onclick='doTask(\"" + task.name + "\")')>" + task.name + "</button>";
+			html += makeTaskButton(task);
 	});
 
   document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
@@ -147,11 +147,18 @@ function clickBeat() {
   updateView();
 }
 
-// TODO: populate tooltip HTML using task info
-function showTooltip(obj, taskObj) {
+function showTooltip(obj, taskName) {
 	var offsets = getOffsets(obj);
 	var tooltip = document.getElementById('tooltip');
-	var html = buildTooltip(taskObj);
+	var task = getTask(taskName);
+	var html = "<div class='tooltipHeader'>" + task.tooltip["description"] + "</div>";
+
+	for (var key in task.tooltip["cost"]) {
+		html += "<div class='tooltipPriceInfo'>" +
+							"<p class='tooltipResource'>" + key + "</p>" +
+							"<p class='tooltipCost'>" + task.tooltip["cost"][key] + "</p>" +
+						"</div>";
+	};
 
 	tooltip.innerHTML = html;
 	tooltip.style.left = offsets.left - (obj.offsetWidth / 3);
@@ -216,20 +223,18 @@ function getResourceNumbers(numReqResource, cost, onClickFn) {
 	return oneTime + tenTimes + hundredTimes + allTimes;
 }
 
-// TODO: Fix this to work with max's task changes
-function makeTaskButton(label, taskObj) {
+function makeTaskButton(task) {
 	var html = "<button";
 
 	// Add onclick event and tooltip mouseover events
-	if (taskObj != undefined) {
-		html += " onclick='doTask(" + taskObj + ")'";
-		html += " onmouseover='showTooltip(this, " + taskObj + ")'";
+	if (task != undefined) {
+		html += " onclick='doTask(\"" + task.name + "\")'";
+		html += " onmouseover='showTooltip(this, \"" + task.name + "\")'";
 		html += " onmouseout='hideTooltip()'";
 	}
 
 	// Add button label and closing tag
-	html +=  ">" + label + "</button>";
+	html +=  ">" + task.name + "</button>";
 
 	return html;
-
 }
