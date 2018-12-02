@@ -44,26 +44,39 @@ body {
   color: white;
 }
 
-[tooltip] {
-  position: relative;
+#tooltip {
+  position: absolute;
+  z-index: 100;
+  display: none;
+  overflow: hidden;
+  background: #111111;
+  opacity: 0.95;
+  color: #ffffff;
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 200px;
+  text-align: center;
 }
 
-[tooltip]::after {
-    content: attr(tooltip);
-    position: absolute;
-    left: -35%;
-    top: 120%;
-    background: rgba(0,0,0,0.7);
-    border: 1px solid white;
-    text-align: center;
-    color: #fff;
-    padding: 4px 2px;
-    font-size: 12px;
-    min-width: 200px;
-    border-radius: 5px;
-    opacity: 0;
+.tooltipHeader {
+  font-size: 12px;
+  margin: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid white;
 }
 
-[tooltip]:hover::after,[tooltip]:hover::before {
-   opacity:1
+.tooltipPriceInfo {
+  overflow: hidden;
+}
+
+.tooltipResource {
+  float: left;
+  font-size: 12px;
+  padding: 5px;
+}
+
+.tooltipCost {
+  float: right;
+  font-size: 12px;
+  padding: 5px;
 }
