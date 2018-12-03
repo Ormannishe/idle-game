@@ -1,11 +1,12 @@
 var activeTask;
 
-function Task(name, tooltip, checkFn, failFn, startFn, finishFn, timeToComplete) {
+function Task(name, tooltip, checkFn, failFn, startFn, tickFn, finishFn, timeToComplete) {
     this.name = name;
     this.tooltip = tooltip;
     this.checkFn = checkFn;
     this.failFn = failFn;
     this.startFn = startFn;
+    this.tickFn = tickFn;
     this.finishFn = finishFn;
     this.timeToComplete = timeToComplete;
 }
@@ -83,7 +84,8 @@ function makeSampleTask() {
   };
 
   var tickFn = function() {
-    // Not Yet Implemented!
+    // Only required for active tasks
+    // What should be done per natural tick while the task is active
   }
 
   var finishFn = function(task) {
@@ -93,9 +95,8 @@ function makeSampleTask() {
 
   var tooltip = "String to display when hovering over the task button";
 
-  // x = time required to complete the task
-  // finishFn and timeToComplete are only required for active tasks
-  var sampleTask = new Task("Task Name", tooltip, checkFn, failFn, finishFn, x);
+  // x = time required to complete the task (only required for active tasks)
+  var sampleTask = new Task("Task Name", tooltip, checkFn, failFn, tickFn, finishFn, x);
 
   // Add the task to the game's task list
   game.tasks.push(sampleTask);
@@ -114,7 +115,7 @@ function makeCheatTask() {
   }
 
   var startFn = function(task) {
-    game.player.addBeat(10);
+    makeBeat(25);
     game.player.addMoney(100);
   };
 
@@ -180,7 +181,7 @@ function makeFirstSongTask() {
                  "cost": {"Samples": game.samplesPerSong,
                           "Time": timeTaken}};
 
-  var firstSongTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn, finishFn, timeTaken);
+  var firstSongTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(firstSongTask);
 }
 
@@ -214,7 +215,7 @@ function makeNewSongTask() {
                  "cost": {"Samples": game.samplesPerSong,
                           "Time": timeTaken}};
 
-  var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn, finishFn, timeTaken);
+  var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(newSongTask);
 }
 
@@ -246,7 +247,7 @@ function makeDJAtBirthdayPartyTask() {
                  "cost": {"Beats": numRequiredBeats,
                           "Time": timeTaken}};
 
-  var DJAtBirthdayPartyTask = new Task("DJ At Birthday Party", tooltip, checkFn, failFn, startFn, finishFn, timeTaken);
+  var DJAtBirthdayPartyTask = new Task("DJ At Birthday Party", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(DJAtBirthdayPartyTask);
 }
 
@@ -301,4 +302,31 @@ function makeBuyMicrophoneTask() {
 
   var buyMicrophoneTask = new Task("Buy a Microphone", tooltip, checkFn, failFn, startFn);
   game.tasks.push(buyMicrophoneTask);
+}
+
+function makeStudyOnlineTask() {
+  var timeTaken = 120;
+
+  var checkFn = function() {
+    return true;
+  }
+
+  var startFn = function(task) {
+    startActiveTask(task);
+  }
+
+  var tickFn = function() {
+    if (Math.random() <= 0.2)
+      makeBeat();
+  }
+
+  var finishFn = function() {
+    stopActiveTask();
+  }
+
+  var tooltip = {"description": "Do some online studying to improve your musical skills. Generates passive beats and rewards laptop XP.",
+                 "cost": {"Time": timeTaken}};
+
+  var studyOnlineTask = new Task("Study Music Online", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
+  game.tasks.push(studyOnlineTask);
 }
