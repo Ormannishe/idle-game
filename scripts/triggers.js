@@ -63,6 +63,7 @@ function firstSongTrigger() {
 
 function studyOnlineTrigger() {
   if (game.player.skills["laptop"].level >= 2) {
+    appendToOutputContainer("Nowadays, if you want to learn, it's only a few clicks away!");
     makeStudyOnlineTask();
     triggerFnSet.add(djBirthdayTrigger);
     return true;
