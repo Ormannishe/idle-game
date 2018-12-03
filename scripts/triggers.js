@@ -1,4 +1,4 @@
-var triggerFnSet = new Set([firstBeatTrigger, firstSampleTrigger, firstSongTrigger, newLaptopTrigger, unlockVocalsTrigger]);
+var triggerFnSet = new Set([firstBeatTrigger, newLaptopTrigger]);
 var newLaptop = false;
 
 function checkTriggers() {
@@ -27,7 +27,8 @@ function firstBeatTrigger() {
   if (game.player.beats >= 1) {
     appendToOutputContainer("You've created your first beat. A building block to something greater.");
     triggerFnSet.add(hundredthBeatTrigger);
-    triggerFnSet.add(djBirthdayTrigger);
+    triggerFnSet.add(studyOnlineTrigger);
+    triggerFnSet.add(firstSampleTrigger);
     return true;
   }
   return false;
@@ -45,6 +46,7 @@ function firstSampleTrigger() {
   if (game.player.beats >= game.beatsPerSample) {
     appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
     makeFirstSampleTask();
+    triggerFnSet.add(firstSongTrigger);
     return true;
   }
   return false;
@@ -59,9 +61,19 @@ function firstSongTrigger() {
   return false;
 }
 
+function studyOnlineTrigger() {
+  if (game.player.skills["laptop"].level >= 2) {
+    makeStudyOnlineTask();
+    triggerFnSet.add(djBirthdayTrigger);
+    return true;
+  }
+  return false;
+}
+
 function djBirthdayTrigger() {
   if (game.player.skills["laptop"].level >= 5) {
     makeDJAtBirthdayPartyTask();
+    triggerFnSet.add(unlockVocalsTrigger);
     return true;
   }
   return false;
@@ -78,7 +90,7 @@ function newLaptopTrigger() {
 }
 
 function unlockVocalsTrigger() {
-  if (game.player.skills["laptop"].level >= 10) {
+  if (game.player.skills["laptop"].level >= 20) {
     appendToOutputContainer("Maybe it's time to pick up another skill?");
     makeBuyMicrophoneTask();
     return true;

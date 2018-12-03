@@ -83,6 +83,10 @@ function adjustTempo(n) {
 function naturalTick() {
   if (activeTask != undefined) {
     var progress = document.getElementById('taskProgress');
+
+    if (activeTask.tickFn != undefined)
+      activeTask.tickFn();
+
     updateProgress(progress, (progress.value + 1), progress.max, activeTask.finishFn);
   }
 

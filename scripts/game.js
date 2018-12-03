@@ -2,8 +2,8 @@ function Game() {
   this.player = new Player();
   this.tasks = [];
   this.clicksPerBeat = 30;
-  this.beatsPerSample = 10;
-  this.samplesPerSong = 10;
+  this.beatsPerSample = 25;
+  this.samplesPerSong = 100;
   this.xpPerBeat = 10;
   this.xpPerSample = 50;
   this.xpPerSong = 250;
@@ -13,9 +13,12 @@ function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
-function makeBeat() {
-  game.player.addBeat(1);
-  game.player.addXp('laptop', game.xpPerBeat);
+function makeBeat(n) {
+  if (n == undefined)
+    n = 1;
+
+  game.player.addBeat(n);
+  game.player.addXp('laptop', (game.xpPerBeat * n));
 }
 
 function makeSample(numToMake) {
