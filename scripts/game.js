@@ -4,8 +4,8 @@ function Game() {
   this.clicksPerBeat = 30;
   this.beatsPerSample = 25;
   this.samplesPerSong = 100;
-  this.xpPerBeat = 10;
-  this.xpPerSample = 50;
+  this.xpPerBeat = 5;
+  this.xpPerSample = 25;
   this.xpPerSong = 250;
 };
 
