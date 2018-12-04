@@ -73,7 +73,18 @@ function studyOnlineTrigger() {
 
 function djBirthdayTrigger() {
   if (game.player.skills["laptop"].level >= 5) {
+    appendToOutputContainer("You're getting good enough at this to possibly get some money out of it.");
     makeDJAtBirthdayPartyTask();
+    triggerFnSet.add(musicClassTrigger);
+    return true;
+  }
+  return false;
+}
+
+function musicClassTrigger() {
+  if (game.player.skills["laptop"].level >= 7) {
+    appendToOutputContainer("You'll be able to learn more quickly if you take a music class!");
+    makeMusicClassTask();
     triggerFnSet.add(unlockVocalsTrigger);
     return true;
   }

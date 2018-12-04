@@ -10,18 +10,27 @@
   margin-right: 20px;
   margin-bottom: 6px;
   font-size: 12px;
+}
+
+.validTask {
   border: 1px solid white;
   color: white;
   background-color: #222222;
 }
 
-#tasks > button:focus {
-  outline: 0;
+.invalidTask {
+  border: 1px solid #cccccc;
+  color: #cccccc;
+  background-color: #333333;
 }
 
-#tasks > button:hover {
+.validTask:hover {
   cursor: pointer;
   background-color: #333333;
+}
+
+#tasks > button:focus {
+  outline: 0;
 }
 
 #taskProgressContainer {
