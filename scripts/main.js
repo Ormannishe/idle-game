@@ -160,6 +160,10 @@ function showTooltip(obj, taskName) {
 						"</div>";
 	};
 
+	if (task.tooltip["flavor"] !== undefined) {
+		html += "<div class='tooltipFlavor'>" + task.tooltip["flavor"] + "</div>";
+	}
+
 	tooltip.innerHTML = html;
 	tooltip.style.left = offsets.left - (obj.offsetWidth / 3);
 	tooltip.style.top = offsets.top + obj.offsetHeight + 5;
@@ -224,7 +228,13 @@ function getResourceNumbers(numReqResource, cost, onClickFn) {
 }
 
 function makeTaskButton(task) {
-	var html = "<button";
+	var html = "";
+	var htmlClass = "class='invalidTask'";
+
+	if (task.checkFn() && (task.finishFn == undefined || activeTask == undefined))
+		htmlClass = "class='validTask'";
+
+	html += "<button " + htmlClass;
 
 	// Add onclick event and tooltip mouseover events
 	if (task != undefined) {

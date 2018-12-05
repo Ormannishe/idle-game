@@ -119,7 +119,9 @@ function makeCheatTask() {
     game.player.addMoney(100);
   };
 
-  var tooltip = {"description": "Gives free beats and money. Cheater."};
+  var tooltip = {"description": "Gives free beats and money. Cheater.",
+                 "cost": {"No Cost": ""},
+                 "flavor": "Cheaters never prosper. Well.. except for right now."};
   var cheatTask = new Task("CHEAT", tooltip, checkFn, undefined, startFn);
   game.tasks.push(cheatTask);
 }
@@ -141,7 +143,8 @@ function makeFirstSampleTask() {
   };
 
   var tooltip = {"description": "Create your first ever sample!",
-                 "cost": {"Beats": game.beatsPerSample}};
+                 "cost": {"Beats": game.beatsPerSample},
+                 "flavor": "Free samples are always great. These samples are okay too."};
 
   var firstSampleTask = new Task("Make First Sample", tooltip, checkFn, failFn, startFn);
   game.tasks.push(firstSampleTask);
@@ -179,7 +182,8 @@ function makeFirstSongTask() {
 
   var tooltip = {"description": "Create your first ever song!",
                  "cost": {"Samples": game.samplesPerSong,
-                          "Time": timeTaken}};
+                          "Time": timeTaken},
+                 "flavor": "You'll probably be embarassed by this one in a few years."};
 
   var firstSongTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(firstSongTask);
@@ -213,7 +217,8 @@ function makeNewSongTask() {
 
   var tooltip = {"description": "Create a new song!",
                  "cost": {"Samples": game.samplesPerSong,
-                          "Time": timeTaken}};
+                          "Time": timeTaken},
+                 "flavor": "Every new song is a new chance. Unless you're Nickelback. Then it's just the same chance over and over."};
 
   var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(newSongTask);
@@ -245,7 +250,8 @@ function makeDJAtBirthdayPartyTask() {
 
   var tooltip = {"description": "DJ for a birthday party! Rewards $50 and Laptop XP.",
                  "cost": {"Beats": numRequiredBeats,
-                          "Time": timeTaken}};
+                          "Time": timeTaken},
+                 "flavor": "Be careful. Kids are honest. Brutally honest."};
 
   var DJAtBirthdayPartyTask = new Task("DJ At Birthday Party", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(DJAtBirthdayPartyTask);
@@ -272,7 +278,8 @@ function makeBuyNewLaptopTask() {
   };
 
   var tooltip = {"description": "Purchase a new laptop. Reduces the number of clicks per beat by 25%.",
-                 "cost": {"Money": requiredMoney}};
+                 "cost": {"Money": requiredMoney},
+                 "flavor": "A new laptop increases your efficieny. Which is weird. It doesn't work like that in the real world."};
 
   var buyNewLaptopTask = new Task("Buy New Laptop", tooltip, checkFn, failFn, startFn);
   game.tasks.push(buyNewLaptopTask);
@@ -298,35 +305,106 @@ function makeBuyMicrophoneTask() {
   };
 
   var tooltip = {"description": "Purchase a new microphone. Unlocks the vocals skill.",
-                 "cost": {"Money": requiredMoney}};
+                 "cost": {"Money": requiredMoney},
+                 "flavor": "You could never really tell if you were good at singing or just bad at hearing."};
 
   var buyMicrophoneTask = new Task("Buy a Microphone", tooltip, checkFn, failFn, startFn);
   game.tasks.push(buyMicrophoneTask);
 }
 
 function makeStudyOnlineTask() {
-  var timeTaken = 120;
+  var timeTaken = 30;
 
   var checkFn = function() {
     return true;
-  }
+  };
 
   var startFn = function(task) {
     startActiveTask(task);
-  }
+  };
 
   var tickFn = function() {
     if (Math.random() <= 0.2)
       makeBeat();
-  }
+  };
 
   var finishFn = function() {
     stopActiveTask();
-  }
+  };
 
-  var tooltip = {"description": "Do some online studying to improve your musical skills. Generates passive beats and rewards laptop XP.",
-                 "cost": {"Time": timeTaken}};
+  var tooltip = {"description": "Do some online studying to improve your musical skills. Has a 20% chance per second to generate a beat and rewards laptop XP.",
+                 "cost": {"Time": timeTaken},
+                 "flavor": "Even in your video games, you can't escape studying."};
 
   var studyOnlineTask = new Task("Study Music Online", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
   game.tasks.push(studyOnlineTask);
+}
+
+function makeMusicClassTask() {
+  var timeTaken = 120;
+  var requiredMoney = 100;
+
+  var checkFn = function() {
+    return game.player.money >= requiredMoney;
+  };
+
+  var failFn = function() {
+    appendToOutputContainer("You don't have enough money to take a class!");
+  };
+
+  var startFn = function(task) {
+    if (startActiveTask(task))
+      game.player.money -= requiredMoney;
+  };
+
+  var tickFn = function() {
+    if (Math.random() <= 0.5)
+      makeBeat();
+  };
+
+  var finishFn = function() {
+    if (Math.random() <= 0.25) {
+      appendToOutputContainer("Some friends from your music class invite you to a jam session!");
+      makeJamSessionTask();
+    }
+
+    stopActiveTask();
+  };
+
+  var tooltip = {"description": "Take a music class to further develop your musical skills. Has a 50% chance per second to generate a beat and rewards laptop XP.",
+                 "cost": {"Money": requiredMoney,
+                          "Time": timeTaken},
+                 "flavor": "$" + requiredMoney + " per class? Why does the world hate students?"};
+
+  var musicClassTask = new Task("Take A Music Class", tooltip, checkFn, failFn, startFn, tickFn, finishFn, timeTaken);
+  game.tasks.push(musicClassTask);
+}
+
+function makeJamSessionTask() {
+  var timeTaken = 60;
+
+  var checkFn = function() {
+    return true;
+  };
+
+  var startFn = function(task) {
+    startActiveTask(task);
+    removeTask(task);
+  };
+
+  var tickFn = function() {
+    if (Math.random() <= 0.5)
+      makeBeat();
+  };
+
+  var finishFn = function() {
+    stopActiveTask();
+  };
+
+  var tooltip = {"description": "Jam out at a friend's house. Has a 50% chance per second to generate a beat and rewards laptop XP.",
+                 "cost": {"Time": timeTaken},
+                 "flavor": "Friends are great to have. Especially when they produce free beats."};
+
+  var jamSessionTask = new Task("Attend Jam Session", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
+  game.tasks.push(jamSessionTask);
 }
