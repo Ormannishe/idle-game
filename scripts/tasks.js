@@ -35,8 +35,6 @@ function removeTask(taskName) {
 }
 
 function startActiveTask(task) {
-  // TODO Implement tickFn
-
   if (activeTask == undefined) {
     var container = document.getElementById('taskProgressContainer');
     var label = document.getElementById('taskLabel');
@@ -53,6 +51,17 @@ function startActiveTask(task) {
 
   appendToOutputContainer("You can only work on one active task at a time!");
   return false;
+}
+
+function updateActiveTask() {
+  if (activeTask != undefined) {
+    var progress = document.getElementById('taskProgress');
+
+    if (activeTask.tickFn != undefined)
+      activeTask.tickFn();
+
+    updateProgress(progress, (progress.value + 1), progress.max, activeTask.finishFn);
+  }
 }
 
 function stopActiveTask() {
@@ -174,7 +183,7 @@ function makeFirstSongTask() {
 
   var finishFn = function() {
     makeSong(activeTask.songName, ["laptop"]);
-    appendToOutputContainer("You've created your first song. The start of a legacy!");
+    appendToOutputContainer(activeTask.songName + " will be remembered as the start of a legacy!");
     document.getElementById('songsTab').style.display = "inline";
     stopActiveTask();
     makeNewSongTask();
@@ -320,19 +329,25 @@ function makeStudyOnlineTask() {
   };
 
   var startFn = function(task) {
+    task.tickCounter = 1;
     startActiveTask(task);
   };
 
   var tickFn = function() {
-    if (Math.random() <= 0.2)
+    if (activeTask.tickCounter == 5) {
       makeBeat();
+      activeTask.tickCounter = 1;
+    }
+    else {
+      activeTask.tickCounter++;
+    }
   };
 
   var finishFn = function() {
     stopActiveTask();
   };
 
-  var tooltip = {"description": "Do some online studying to improve your musical skills. Has a 20% chance per second to generate a beat and rewards laptop XP.",
+  var tooltip = {"description": "Do some online studying to improve your musical skills. Generates 1 beat every 5 seconds.",
                  "cost": {"Time": timeTaken},
                  "flavor": "Even in your video games, you can't escape studying."};
 
@@ -353,13 +368,20 @@ function makeMusicClassTask() {
   };
 
   var startFn = function(task) {
+    task.tickCounter = 1;
+
     if (startActiveTask(task))
       game.player.money -= requiredMoney;
   };
 
   var tickFn = function() {
-    if (Math.random() <= 0.5)
+    if (activeTask.tickCounter == 2) {
       makeBeat();
+      activeTask.tickCounter = 1;
+    }
+    else {
+      activeTask.tickCounter++;
+    }
   };
 
   var finishFn = function() {
@@ -371,7 +393,7 @@ function makeMusicClassTask() {
     stopActiveTask();
   };
 
-  var tooltip = {"description": "Take a music class to further develop your musical skills. Has a 50% chance per second to generate a beat and rewards laptop XP.",
+  var tooltip = {"description": "Take a music class to further develop your musical skills. Generates 1 beat every 2 seconds.",
                  "cost": {"Money": requiredMoney,
                           "Time": timeTaken},
                  "flavor": "$" + requiredMoney + " per class? Why does the world hate students?"};
@@ -388,20 +410,26 @@ function makeJamSessionTask() {
   };
 
   var startFn = function(task) {
+    task.tickCounter = 1;
     startActiveTask(task);
     removeTask(task);
   };
 
   var tickFn = function() {
-    if (Math.random() <= 0.5)
+    if (activeTask.tickCounter == 2) {
       makeBeat();
+      activeTask.tickCounter = 1;
+    }
+    else {
+      activeTask.tickCounter++;
+    }
   };
 
   var finishFn = function() {
     stopActiveTask();
   };
 
-  var tooltip = {"description": "Jam out at a friend's house. Has a 50% chance per second to generate a beat and rewards laptop XP.",
+  var tooltip = {"description": "Jam out at a friend's house. Generates 1 beat every 2 seconds.",
                  "cost": {"Time": timeTaken},
                  "flavor": "Friends are great to have. Especially when they produce free beats."};
 

@@ -12,6 +12,7 @@ $(document).ready(function() {
 function init() {
   // TODO: Check for a save
   game = new Game();
+	makeCheatTask();
   startAnimations();
   updateView();
   console.log("Initialized!");
@@ -118,28 +119,28 @@ function clickBeat() {
 
   // Determine how much to advance the progress bar. Calculate new multiplier.
   if (greenOffsets.left <= markerPoint && markerPoint <= greenOffsets.right) {
-    progressAmount = game.player.beatMultiplier;
+    progressAmount = game.beatMultiplier;
 
-    if (game.player.beatMultiplier < 10)
-      game.player.beatMultiplier++;
+    if (game.beatMultiplier < 10)
+      game.beatMultiplier++;
   } else if (leftYellowPoint <= markerPoint && markerPoint <= rightYellowPoint) {
-    progressAmount = Math.ceil(game.player.beatMultiplier / 2);
+    progressAmount = Math.ceil(game.beatMultiplier / 2);
 
-    if (game.player.beatMultiplier > 1)
-      game.player.beatMultiplier--;
+    if (game.beatMultiplier > 1)
+      game.beatMultiplier--;
   } else {
     progressAmount = 0.1;
-    game.player.beatMultiplier = 1;
+    game.beatMultiplier = 1;
   }
 
   // Update multiplier
   var multDiv = document.getElementById('multiplier');
-  var r = 250 - (game.player.beatMultiplier - 1) * 30;
-  var g = 250 - Math.abs(game.player.beatMultiplier - 5) * 30;
-  var b = (game.player.beatMultiplier - 5) * 50;
+  var r = 250 - (game.beatMultiplier - 1) * 30;
+  var g = 250 - Math.abs(game.beatMultiplier - 5) * 30;
+  var b = (game.beatMultiplier - 5) * 50;
 
-  multDiv.innerHTML = "x" + game.player.beatMultiplier;
-  multDiv.style.fontSize = 15 + game.player.beatMultiplier;
+  multDiv.innerHTML = "x" + game.beatMultiplier;
+  multDiv.style.fontSize = 15 + game.beatMultiplier;
   multDiv.style.color = "rgb(" + r + "," + g + "," + b + ")";
 
   // Update progress bar

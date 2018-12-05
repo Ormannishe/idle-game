@@ -1,9 +1,10 @@
 function Game() {
   this.player = new Player();
   this.tasks = [];
+  this.beatMultiplier = 1;
   this.clicksPerBeat = 30;
   this.beatsPerSample = 25;
-  this.samplesPerSong = 100;
+  this.samplesPerSong = 50;
   this.xpPerBeat = 5;
   this.xpPerSample = 25;
   this.xpPerSong = 250;
