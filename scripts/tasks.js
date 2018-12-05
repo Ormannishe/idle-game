@@ -334,7 +334,7 @@ function makeStudyOnlineTask() {
   };
 
   var tickFn = function() {
-    if (activeTask.tickCounter == 5) {
+    if (activeTask.tickCounter >= 5) {
       makeBeat();
       activeTask.tickCounter = 1;
     }
@@ -375,7 +375,7 @@ function makeMusicClassTask() {
   };
 
   var tickFn = function() {
-    if (activeTask.tickCounter == 2) {
+    if (activeTask.tickCounter >= 2) {
       makeBeat();
       activeTask.tickCounter = 1;
     }
@@ -416,7 +416,7 @@ function makeJamSessionTask() {
   };
 
   var tickFn = function() {
-    if (activeTask.tickCounter == 2) {
+    if (activeTask.tickCounter >= 2) {
       makeBeat();
       activeTask.tickCounter = 1;
     }
