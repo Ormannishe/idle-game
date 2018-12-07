@@ -90,6 +90,7 @@ function makeSampleTask() {
 
   var startFn = function(task) {
     // What should be done immediately after clicking the button
+    // This function always takes the task object as a parameter
   };
 
   var tickFn = function() {
@@ -148,7 +149,7 @@ function makeFirstSampleTask() {
     makeSample(1);
     document.getElementById('samples').style.display = "block";
     appendToOutputContainer("You've created your first musical sample! Your eyes glow with pride as you take one more step toward your destiny.");
-    removeTask("Make First Sample");
+    removeTask(task.name);
   };
 
   var tooltip = {"description": "Create your first ever sample!",
@@ -176,9 +177,8 @@ function makeFirstSongTask() {
     if (songName !== null) {
       task.songName = songName;
       startActiveTask(task);
+      removeTask(task.name);
     }
-
-    removeTask("Make First Song");
   };
 
   var finishFn = function() {
@@ -246,8 +246,7 @@ function makeDJAtBirthdayPartyTask() {
   };
 
   var startFn = function(task) {
-    if (startActiveTask(task))
-      game.player.beats -= numRequiredBeats;
+    startActiveTask(task);
   };
 
   var finishFn = function() {
@@ -257,10 +256,9 @@ function makeDJAtBirthdayPartyTask() {
     stopActiveTask();
   };
 
-  var tooltip = {"description": "DJ for a birthday party! Rewards $50 and Laptop XP.",
-                 "cost": {"Beats": numRequiredBeats,
-                          "Time": timeTaken},
-                 "flavor": "Be careful. Kids are honest. Brutally honest."};
+  var tooltip = {"description": "An opportunity to DJ professionally at a birthday party! Requires 20 beats to play at the party. Rewards $50 and Laptop XP.",
+                 "cost": {"Time": timeTaken},
+                 "flavor": "Be careful, kids are honest. Brutally honest."};
 
   var DJAtBirthdayPartyTask = new Task("DJ At Birthday Party", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(DJAtBirthdayPartyTask);
@@ -283,7 +281,7 @@ function makeBuyNewLaptopTask() {
     game.clicksPerBeat = Math.ceil(game.clicksPerBeat * 0.75);
     game.player.money -= requiredMoney;
     updateProgress(beatProgress, beatProgress.value, game.clicksPerBeat, makeBeat);
-    removeTask("Buy New Laptop");
+    removeTask(task.name);
   };
 
   var tooltip = {"description": "Purchase a new laptop. Reduces the number of clicks per beat by 25%.",
@@ -310,7 +308,7 @@ function makeBuyMicrophoneTask() {
     appendToOutputContainer("You purchase a microphone. Maybe your voice will add another element to your music.");
     document.getElementById('vocalTab').style.display = "inline";
     document.getElementById('vocalSkill').style.display = "inline";
-    removeTask("Buy a Microphone");
+    removeTask(task.name);
   };
 
   var tooltip = {"description": "Purchase a new microphone. Unlocks the vocals skill.",

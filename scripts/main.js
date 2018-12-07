@@ -12,6 +12,7 @@ $(document).ready(function() {
 function init() {
   // TODO: Check for a save
   game = new Game();
+	makeCheatTask();
   startAnimations();
   updateView();
   console.log("Initialized!");
@@ -128,7 +129,7 @@ function clickBeat() {
     if (game.beatMultiplier > 1)
       game.beatMultiplier--;
   } else {
-    progressAmount = 0.1;
+    progressAmount = 0.2;
     game.beatMultiplier = 1;
   }
 
@@ -144,7 +145,6 @@ function clickBeat() {
 
   // Update progress bar
   updateProgress(progress, (progress.value + progressAmount), game.clicksPerBeat, makeBeat);
-  updateView();
 }
 
 function showTooltip(obj, taskName) {

@@ -20,6 +20,7 @@ function makeBeat(n) {
 
   game.player.addBeat(n);
   game.player.addXp('laptop', (game.xpPerBeat * n));
+  updateView();
 }
 
 function makeSample(numToMake) {
