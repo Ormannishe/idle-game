@@ -7,7 +7,6 @@ class Player {
     this.lifetimeMoney = 0;
     this.beats = 0;
     this.lifetimeBeats = 0;
-    this.beatMultiplier = 1;
     this.samples = 0;
     this.lifetimeSamples = 0;
     this.songs = [];

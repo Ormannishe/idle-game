@@ -73,7 +73,7 @@ function studyOnlineTrigger() {
 
 function djBirthdayTrigger() {
   if (game.player.skills["laptop"].level >= 5) {
-    appendToOutputContainer("You're getting good enough at this to possibly get some money out of it.");
+    appendToOutputContainer("An opportunity to DJ for a birthday party has opened up!");
     makeDJAtBirthdayPartyTask();
     triggerFnSet.add(musicClassTrigger);
     return true;
