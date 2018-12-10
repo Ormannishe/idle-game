@@ -42,6 +42,21 @@
 #taskProgressContainer > p {
   margin-top: 6px;
   margin-bottom: 6px;
+  float: left;
+}
+
+#taskProgressContainer > button {
+  background-color: Transparent;
+  color: white;
+  border: none;
+  overflow: hidden;
+  outline:none;
+  margin-left: 5px;
+}
+
+#taskProgressContainer > button:hover {
+  cursor: pointer;
+  color: red;
 }
 
 #taskProgressContainer > progress[value] {

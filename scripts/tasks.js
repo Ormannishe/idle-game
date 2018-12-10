@@ -1,4 +1,6 @@
 var activeTask;
+var oddJobs = ["Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
+               "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"];
 
 function Task(name, tooltip, checkFn, failFn, startFn, tickFn, finishFn, timeToComplete) {
     this.name = name;
@@ -25,6 +27,14 @@ function doTask(taskName) {
   updateView();
 }
 
+function cancelTask() {
+  if (getTask(activeTask.name) == undefined)
+    game.tasks.push(activeTask);
+
+  stopActiveTask();
+  updateTasks();
+}
+
 
 function getTask(taskName) {
   return game.tasks.filter(task => task.name === taskName)[0];
@@ -44,7 +54,7 @@ function startActiveTask(task) {
     label.innerHTML = task.name;
     progress.value = 0;
     progress.max = task.timeToComplete;
-    container.style.display = "block";
+    container.style.display = "inline-block";
 
     return true;
   }
@@ -231,6 +241,39 @@ function makeNewSongTask() {
 
   var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(newSongTask);
+}
+
+function makeOddJobsTask() {
+  var timeTaken = 60;
+  var moneyReward = 10;
+  var job = oddJobs[Math.floor(Math.random() * oddJobs.length)];
+
+  var checkFn = function() {
+    return true;
+  };
+
+  var startFn = function(task) {
+    startActiveTask(task);
+    removeTask(task.name);
+  };
+
+  var finishFn = function() {
+    game.player.addMoney(moneyReward);
+    appendToOutputContainer("After an hour of labor, you take home a measly " + moneyReward + " bucks.");
+    stopActiveTask();
+
+    if (game.player.skills["laptop"].level < 5)
+      triggerFnSet.add(oddJobsTrigger);
+    else
+      appendToOutputContainer("It's time to focus on your music. Odd jobs are a thing of the past!");
+  };
+
+  var tooltip = {"description": "Do some odd jobs around the neighborhood. Rewards $10.",
+                 "cost": {"Time": timeTaken},
+                 "flavor": "Even the most famous of legends have humble beginnings."};
+
+  var oddJobsTask = new Task(job, tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
+  game.tasks.push(oddJobsTask);
 }
 
 function makeDJAtBirthdayPartyTask() {
