@@ -32,6 +32,7 @@ function cancelTask() {
     game.tasks.push(activeTask);
 
   stopActiveTask();
+  updateTasks();
 }
 
 
