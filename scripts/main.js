@@ -12,7 +12,6 @@ $(document).ready(function() {
 function init() {
   // TODO: Check for a save
   game = new Game();
-	makeCheatTask();
   startAnimations();
   updateView();
   console.log("Initialized!");

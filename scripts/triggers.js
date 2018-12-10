@@ -26,6 +26,7 @@ function exampleTrigger() {
 function firstBeatTrigger() {
   if (game.player.beats >= 1) {
     appendToOutputContainer("You've created your first beat. A building block to something greater.");
+    triggerFnSet.add(oddJobsTrigger);
     triggerFnSet.add(hundredthBeatTrigger);
     triggerFnSet.add(studyOnlineTrigger);
     triggerFnSet.add(firstSampleTrigger);
@@ -36,7 +37,7 @@ function firstBeatTrigger() {
 
 function hundredthBeatTrigger() {
   if (game.player.lifetimeBeats >= 100) {
-    appendToOutputContainer("You make your hundredth beat, you feel like you're getting better at this");
+    appendToOutputContainer("As you make your hundredth beat, you can feel you're getting better at this.");
     return true;
   }
   return false;
@@ -63,9 +64,19 @@ function firstSongTrigger() {
 
 function studyOnlineTrigger() {
   if (game.player.skills["laptop"].level >= 2) {
-    appendToOutputContainer("Nowadays, if you want to learn, it's only a few clicks away!");
+    appendToOutputContainer("If you want to get better at this, you're going to have to do some studying.");
     makeStudyOnlineTask();
     triggerFnSet.add(djBirthdayTrigger);
+    return true;
+  }
+  return false;
+}
+
+function oddJobsTrigger() {
+  // TODO: Make this an event
+  if (game.player.lifetimeBeats >= 3 && (Math.random() < 0.05)) {
+    appendToOutputContainer("A neighbor comes by with an opportunity to make a little cash.");
+    makeOddJobsTask();
     return true;
   }
   return false;
