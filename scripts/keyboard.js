@@ -20,7 +20,8 @@ var keyToKeyMap = { // White Keys
 function startKeyboard() {
   document.addEventListener('keydown', keyboardKeyDownEvent);
   document.addEventListener('keyup', keyboardKeyUpEvent);
-  playKeyboardSong();
+  if (currentSong == undefined)
+    playKeyboardSong();
 }
 
 function stopKeyboard() {

@@ -19,7 +19,7 @@ $(document).ready(function() {
 function init() {
   // TODO: Check for a save
   game = new Game();
-	startLaptop();
+  startLaptop();
   startTicking();
   updateView();
   console.log("Initialized!");
