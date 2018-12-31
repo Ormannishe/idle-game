@@ -1,147 +1,191 @@
 <html>
-	<head>
-		<title>Idle Game</title>
-		<link rel='stylesheet', href='stylesheets/style.css'></link>
-		<link rel='stylesheet', href='stylesheets/click-container.css'></link>
-		<link rel='stylesheet', href='stylesheets/items-container.css'></link>
-		<link rel='stylesheet', href='stylesheets/output-container.css'></link>
-		<link rel='stylesheet', href='stylesheets/task-container.css'></link>
-		<link rel='stylesheet', href='stylesheets/skills-container.css'></link>
-	</head>
-	<body>
-		<div id='tooltip'>
-		</div>
-		<div class='column'>
-			<div id='clickContainer' class='row'>
-				<div id='instrumentContainer'>
-					<button class="activeInstrument" onclick="toggleInstrument(event, 'laptop')">Laptop</button>
-  					<button id="vocalTab" class="instrument" onclick="toggleInstrument(event, 'vocal')">Vocal</button>
-  					<button id="keyboardTab" class="instrument" onclick="toggleInstrument(event, 'keyboard')">Keyboard</button>
-  					<button id="guitarTab" class="instrument" onclick="toggleInstrument(event, 'guitar')">Guitar</button>
-  					<button id="drumTab" class="instrument" onclick="toggleInstrument(event, 'drum')">Drum</button>
-  				</div>
-  				<div id='laptop' class='instrumentContent'>
-  					<div id='tempoSelector'>
-  						<p>Tempo</p>
-  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(5)">
-  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(10)">
-  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(15)" checked="checked">
-  						<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(25)">
-					</div>
-					<div id='beatContainer'>
-						<div id='marker'></div>
-						<div id='zones'>
-							<div class='redZone'></div>
-							<div id='leftYellowZone' class='yellowZone'></div>
-							<div class='greenZone'></div>
-							<div id='rightYellowZone' class='yellowZone'></div>
-							<div class='redZone'></div>
-						</div>
-						<div id='multiplier'>x1</div>
-					</div>
-					<div id='beatButtonContainer'>
-						<button id='makeBeat' type='button' onclick='clickBeat()'>Make Beat</button>
-					</div>
-					<div id='progressContainer'>
-						<progress id='beatProgress' value='0' max='1'></progress>
-					</div>
-				</div>
-				<div id='vocal' class='instrumentContent'>Under Construction!</div>
-			</div>
-			<div id='itemsContainer' class='row'>
-				<div id='itemsTabContainer'>
-					<button class="active-tab" onclick="toggleItemTab(event, 'resources')">Resources</button>
-  					<button id="songsTab" class="tab" onclick="toggleItemTab(event, 'songs')">Songs</button>
-  					<button id="albumsTab" class="tab" onclick="toggleItemTab(event, 'albums')">Albums</button>
-  				</div>
 
-  				<div id="resources" class="tabcontent">
-  					<div id='resourceHeader'>
-  						<p>Resource</p>
-  						<p>Amount</p>
-  						<p>x1</p>
-  						<p>x10</p>
-  						<p>x100</p>
-  						<p>All</p>
-  					</div>
-  					<div id='money' class='resourceRow'>
-				 		<p>Money</p>
-				 		<p>0</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 	</div>
-				 	<div id='beats' class='resourceRow'>
-				 		<p>Beats</p>
-				 		<p>0</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 		<p>-</p>
-				 	</div>
-				 	<div id='samples' class='resourceRow'>
-				 	</div>
-				</div>
+<head>
+	<title>Idle Game</title>
+	<link rel='stylesheet' , href='stylesheets/style.css'>
+	</link>
+	<link rel='stylesheet' , href='stylesheets/click-container.css'>
+	</link>
+	<link rel='stylesheet' , href='stylesheets/items-container.css'>
+	</link>
+	<link rel='stylesheet' , href='stylesheets/output-container.css'>
+	</link>
+	<link rel='stylesheet' , href='stylesheets/task-container.css'>
+	</link>
+	<link rel='stylesheet' , href='stylesheets/skills-container.css'>
+	</link>
+</head>
 
-				<div id="songs" class="tabcontent">
+<body>
+	<div id='tooltip'></div>
+	<div class='column'>
+		<div id='clickContainer' class='row'>
+			<div id='instrumentContainer'>
+				<button class="activeInstrument" onclick="toggleInstrument(event, 'laptop')">Laptop</button>
+				<button id="vocalTab" class="instrument" onclick="toggleInstrument(event, 'vocal')">Vocal</button>
+				<button id="keyboardTab" class="instrument" onclick="toggleInstrument(event, 'keyboard')">Keyboard</button>
+				<button id="guitarTab" class="instrument" onclick="toggleInstrument(event, 'guitar')">Guitar</button>
+				<button id="drumTab" class="instrument" onclick="toggleInstrument(event, 'drum')">Drum</button>
+			</div>
+			<div id='laptop' class='instrumentContent'>
+				<div id='tempoSelector'>
+					<p>Tempo</p>
+					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(5)">
+					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(10)">
+					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(15)" checked="checked">
+					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo(25)">
 				</div>
-
-				<div id="albums" class="tabcontent">
-				 	<p>None :(</p>
+				<div id='beatContainer'>
+					<div id='marker'></div>
+					<div id='zones'>
+						<div class='redZone'></div>
+						<div id='leftYellowZone' class='yellowZone'></div>
+						<div id='greenZone'></div>
+						<div id='rightYellowZone' class='yellowZone'></div>
+						<div class='redZone'></div>
+					</div>
+					<div id='laptopMultiplier'>x1</div>
+				</div>
+				<div id='beatButtonContainer'>
+					<button id='makeBeat' type='button' onclick='clickBeat()'>Make Beat</button>
+				</div>
+				<div id='laptopProgressContainer' class='beatProgress'>
+					<progress id='laptopBeatProgress' value='0' max='1'></progress>
 				</div>
 			</div>
-		</div>
-		<div class='column'>
-			<div id='outputContainer' class='row'>
-				<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
-			</div>
-			<div id='taskContainer' class='row'>
-				<div id='tasks'>
-					<p>Tasks</p>
+			<div id='vocal' class='instrumentContent'>Under Construction!</div>
+			<div id='keyboard' class='instrumentContent'>
+				<div id='keyboardContainer'>
+					<div id='whiteKeyContainer'>
+						<button id='C3Key' class='whiteKey'>TAB</button>
+						<button id='D3Key' class='whiteKey'>Q</button>
+						<button id='E3Key' class='whiteKey'>W</button>
+						<button id='F3Key' class='whiteKey'>E</button>
+						<button id='G3Key' class='whiteKey'>R</button>
+						<button id='A3Key' class='whiteKey'>T</button>
+						<button id='B3Key' class='whiteKey'>Y</button>
+						<button id='C4Key' class='whiteKey'>U</button>
+						<button id='D4Key' class='whiteKey'>I</button>
+						<button id='E4Key' class='whiteKey'>O</button>
+						<button id='F4Key' class='whiteKey'>P</button>
+						<button id='G4Key' class='whiteKey'>[</button>
+						<button id='A4Key' class='whiteKey'>]</button>
+						<button id='B4Key' class='whiteKey'>\</button>
+						<button id='C5Key' class='whiteKey'>ENTR</button>
+					</div>
+					<div id='blackKeyContainer'>
+						<button id='Db3Key' class='blackKey'>1</button>
+						<button id='Eb3Key' class='blackKey'>2</button>
+						<div class='spaceKey'></div>
+						<button id='Gb3Key' class='blackKey'>4</button>
+						<button id='Ab3Key' class='blackKey'>5</button>
+						<button id='Bb3Key' class='blackKey'>6</button>
+						<div class='blackKey spaceKey'></div>
+						<button id='Db4Key' class='blackKey'>8</button>
+						<button id='Eb4Key' class='blackKey'>9</button>
+						<div class='spaceKey'></div>
+						<button id='Gb4Key' class='blackKey'>-</button>
+						<button id='Ab4Key' class='blackKey'>=</button>
+						<button id='Bb4Key' class='blackKey'>BKS</button>
+					</div>
 				</div>
-				<div id='taskProgressContainer'>
-					<p id='taskLabel'>Some Task</p>
-					<button onclick='cancelTask()'>x</button>
-					<progress id='taskProgress' value='0', max='10'></progress>
-				</div>
-			</div>
-			<div id='skillsContainer' class='row'>
-				<p>Skills</p>
-				<div id='laptopSkill' class='skill'>
-					<img src='images/laptop.png'></img>
-					<p id='laptopLevel'>1</p>
-					<progress id='laptopProgress' value='0' max='1'></progress>
-				</div>
-				<div id='vocalSkill' class='skill'>
-					<img src='images/microphone.png'></img>
-					<p id='vocalLevel'>1</p>
-					<progress id='vocalProgress' value='0' max='1'></progress>
-				</div>
-				<div id='keyboardSkill' class='skill'>
-					<img src='images/keyboard.png'></img>
-					<p id='keyboardLevel'>1</p>
-					<progress id='keyboardProgress' value='0' max='1'></progress>
-				</div>
-				<div id='guitarSkill' class='skill'>
-					<img src='images/guitar.png'></img>
-					<p id='guitarLevel'>1</p>
-					<progress id='guitarProgress' value='0' max='1'></progress>
-				</div>
-				<div id='drumSkill' class='skill'>
-					<img src='images/drums.png'></img>
-					<p id='drumLevel'>1</p>
-					<progress id='drumProgress' value='0' max='1'></progress>
+				<div id='keyboardMultiplier' class='multiplier'>x1</div>
+				<div id='keyboardProgressContainer' class='beatProgress'>
+					<progress id='keyboardBeatProgress' value='0' max='1'></progress>
 				</div>
 			</div>
 		</div>
-	</body>
-	<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
-	<script src='scripts/main.js'></script>
-	<script src='scripts/game.js'></script>
-	<script src='scripts/animations.js'></script>
-	<script src='scripts/triggers.js'></script>
-	<script src='scripts/player.js'></script>
-	<script src='scripts/tasks.js'></script>
-	<script src='scripts/song.js'></script>
+		<div id='itemsContainer' class='row'>
+			<div id='itemsTabContainer'>
+				<button class="active-tab" onclick="toggleItemTab(event, 'resources')">Resources</button>
+				<button id="songsTab" class="tab" onclick="toggleItemTab(event, 'songs')">Songs</button>
+				<button id="albumsTab" class="tab" onclick="toggleItemTab(event, 'albums')">Albums</button>
+			</div>
+
+			<div id="resources" class="tabcontent">
+				<div id='resourceHeader'>
+					<p>Resource</p>
+					<p>Amount</p>
+					<p>x1</p>
+					<p>x10</p>
+					<p>x100</p>
+					<p>All</p>
+				</div>
+				<div id='money' class='resourceRow'>
+					<p>Money</p>
+					<p>0</p>
+					<p>-</p>
+					<p>-</p>
+					<p>-</p>
+					<p>-</p>
+				</div>
+				<div id='beats' class='resourceRow'></div>
+				<div id='samples' class='resourceRow'></div>
+				<div id='notes' class='resourceRow'></div>
+				<div id='measures' class='resourceRow'></div>
+			</div>
+
+			<div id="songs" class="tabcontent">
+			</div>
+
+			<div id="albums" class="tabcontent">
+				<p>None :(</p>
+			</div>
+		</div>
+	</div>
+	<div class='column'>
+		<div id='outputContainer' class='row'>
+			<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
+		</div>
+		<div id='taskContainer' class='row'>
+			<div id='tasks'>
+				<p>Tasks</p>
+			</div>
+			<div id='taskProgressContainer'>
+				<p id='taskLabel'>Some Task</p>
+				<button onclick='cancelTask()'>x</button>
+				<progress id='taskProgress' value='0' , max='10'></progress>
+			</div>
+		</div>
+		<div id='skillsContainer' class='row'>
+			<p>Skills</p>
+			<div id='laptopSkill' class='skill'>
+				<img src='images/laptop.png'></img>
+				<p id='laptopLevel'>1</p>
+				<progress id='laptopSkillProgress' value='0' max='1'></progress>
+			</div>
+			<div id='vocalSkill' class='skill'>
+				<img src='images/microphone.png'></img>
+				<p id='vocalLevel'>1</p>
+				<progress id='vocalSkillProgress' value='0' max='1'></progress>
+			</div>
+			<div id='keyboardSkill' class='skill'>
+				<img src='images/keyboard.png'></img>
+				<p id='keyboardLevel'>1</p>
+				<progress id='keyboardSkillProgress' value='0' max='1'></progress>
+			</div>
+			<div id='guitarSkill' class='skill'>
+				<img src='images/guitar.png'></img>
+				<p id='guitarLevel'>1</p>
+				<progress id='guitarSkillProgress' value='0' max='1'></progress>
+			</div>
+			<div id='drumSkill' class='skill'>
+				<img src='images/drums.png'></img>
+				<p id='drumLevel'>1</p>
+				<progress id='drumSkillProgress' value='0' max='1'></progress>
+			</div>
+		</div>
+	</div>
+</body>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+<script src='scripts/main.js'></script>
+<script src='scripts/view.js'></script>
+<script src='scripts/game.js'></script>
+<script src='scripts/player.js'></script>
+<script src='scripts/laptop.js'></script>
+<script src='scripts/keyboard.js'></script>
+<script src='scripts/triggers.js'></script>
+<script src='scripts/tasks.js'></script>
+<script src='scripts/song.js'></script>
+
 </html>
