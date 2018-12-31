@@ -43,7 +43,7 @@ function keyboardKeyDownEvent(event) {
 	if (notePlayed !== undefined && event.repeat == false) {
     var progressAmount = 0.5;
     var progress = document.getElementById('keyboardBeatProgress');
-    var audio = new Audio("resources/Piano.mf." + notePlayed + ".mp3");
+    var audio = new Audio("resources/audio/Piano.mf." + notePlayed + ".mp3");
     var keyboardKey = document.getElementById(notePlayed + "Key");
 
     // For Debug functionality
