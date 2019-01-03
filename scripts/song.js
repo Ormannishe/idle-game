@@ -44,7 +44,7 @@ function adjustSongStats() {
   	Song Popularity has a 10% chance to decrease by a random amount up to (1 / quality) * 100.
   	(Higher quality songs decrease in popularity slower)
 
-  	A modifier is then applied on top of the base 10% chances. A bonus of up to 50% can be applied to the gain chance or 
+  	A modifier is then applied on top of the base 10% chances. A bonus of up to 50% can be applied to the gain chance or
   	lose chance based on the song's current popularity and max popularity.
 
   	Song Revenue is always a fraction of it's popularity (TODO: fraction increases via different medias)
@@ -78,7 +78,7 @@ function adjustSongStats() {
     // Calculate new revenue stats and give player money
     if (revenueMod > 0) {
       song.moneyPerSec = song.popularity / revenueMod;
-      game.player.addMoney(song.moneyPerSec);
+      addMoney(song.moneyPerSec);
       song.totalEarnings += song.moneyPerSec;
     }
   });

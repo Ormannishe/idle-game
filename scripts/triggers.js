@@ -25,11 +25,22 @@ function exampleTrigger() {
 
 function firstBeatTrigger() {
   if (game.player.beats >= 1) {
+    document.getElementById('beats').style.display = "block";
     appendToOutputContainer("You've created your first beat. A building block to something greater.");
     triggerFnSet.add(oddJobsTrigger);
     triggerFnSet.add(hundredthBeatTrigger);
     triggerFnSet.add(studyOnlineTrigger);
     triggerFnSet.add(firstSampleTrigger);
+    return true;
+  }
+  return false;
+}
+
+function firstNoteTrigger() {
+  if (game.player.notes >= 1) {
+    document.getElementById('notes').style.display = "block";
+    appendToOutputContainer("You've played your first note!");
+    triggerFnSet.add(firstMeasureTrigger);
     return true;
   }
   return false;
@@ -48,6 +59,15 @@ function firstSampleTrigger() {
     appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
     makeFirstSampleTask();
     triggerFnSet.add(firstSongTrigger);
+    return true;
+  }
+  return false;
+}
+
+function firstMeasureTrigger() {
+  if (game.player.notes >= game.notesPerMeasure) {
+    appendToOutputContainer("After playing several notes, you're ready to record your first measure.");
+    makeFirstMeasureTask();
     return true;
   }
   return false;
@@ -96,7 +116,7 @@ function musicClassTrigger() {
   if (game.player.skills["laptop"].level >= 7) {
     appendToOutputContainer("You'll be able to learn more quickly if you take a music class!");
     makeMusicClassTask();
-    triggerFnSet.add(unlockVocalsTrigger);
+    triggerFnSet.add(unlockNewInstrumentTrigger);
     return true;
   }
   return false;
@@ -112,10 +132,10 @@ function newLaptopTrigger() {
   return false;
 }
 
-function unlockVocalsTrigger() {
+function unlockNewInstrumentTrigger() {
   if (game.player.skills["laptop"].level >= 20) {
     appendToOutputContainer("Maybe it's time to pick up another skill?");
-    makeBuyMicrophoneTask();
+    makeBuyKeyboardTask();
     return true;
   }
   return false;

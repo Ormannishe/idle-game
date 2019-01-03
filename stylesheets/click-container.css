@@ -1,3 +1,7 @@
+/*
+  ------ Shared CSS Across All Tabs ------
+*/
+
 #clickContainer {
   background-color: #222222;
 }
@@ -6,7 +10,34 @@
   overflow: hidden;
 }
 
-/* 
+.beatProgress {
+  height: 8%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.beatProgress > progress[value] {
+  width: 50%;
+  height: 80%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.beatProgress > progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.beatProgress > progress[value]::-webkit-progress-value {
+  background-color: #33cc33;
+}
+
+/*
   ------ CSS For Instrument Tabs ------
 */
 
@@ -45,18 +76,18 @@
   color: white;
 }
 
-/* Hide song and album tabs by default */
+/* Hide non-active tabs by default */
 #vocalTab, #keyboardTab, #guitarTab, #drumTab {
   display: none;
 }
 
 /* Hide non-active tab content by default */
-#vocal {
+#vocal, #keyboard {
   display: none;
 }
 
 
-/* 
+/*
   ------ CSS For Laptop Tab ------
 */
 
@@ -87,7 +118,7 @@
   align-items: center;
 }
 
-.greenZone {
+#greenZone {
   width: 15%;
   height: 5%;
   background-color: #00cc44;
@@ -108,7 +139,7 @@
   border: 1px solid #cc2900;
 }
 
-#multiplier {
+#laptopMultiplier {
   font-size: 16px;
   color: rgb(250, 130, 0);
   text-align: center;
@@ -163,29 +194,86 @@
   background-color: #333333;
 }
 
-#progressContainer {
-  height: 8%;
-  width: 100%;
+/*
+  ------ CSS For Vocals Tab ------
+*/
+
+/*
+  ------ CSS For Keyboard Tab ------
+*/
+
+#keyboardContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  height: 70%;
+  width: 90%;
+  margin: 0 auto;
   margin-top: 10px;
-  margin-bottom: 10px;
+  border: 1px solid transparent;
 }
 
-#progressContainer > progress[value] {
-  width: 50%;
-  height: 80%;
-  -webkit-appearance: none;
-  appearance: none;
+#whiteKeyContainer {
+  position: absolute;
+  z-index: 2;
+  height: 90%;
+  width: 100%;
 }
 
-#progressContainer > progress[value]::-webkit-progress-bar {
-  background-color: #eee;
-  border-radius: 2px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+#blackKeyContainer {
+  position: absolute;
+  z-index: 3;
+  height: 90%;
+  width: 100%;
 }
 
-#progressContainer > progress[value]::-webkit-progress-value {
-  background-color: #33cc33;
+.whiteKey {
+  height: 100%;
+  width: 6.6%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  float: left;
+  text-align: center;
+}
+
+.blackKey, .spaceKey {
+  height: 70%;
+  width: 3.3%;
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  float: left;
+  text-align: center;
+  font-size: 10;
+  margin-left: 3.3%;
+}
+
+.blackKey:focus, .whiteKey:focus {
+  outline: 0;
+}
+
+.whiteKey:before, .blackKey:before { /* Bit of a hack to push the text to the bottom of the keys */
+  content: "jamesisthegreatest";
+  display: inline-block;
+  height: 90%;
+  opacity: 0;
+}
+
+.spaceKey { /* Space Keys are used to break up the black key groups naturally */
+  opacity: 0;
+}
+
+#Db3Key { /* First black key on the keybaord requires more left spacing */
+  margin-left: 5%;
+}
+
+#keyboardMultiplier {
+  font-size: 16px;
+  color: rgb(250, 130, 0);
+  text-align: center;
+  padding-top: 2%;
+  height: 10%;
+  overflow: hidden;
 }

@@ -1,6 +1,7 @@
 #outputContainer {
     overflow:scroll;
     overflow-x:hidden;
+    padding-bottom: 6px;
 }
 
 #outputContainer > p {

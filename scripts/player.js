@@ -9,6 +9,8 @@ class Player {
     this.lifetimeBeats = 0;
     this.samples = 0;
     this.lifetimeSamples = 0;
+    this.notes = 0;
+    this.measures = 0;
     this.songs = [];
     this.albums = [];
     this.skills = {
@@ -43,16 +45,6 @@ class Player {
         nextLevelXpRatio: 1.2
       }
     }
-  }
-
-  addBeat(n) {
-    this.beats += n;
-    this.lifetimeBeats += n;
-  }
-
-  addMoney(n) {
-    this.money += n;
-    this.lifetimeMoney += n;
   }
 
   addXp(skill, n) {

@@ -84,7 +84,7 @@
 }
 
 .resourceRow:hover {
-  background-color: #555555
+  background-color: #555555;
 }
 
 #money {
@@ -92,11 +92,22 @@
 }
 
 #beats {
-  color: #5555ff;
+  color: #0066ff;
+  display: none;
 }
 
 #samples {
-  color: #bb0000;
+  color: #3399ff;
+  display: none;
+}
+
+#notes {
+  color: #ffff66;
+  display: none;
+}
+
+#measures {
+  color: #ffcc66;
   display: none;
 }
 
