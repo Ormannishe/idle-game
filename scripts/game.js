@@ -6,7 +6,7 @@ function Game() {
   this.beatsPerSample = 25;
   this.samplesPerSong = 50;
   this.keyboardMultiplier = 1;
-  this.clicksPerNote = 100;
+  this.clicksPerNote = 50;
   this.notesPerMeasure = 25;
   this.measuresPerSong = 50;
   this.xpPerBeat = 5;
@@ -15,6 +15,13 @@ function Game() {
   this.xpPerMeasure = 50;
   this.xpPerSong = 500;
 };
+
+function addFame(n) {
+  if (n == undefined)
+    n = 1;
+
+  game.player.fame += n;
+}
 
 function addMoney(n) {
   game.player.money += n;

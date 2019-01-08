@@ -3,6 +3,7 @@ class Player {
   constructor() {
     this.name = "Michael Jackson";
     this.instruments = ["Laptop"];
+    this.fame = 0;
     this.money = 0;
     this.lifetimeMoney = 0;
     this.beats = 0;
@@ -10,6 +11,7 @@ class Player {
     this.samples = 0;
     this.lifetimeSamples = 0;
     this.notes = 0;
+    this.lifetimeNotes = 0;
     this.measures = 0;
     this.songs = [];
     this.albums = [];

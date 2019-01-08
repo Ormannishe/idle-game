@@ -87,6 +87,41 @@
   background-color: #555555;
 }
 
+#fame {
+  color: #ff751a;
+}
+
+#fameDiv{
+  width: 16.666666%;
+  display: inline-block;
+  float: left;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+}
+
+#fameDiv > button {
+  position: absolute;
+  left: 4px;
+  overflow: hidden;
+  margin-left: 5px;
+  color: grey;
+  background-color: black;
+  border: 1px solid grey;
+  padding-top: 1px;
+  border-radius: 20px;
+  font-size: 10px;
+  width: 14px;
+  height: 14px;
+  outline: none;
+}
+
+#fameDiv > button:hover {
+  cursor: pointer;
+  color: white;
+  border-color: white;
+}
+
 #money {
   color: #00bb00;
 }
