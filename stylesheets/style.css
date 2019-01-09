@@ -58,7 +58,7 @@ body {
   text-align: center;
 }
 
-.tooltipHeader {
+#tooltipHeader {
   font-size: 11px;
   margin: 5px;
   padding-bottom: 5px;

@@ -9,11 +9,11 @@ function startTicking() {
 function naturalTick() {
   updateActiveTask();
   adjustSongStats();
-  updateView();
+  updateView(true);
 }
 
-function updateView() {
-  checkTriggers();
+function updateView(natural) {
+  checkTriggers(natural);
   updateResourcesTab();
   updateSongsTab();
   updateTasks();
@@ -21,15 +21,14 @@ function updateView() {
 }
 
 function updateResourcesTab() {
-  // TODO: Add more resources
-  var defaultSuffix = "<p>-</p><p>-</p><p>-</p><p>-</p>";
   var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
   var measureSuffix = getResourceNumbers(game.player.notes, game.notesPerMeasure, "makeMeasure");
 
-  document.getElementById('money').innerHTML = "<p>Money</p><p>$" + round(game.player.money, 2) + "</p>" + defaultSuffix;
-  document.getElementById('beats').innerHTML = "<p>Beats</p><p>" + game.player.beats + "</p>" + defaultSuffix;
+  document.getElementById('fameAmount').innerHTML = game.player.fame;
+  document.getElementById('moneyAmount').innerHTML = "$" + round(game.player.money, 2);
+  document.getElementById('beatAmount').innerHTML = game.player.beats;
   document.getElementById('samples').innerHTML = "<p>Samples</p><p>" + game.player.samples + "</p>" + sampleSuffix;
-  document.getElementById('notes').innerHTML = "<p>Notes</p><p>" + game.player.notes + "</p>" + defaultSuffix;
+  document.getElementById('noteAmount').innerHTML = game.player.notes;
   document.getElementById('measures').innerHTML = "<p>Measures</p><p>" + game.player.measures + "</p>" + measureSuffix;
 
 }
@@ -102,11 +101,37 @@ function appendToOutputContainer(message) {
 
 /* Event Handlers */
 
+function fameTooltip() {
+  var obj = document.getElementById('fameTooltip');
+  var tooltip = document.getElementById('tooltip');
+  var offsets = getOffsets(obj);
+  var html = "<div id='tooltipHeader'>" +
+            "Fame is a measure of how well known you are as an artist.<br><br>" +
+             "You can increase your fame through various tasks or by releasing high quality songs and albums.<br><br>" +
+             "The more famous you are, the larger your fanbase will be. Songs and Albums created by you will gain popularity faster if you have an established fanbase.<br><br>" +
+             "Increased fame also leads to more lucrative opportunities such as playing at prestigious events with other famous artists or attending VIP social events." +
+             "</div>";
+
+  tooltip.innerHTML = html;
+  tooltip.style.left = offsets.left + 20;
+  tooltip.style.top = offsets.top - 70;
+  tooltip.style.width = "400px";
+  tooltip.style.display = "inline";
+
+  var tooltipHeader = document.getElementById('tooltipHeader');
+  tooltipHeader.style.borderBottom = "none";
+}
+
+function hideFameTooltip() {
+  tooltip.style.width = "200px";
+  hideTooltip();
+}
+
 function showTooltip(obj, taskName) {
 	var offsets = getOffsets(obj);
 	var tooltip = document.getElementById('tooltip');
 	var task = getTask(taskName);
-	var html = "<div class='tooltipHeader'>" + task.tooltip["description"] + "</div>";
+	var html = "<div id='tooltipHeader'>" + task.tooltip["description"] + "</div>";
 
 	for (var key in task.tooltip["cost"]) {
 		html += "<div class='tooltipPriceInfo'>" +

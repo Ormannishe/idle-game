@@ -41,7 +41,10 @@ function getTask(taskName) {
 }
 
 function removeTask(taskName) {
-  game.tasks.splice(game.tasks.findIndex(task => task.name === taskName), 1)
+  var index = game.tasks.findIndex(task => task.name === taskName);
+
+  if (index > -1)
+    game.tasks.splice(index, 1);
 }
 
 function startActiveTask(task) {
@@ -135,8 +138,8 @@ function makeCheatTask() {
   }
 
   var startFn = function(task) {
-    addBeat(250);
-    addMoney(1000);
+    addBeat(25);
+    addMoney(100);
   };
 
   var tooltip = {"description": "Gives free beats and money. Cheater.",
@@ -210,8 +213,9 @@ function makeFirstSongTask() {
 
     if (songName !== null) {
       task.songName = songName;
-      startActiveTask(task);
-      removeTask(task.name);
+      if (startActiveTask(task)) {
+        removeTask(task.name);
+      }
     }
   };
 
@@ -277,8 +281,9 @@ function makeOddJobsTask() {
   };
 
   var startFn = function(task) {
-    startActiveTask(task);
-    removeTask(task.name);
+    if (startActiveTask(task)) {
+      removeTask(task.name);
+    }
   };
 
   var finishFn = function() {
@@ -286,10 +291,8 @@ function makeOddJobsTask() {
     appendToOutputContainer("After an hour of labor, you take home a measly " + moneyReward + " bucks.");
     stopActiveTask();
 
-    if (game.player.skills["laptop"].level < 5)
-      triggerFnSet.add(oddJobsTrigger);
-    else
-      appendToOutputContainer("It's time to focus on your music. Odd jobs are a thing of the past!");
+    if (game.player.fame < 5)
+      triggerFnSet.add(oddJobsEventTrigger);
   };
 
   var tooltip = {"description": "Do some odd jobs around the neighborhood. Rewards $10.",
@@ -301,26 +304,30 @@ function makeOddJobsTask() {
 }
 
 function makeDJAtBirthdayPartyTask() {
-  var timeTaken = 120;
+  var timeTaken = 180;
 
   var checkFn = function() {
     return true;
   };
 
   var startFn = function(task) {
-    startActiveTask(task);
+    if (startActiveTask(task)) {
+      removeTask(task.name);
+    }
   };
 
   var finishFn = function() {
+    addFame(1);
     addMoney(50);
-    game.player.addXp("laptop", 250);
-    appendToOutputContainer("You earn a quick 50 bucks DJing at a birthday party.");
+    game.player.addXp("laptop", 50);
+    appendToOutputContainer("You earn a decent 50 bucks DJing at a birthday party.");
     stopActiveTask();
+    triggerFnSet.add(djBirthdayEventTrigger);
   };
 
-  var tooltip = {"description": "An opportunity to DJ professionally at a birthday party! Rewards $50 and Laptop XP.",
+  var tooltip = {"description": "An opportunity to DJ professionally at a birthday party! Rewards 1 Fame, $50 and Laptop XP.",
                  "cost": {"Time": timeTaken},
-                 "flavor": "Be careful, kids are honest. Brutally honest."};
+                 "flavor": "Getting famous, one schrieking teen at a time."};
 
   var DJAtBirthdayPartyTask = new Task("DJ At Birthday Party", tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(DJAtBirthdayPartyTask);
@@ -458,8 +465,9 @@ function makeMusicClassTask() {
   var startFn = function(task) {
     task.tickCounter = 1;
 
-    if (startActiveTask(task))
+    if (startActiveTask(task)) {
       game.player.money -= requiredMoney;
+    }
   };
 
   var tickFn = function() {
@@ -499,8 +507,9 @@ function makeJamSessionTask() {
 
   var startFn = function(task) {
     task.tickCounter = 1;
-    startActiveTask(task);
-    removeTask(task);
+    if (startActiveTask(task)) {
+      removeTask(task);
+    }
   };
 
   var tickFn = function() {
