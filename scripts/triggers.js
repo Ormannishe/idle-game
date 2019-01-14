@@ -53,6 +53,7 @@ function firstSampleTrigger() {
   if (game.player.beats >= game.beatsPerSample) {
     appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
     makeFirstSampleTask();
+    makeExperimentWithTempoTask();
     triggerFnSet.add(hundredthBeatTrigger);
     triggerFnSet.add(firstSongTrigger);
     return true;
@@ -123,41 +124,45 @@ function studyOnlineTrigger() {
   if (game.player.skills["laptop"].level >= 2) {
     appendToOutputContainer("If you want to get better at this, you're going to have to do some studying.");
     makeStudyOnlineTask();
-    triggerFnSet.add(djBirthdayTrigger);
+    triggerFnSet.add(onlinePortfolioTrigger);
     return true;
   }
 }
 
-function djBirthdayTrigger() {
+function onlinePortfolioTrigger() {
   if (game.player.skills["laptop"].level >= 5) {
-    triggerFnSet.add(djBirthdayEventTrigger);
+    makeOnlinePortfolioTask();
     triggerFnSet.add(musicClassTrigger);
     return true;
   }
 }
 
-function djBirthdayEventTrigger(natural) {
-  // The expected number of ticks this event takes to trigger
-  var avgTicks = 100 - (5 * game.player.fame);
+function djPartyTrigger(natural) {
+  // Average number of ticks required to trigger this event
+  var avgTicks = 100 - game.player.fame;
 
   if (avgTicks < 30)
     avgTicks = 30;
 
   if (natural && Math.random() < (1 / avgTicks)) {
-    appendToOutputContainer("An opportunity to DJ for a birthday party has opened up!");
-    makeDJAtBirthdayPartyTask();
+    var partyTypes = ["Birthday Party", "House Party", "Corporate Party"]
+    var party = partyTypes[Math.floor(Math.random() * partyTypes.length)]
+    appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + party.toLowerCase() + "!");
+    makeDJAtPartyTask(party);
     return true;
   }
 }
 
 function musicClassTrigger() {
-  if (game.player.skills["laptop"].level >= 7) {
+  if (game.player.skills["laptop"].level >= 8) {
     appendToOutputContainer("You'll be able to learn more quickly if you take a music class!");
     makeMusicClassTask();
     triggerFnSet.add(unlockNewInstrumentTrigger);
     return true;
   }
 }
+
+// level 11 ?
 
 function unlockNewInstrumentTrigger() {
   if (game.player.skills["laptop"].level >= 15) {
@@ -181,13 +186,28 @@ function newLaptopTrigger() {
 /* Fame Progression */
 
 function finishOddJobsTrigger() {
-  if (game.player.fame >= 5) {
+  if (game.player.fame >= 25) {
+    makeMeetWithNightclubOwnersTask();
     appendToOutputContainer("It's time to focus on your music. Odd jobs are a thing of the past!");
     triggerFnSet.delete(oddJobsEventTrigger);
     oddJobs.forEach(function(job) {
       removeTask(job);
     });
 
+    return true;
+  }
+}
+
+function djNightclubEventTrigger(natural) {
+  // The expected number of ticks this event takes to trigger
+  var avgTicks = 500 - game.player.fame;
+
+  if (avgTicks < 30)
+    avgTicks = 30;
+
+  if (natural && Math.random() < (1 / avgTicks)) {
+    appendToOutputContainer("An opportunity to DJ at a nightclub has opened up!");
+    makeDJAtNightclubTask();
     return true;
   }
 }

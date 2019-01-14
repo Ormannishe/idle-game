@@ -140,6 +140,7 @@ function makeCheatTask() {
   var startFn = function(task) {
     addBeat(25);
     addMoney(100);
+    addFame(1);
   };
 
   var tooltip = {"description": "Gives free beats and money. Cheater.",
@@ -291,7 +292,7 @@ function makeOddJobsTask() {
     appendToOutputContainer("After an hour of labor, you take home a measly " + moneyReward + " bucks.");
     stopActiveTask();
 
-    if (game.player.fame < 5)
+    if (game.player.fame < 25)
       triggerFnSet.add(oddJobsEventTrigger);
   };
 
@@ -303,7 +304,33 @@ function makeOddJobsTask() {
   game.tasks.push(oddJobsTask);
 }
 
-function makeDJAtBirthdayPartyTask() {
+function makeOnlinePortfolioTask() {
+  var requiredSamples = 5;
+
+  var checkFn = function() {
+    return game.player.samples >= requiredSamples;
+  }
+
+  var failFn = function() {
+    appendToOutputContainer("You haven't made enough samples to build a portfolio yet!");
+  }
+
+  var startFn = function(task) {
+    game.player.samples -= requiredSamples;
+    triggerFnSet.add(djPartyTrigger);
+    appendToOutputContainer("You've completed your online portfolio. Now you just have to wait for the clients to pour in!");
+    removeTask(task.name);
+  };
+
+  var tooltip = {"description": "Build an online portfolio containing some of your custom samples. Unlocks opportunities to play your music at small gatherings.",
+                 "cost": {"Samples": requiredSamples},
+                 "flavor": "You like your music, now you just have to get other people to like your music!"};
+
+  var onlinePortfolioTask = new Task("Make Online Portfolio", tooltip, checkFn, failFn, startFn);
+  game.tasks.push(onlinePortfolioTask);
+}
+
+function makeDJAtPartyTask(partyType) {
   var timeTaken = 180;
 
   var checkFn = function() {
@@ -317,20 +344,77 @@ function makeDJAtBirthdayPartyTask() {
   };
 
   var finishFn = function() {
-    addFame(1);
+    addFame(Math.ceil(Math.random() * 5));
     addMoney(50);
     game.player.addXp("laptop", 50);
-    appendToOutputContainer("You earn a decent 50 bucks DJing at a birthday party.");
+    appendToOutputContainer("After a few hours work at a party, you manage to make $50!");
     stopActiveTask();
-    triggerFnSet.add(djBirthdayEventTrigger);
+    triggerFnSet.add(djPartyTrigger);
   };
 
-  var tooltip = {"description": "An opportunity to DJ professionally at a birthday party! Rewards 1 Fame, $50 and Laptop XP.",
+  var tooltip = {"description": "An opportunity to DJ professionally at a party! Rewards 1-5 Fame, $50 and Laptop XP.",
                  "cost": {"Time": timeTaken},
-                 "flavor": "Getting famous, one schrieking teen at a time."};
+                 "flavor": "Turns out, parties are a lot less fun when you're working."};
 
-  var DJAtBirthdayPartyTask = new Task("DJ At Birthday Party", tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
+  var taskName = "DJ At " + partyType;
+  var DJAtBirthdayPartyTask = new Task(taskName, tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(DJAtBirthdayPartyTask);
+}
+
+function makeMeetWithNightclubOwnersTask() {
+  var requiredSamples = 30;
+
+  var checkFn = function() {
+    return game.player.samples >= requiredSamples;
+  }
+
+  var failFn = function() {
+    appendToOutputContainer("You need more samples if you want to make a good impression!");
+  }
+
+  var startFn = function(task) {
+    game.player.samples -= requiredSamples;
+    triggerFnSet.add(djNightclubEventTrigger);
+    appendToOutputContainer("Several nightclub owners liked the samples you showed them!");
+    removeTask(task.name);
+  };
+
+  var tooltip = {"description": "Meet with the owners of local nightclubs and demo some of your music. Unlocks opportunities to play your music at clubs.",
+                 "cost": {"Samples": requiredSamples},
+                 "flavor": "Nightclubs during the day are.... weird."};
+
+  var meetWithNightclubOwnersTask = new Task("Meet With Nightclub Owners", tooltip, checkFn, failFn, startFn);
+  game.tasks.push(meetWithNightclubOwnersTask);
+}
+
+function makeDJAtNightclubTask() {
+  var timeTaken = 180;
+
+  var checkFn = function() {
+    return true;
+  };
+
+  var startFn = function(task) {
+    if (startActiveTask(task)) {
+      removeTask(task.name);
+    }
+  };
+
+  var finishFn = function() {
+    addFame(10 + Math.ceil(Math.random() * 5));
+    addMoney(150);
+    game.player.addXp("laptop", 150);
+    appendToOutputContainer("You earn a solid $150 DJing at a nightclub!");
+    stopActiveTask();
+    triggerFnSet.add(djNightclubEventTrigger);
+  };
+
+  var tooltip = {"description": "An opportunity to DJ professionally at a nightclub! Rewards 10-15 Fame, $150 and Laptop XP.",
+                 "cost": {"Time": timeTaken},
+                 "flavor": "Getting famous, one sweaty drunk at a time."};
+
+  var DJAtNightclubTask = new Task("DJ At Nightclub", tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
+  game.tasks.push(DJAtNightclubTask);
 }
 
 function makeBuyNewLaptopTask() {
@@ -532,4 +616,29 @@ function makeJamSessionTask() {
 
   var jamSessionTask = new Task("Attend Jam Session", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
   game.tasks.push(jamSessionTask);
+}
+
+function makeExperimentWithTempoTask() {
+  var requiredBeats = 50;
+
+  var checkFn = function() {
+    return game.player.beats >= requiredBeats;
+  }
+
+  var failFn = function() {
+    appendToOutputContainer("You don't have enough beats to unlock the tempo selector!");
+  }
+
+  var startFn = function(task) {
+    var tempoSelector = document.getElementById("tempoSelector");
+    tempoSelector.style.display = "inline";
+    game.player.beats -= requiredBeats;
+    removeTask(task.name);
+  };
+
+  var tooltip = {"description": "Experiment with making beats at different tempos. Unlocks the tempo selector for your laptop.",
+                 "cost": {"Beats": requiredBeats},
+                 "flavor": "The ability to alter time itself, for the low cost of " + requiredBeats + " beats."};
+  var tempoTask = new Task("Experiment With Tempo", tooltip, checkFn, failFn, startFn);
+  game.tasks.push(tempoTask);
 }

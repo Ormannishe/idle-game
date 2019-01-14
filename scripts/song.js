@@ -1,7 +1,7 @@
-function Song(name, quality) {
+function Song(name, quality, popularity) {
   this.name = name;
   this.quality = quality;
-  this.popularity = 0;
+  this.popularity = popularity;
   this.maxPopularity = Math.pow(quality, 2) * 100;
   this.moneyPerSec = 0;
   this.totalEarnings = 0;
@@ -10,16 +10,17 @@ function Song(name, quality) {
 function makeSong(songName, skills) {
   /*
   	Creates a new Song entity with the given name using the given list of skills.
-  	The popularity and revenue of a song increases as a function of it's quality.
-  	It's quality is calculated below as such:
+  	The popularity and revenue of a song increases as a function of it's quality
+    and the player's fame. It's quality is calculated below as such:
 
   	Song Quality = The average skill level of the skills involved, plus 1 for each skill,
-  				   with a random modifier between 50% and 150% (rounded up)
+  				         with a random modifier between 75% and 125% (rounded up)
   */
 
   if (game.player.samples >= game.samplesPerSong && skills.length > 0) {
-    var quality = 0;
     var newSong;
+    var quality = 0;
+    var popularity = 0;
 
     game.player.samples -= game.samplesPerSong;
 
@@ -28,8 +29,9 @@ function makeSong(songName, skills) {
       game.player.addXp(skill, game.xpPerSong);
     })
 
-    quality = Math.ceil((quality / skills.length + skills.length) * (Math.random() + 0.5));
-    newSong = new Song(songName, quality);
+    quality = Math.ceil((quality / skills.length + skills.length) * (0.75 + (Math.random() / 2)));
+    popularity = Math.ceil(game.player.fame / 4);
+    newSong = new Song(songName, quality, popularity);
     game.player.songs.push(newSong);
   }
 }
