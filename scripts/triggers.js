@@ -41,10 +41,45 @@ function oddJobsEventTrigger(natural) {
 /* Beat Progression */
 
 function firstBeatTrigger() {
-  if (game.player.beats >= 1) {
+  if (game.player.lifetimeBeats >= 1) {
     document.getElementById('beats').style.display = "block";
     appendToOutputContainer("You've created your first beat. A building block to something greater.");
+    triggerFnSet.add(tenthBeatTrigger);
+    return true;
+  }
+}
+
+function tenthBeatTrigger() {
+  if (game.player.lifetimeBeats >= 10) {
+    appendToOutputContainer("You have so many ideas! You should probably write some of them down.");
+    makeBuyBeatBookTask();
     triggerFnSet.add(firstSampleTrigger);
+    triggerFnSet.add(fiftiethBeatTrigger);
+    return true;
+  }
+}
+
+function fiftiethBeatTrigger() {
+  if (game.player.lifetimeBeats >= 50) {
+    appendToOutputContainer("You've got the basics down, maybe it's time to experiment with the tempo?");
+    makeExperimentWithTempoTask();
+    triggerFnSet.add(hundredthBeatTrigger);
+    return true;
+  }
+}
+
+function hundredthBeatTrigger() {
+  if (game.player.lifetimeBeats >= 100) {
+    appendToOutputContainer("As you make your hundredth beat, you can feel you're getting better at this.");
+    makeExploreSubgenreTask();
+    triggerFnSet.add(thousandthBeatTrigger);
+    return true;
+  }
+}
+
+function thousandthBeatTrigger() {
+  if (game.player.lifetimeBeats >= 1000) {
+    appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
     return true;
   }
 }
@@ -53,8 +88,6 @@ function firstSampleTrigger() {
   if (game.player.beats >= game.beatsPerSample) {
     appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
     makeFirstSampleTask();
-    makeExperimentWithTempoTask();
-    triggerFnSet.add(hundredthBeatTrigger);
     triggerFnSet.add(firstSongTrigger);
     return true;
   }
@@ -64,21 +97,6 @@ function firstSongTrigger() {
   if (game.player.samples >= game.samplesPerSong) {
     appendToOutputContainer("With a handful of samples, you feel like you might have enough material to make a full song!");
     makeFirstSongTask();
-    return true;
-  }
-}
-
-function hundredthBeatTrigger() {
-  if (game.player.lifetimeBeats >= 100) {
-    appendToOutputContainer("As you make your hundredth beat, you can feel you're getting better at this.");
-    triggerFnSet.add(thousandthBeatTrigger);
-    return true;
-  }
-}
-
-function thousandthBeatTrigger() {
-  if (game.player.lifetimeBeats >= 1000) {
-    appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
     return true;
   }
 }

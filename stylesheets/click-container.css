@@ -166,6 +166,7 @@
 
 #tempoSelector > input {
   margin: 9px 9px 9px 9px;
+  cursor: pointer;
 }
 
 #beatButtonContainer {
@@ -193,6 +194,95 @@
 #beatButtonContainer > button:hover {
   cursor: pointer;
   background-color: #333333;
+}
+
+/* Sub-genres */
+
+#subgenreContainer {
+  height: 8%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.subgenre {
+  margin-right: 5px;
+  border-radius: 15px;
+  width: 2%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.subgenre:focus {
+  outline: 0;
+}
+
+#trance {
+  background-color: #5DADE2;
+  border: 1px solid #85C1E9;
+  display: none;
+}
+
+#house {
+  background-color: #E67E22;
+  border: 1px solid #EB984E;
+  display: none;
+}
+
+#drumAndBass {
+  background-color: #2980B9;
+  border: 1px solid #5499C7;
+  display: none;
+}
+
+#hardstyle {
+  background-color: #27AE60;
+  border: 1px solid #52BE80;
+  display: none;
+}
+
+#electro {
+  background-color: #F7DC6F;
+  border: 1px solid #F9E79F;
+  display: none;
+}
+
+#industrial {
+  background-color: #C0392B;
+  border: 1px solid #CD6155;
+  display: none;
+}
+
+#dubstep {
+  background-color: #8E44AD;
+  border: 1px solid #A569BD;
+  display: none;
+}
+
+#dropProgressContainer {
+  height: 4%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+}
+
+#dropProgressContainer > progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#dropProgressContainer > progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+#dropProgressContainer > progress[value]::-webkit-progress-value {
+  background-color: #8E44AD;
 }
 
 /*

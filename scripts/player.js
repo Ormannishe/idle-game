@@ -6,6 +6,7 @@ class Player {
     this.fame = 0;
     this.money = 0;
     this.lifetimeMoney = 0;
+    this.passiveBeatProgress = 0;
     this.beats = 0;
     this.lifetimeBeats = 0;
     this.samples = 0;

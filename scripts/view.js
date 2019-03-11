@@ -7,9 +7,20 @@ function startTicking() {
 }
 
 function naturalTick() {
+  passiveResourceGeneration();
   updateActiveTask();
   adjustSongStats();
   updateView(true);
+}
+
+function passiveResourceGeneration() {
+  var progress = document.getElementById('laptopBeatProgress');
+  var progressAmount = game.player.passiveBeatProgress;
+
+  if (game.activeLaptopSubgenre == "trance")
+    progressAmount *= 2;
+
+  updateProgress(progress, (progress.value + progressAmount), game.clicksPerBeat, addBeat);
 }
 
 function updateView(natural) {
@@ -106,7 +117,7 @@ function fameTooltip() {
   var tooltip = document.getElementById('tooltip');
   var offsets = getOffsets(obj);
   var html = "<div id='tooltipHeader'>" +
-            "Fame is a measure of how well known you are as an artist.<br><br>" +
+             "Fame is a measure of how well known you are as an artist.<br><br>" +
              "You can increase your fame through various tasks or by releasing high quality songs and albums.<br><br>" +
              "The more famous you are, the larger your fanbase will be. Songs and Albums created by you will gain popularity faster if you have an established fanbase.<br><br>" +
              "Increased fame also leads to more lucrative opportunities such as playing at prestigious events with other famous artists or attending VIP social events." +
@@ -231,13 +242,14 @@ function updateProgress(progress, value, max, triggerFn) {
 }
 
 function updateMultiplier(multiplier, elementId) {
+  var colorAndFontShift = Math.min(10, multiplier);
   var multDiv = document.getElementById(elementId);
-  var r = 250 - (multiplier - 1) * 30;
-  var g = 250 - Math.abs(multiplier - 5) * 30;
-  var b = (multiplier - 5) * 50;
+  var r = 250 - (colorAndFontShift - 1) * 30;
+  var g = 250 - Math.abs(colorAndFontShift - 5) * 30;
+  var b = (colorAndFontShift - 5) * 50;
 
   multDiv.innerHTML = "x" + multiplier;
-  multDiv.style.fontSize = 15 + multiplier;
+  multDiv.style.fontSize = 15 + colorAndFontShift;
   multDiv.style.color = "rgb(" + r + "," + g + "," + b + ")";
 }
 

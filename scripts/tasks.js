@@ -324,7 +324,7 @@ function makeOnlinePortfolioTask() {
 
   var tooltip = {"description": "Build an online portfolio containing some of your custom samples. Unlocks opportunities to play your music at small gatherings.",
                  "cost": {"Samples": requiredSamples},
-                 "flavor": "You like your music, now you just have to get other people to like your music!"};
+                 "flavor": "Turns out the hardest part about becoming an artist is getting other people to like your music."};
 
   var onlinePortfolioTask = new Task("Make Online Portfolio", tooltip, checkFn, failFn, startFn);
   game.tasks.push(onlinePortfolioTask);
@@ -415,6 +415,31 @@ function makeDJAtNightclubTask() {
 
   var DJAtNightclubTask = new Task("DJ At Nightclub", tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
   game.tasks.push(DJAtNightclubTask);
+}
+
+function makeBuyBeatBookTask() {
+  var requiredMoney = 10;
+
+  var checkFn = function() {
+    return game.player.money >= requiredMoney;
+  };
+
+  var failFn = function() {
+    appendToOutputContainer("You don't have enough money to purchase a notebook!");
+  };
+
+  var startFn = function(task) {
+    game.player.money -= requiredMoney;
+    game.player.passiveBeatProgress++;
+    removeTask(task.name);
+  };
+
+  var tooltip = {"description": "Purchase a notebook to write down ideas as they come to you. Permanently generates passive beat progress.",
+                 "cost": {"Money": requiredMoney},
+                 "flavor": "Some people like playing games. Others prefer when the game plays itself."};
+
+  var buyBeatBookTask = new Task("Book Of Beats", tooltip, checkFn, failFn, startFn);
+  game.tasks.push(buyBeatBookTask);
 }
 
 function makeBuyNewLaptopTask() {
@@ -526,7 +551,7 @@ function makeStudyOnlineTask() {
     stopActiveTask();
   };
 
-  var tooltip = {"description": "Do some online studying to improve your musical skills. Generates 1 beat every 5 seconds.",
+  var tooltip = {"description": "Do some online studying to improve your musical skills. Generates 1 beat every 5 seconds. Repeatable.",
                  "cost": {"Time": timeTaken},
                  "flavor": "You came here to procrastinate, but you ended up studying."};
 
@@ -573,7 +598,7 @@ function makeMusicClassTask() {
     stopActiveTask();
   };
 
-  var tooltip = {"description": "Take a music class to further develop your musical skills. Generates 1 beat every 2 seconds.",
+  var tooltip = {"description": "Take a music class to further develop your musical skills. Generates 1 beat every 2 seconds. Repeatable.",
                  "cost": {"Money": requiredMoney,
                           "Time": timeTaken},
                  "flavor": "$" + requiredMoney + " per class? Why does the world hate students?"};
@@ -641,4 +666,42 @@ function makeExperimentWithTempoTask() {
                  "flavor": "The ability to alter time itself, for the low cost of " + requiredBeats + " beats."};
   var tempoTask = new Task("Experiment With Tempo", tooltip, checkFn, failFn, startFn);
   game.tasks.push(tempoTask);
+}
+
+function makeExploreSubgenreTask() {
+  var requiredBeats = 100;
+
+  var checkFn = function() {
+    return game.player.beats >= requiredBeats;
+  }
+
+  var failFn = function() {
+    appendToOutputContainer("You don't have enough beats to unlock a sub-genre!");
+  }
+
+  var startFn = function(task) {
+    // TODO: Lightbox that allows user to pick the genre they want to explore
+    var subgenre = "house";
+    var htmlObj = document.getElementById(subgenre);
+    htmlObj.style.display = "inline";
+    setLaptopGenre(htmlObj);
+
+    // Remove after testing is done
+    document.getElementById("trance").style.display = "inline";
+    document.getElementById("industrial").style.display = "inline";
+    document.getElementById("hardstyle").style.display = "inline";
+    document.getElementById("dubstep").style.display = "inline";
+    document.getElementById("drumAndBass").style.display = "inline";
+    document.getElementById("electro").style.display = "inline";
+
+    game.player.beats -= requiredBeats;
+    appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
+    removeTask(task.name);
+  };
+
+  var tooltip = {"description": "Experiment with different sub-genres of electronic music. Unlocks a bonus effect of your choice for your laptop, improving beat production.",
+                 "cost": {"Beats": requiredBeats},
+                 "flavor": "You're not a real artist if people aren't arguing about what sub-sub-sub-genre your music is in."};
+  var subgenreTask = new Task("Explore A Sub-Genre", tooltip, checkFn, failFn, startFn);
+  game.tasks.push(subgenreTask);
 }
