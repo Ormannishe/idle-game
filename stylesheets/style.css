@@ -44,6 +44,8 @@ body {
   color: white;
 }
 
+/* Tooltip CSS */
+
 #tooltip {
   position: absolute;
   z-index: 100;
@@ -88,4 +90,36 @@ body {
   margin: 5px;
   padding-top: 5px;
   border-top: 1px solid white;
+}
+
+/* Pop Up CSS */
+
+#popUpBox {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 10; /* Sit on top */
+  border: 2px solid white;
+  color: white;
+  background-color: var(--my-background-color);
+  left: 25%;
+  top: 15%;
+  width: 50%;
+  height: auto;
+}
+
+#closePopUp {
+  background-color: Transparent;
+  color: white;
+  font-size: 16px;
+  border: none;
+  overflow: hidden;
+  outline:none;
+  float: right;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+#closePopUp:hover {
+  cursor: pointer;
+  color: red;
 }

@@ -18,6 +18,10 @@
 
 <body>
 	<div id='tooltip'></div>
+	<div id='popUpBox'>
+		<button id='closePopUp' onclick="closePopUp()">x</button>
+		<div id='popUpContent'></div>
+	</div>
 	<div class='column'>
 		<div id='clickContainer' class='row'>
 			<div id='instrumentContainer'>
@@ -51,6 +55,18 @@
 				</div>
 				<div id='laptopProgressContainer' class='beatProgress'>
 					<progress id='laptopBeatProgress' value='0' max='1'></progress>
+				</div>
+				<div id='subgenreContainer'>
+					<button id="trance" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="house" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="drumAndBass" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="hardstyle" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="electro" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="industrial" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="dubstep" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+				</div>
+				<div id = "dropProgressContainer">
+					<progress id='theDropProgress' value='0' max='500'></progress>
 				</div>
 			</div>
 			<div id='vocal' class='instrumentContent'>Under Construction!</div>

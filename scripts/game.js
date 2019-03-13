@@ -2,6 +2,8 @@ function Game() {
   this.player = new Player();
   this.tasks = [];
   this.laptopMultiplier = 1;
+  this.activeLaptopSubgenre = "nogenre";
+  this.unlearnedLaptopSubgenres = ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"];
   this.clicksPerBeat = 30;
   this.beatsPerSample = 25;
   this.samplesPerSong = 50;
@@ -35,6 +37,7 @@ function addBeat(n) {
   game.player.beats += n;
   game.player.lifetimeBeats += n;
   game.player.addXp("laptop", (game.xpPerBeat * n));
+
   updateView();
 }
 
