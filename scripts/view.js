@@ -305,3 +305,13 @@ function makeTaskButton(task) {
 
 	return html;
 }
+
+function openPopUp(populateFn) {
+  document.getElementById("popUpBox").style.display = "block";
+  populateFn();
+}
+
+function closePopUp() {
+  document.getElementById("popUpBox").style.display = "none";
+  document.getElementById("popUpContent").innerHTML = "";
+}

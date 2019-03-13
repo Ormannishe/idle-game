@@ -201,36 +201,49 @@ function dropTick() {
   }
 }
 
-function genreTooltip(obj) {
-  var tooltip = document.getElementById('tooltip');
-  var offsets = getOffsets(obj);
-  var html = "<div id='tooltipHeader'>";
-
-  switch(obj.id) {
+function getTooltipInfo(subgenre) {
+  switch(subgenre) {
     case "trance":
-      html += "Subgenre: Trance<br><br>Reduces the maximum combo by 10 (but not lower than 1). Generates 2x passive beat progress.";
+      return {"genre": "Trance",
+              "tooltip": "Reduces the maximum combo by 10 (but not lower than 1). Generates 2x passive beat progress."};
       break;
     case "house":
-      html += "Subgenre: House<br><br>Clicking generates 2x beat progress when using the slowest tempo.";
+      return {"genre": "House",
+              "tooltip": "Clicking generates 2x beat progress when using the slowest tempo."};
       break;
     case "drumAndBass":
-      html += "Subgenre: Drum and Bass<br><br>Increases the maximum combo by 20.";
+      return {"genre": "Drum and Bass",
+              "tooltip": "Increases the maximum combo by 20."};
       break;
     case "hardstyle":
-      html += "Subgenre: Hardstyle<br><br>Clicking generates 2x beat progress when using the fastest tempo.";
+      return {"genre": "Hardstyle",
+              "tooltip": "Clicking generates 2x beat progress when using the fastest tempo."};
       break;
     case "electro":
-      html += "Subgenre: Electro<br><br>Increases the size of the green zone and reduces the size of the yellow zones.";
+      return {"genre": "Electro",
+              "tooltip": "Increases the size of the green zone and reduces the size of the yellow zones."};
       break;
     case "industrial":
-      html += "Subgenre: Industrial<br><br>Clicking in the red zones generates 5x more beat progress.";
+      return {"genre": "Industrial",
+              "tooltip": "Clicking in the red zones generates 5x more beat progress."};
       break;
     case "dubstep":
-      html += "Subgenre: Dubstep<br><br>Every 50 seconds, enter The Drop. When The Drop occurs, clicking generates 10x beat progress for 10 seconds.";
+      return {"genre": "Dubstep",
+              "tooltip": "Every 50 seconds, enter The Drop. When The Drop occurs, clicking generates 10x beat progress for 10 seconds."};
       break;
     default:
       break;
   }
+}
+
+function genreTooltip(obj) {
+  var tooltip = document.getElementById('tooltip');
+  var tooltipInfo = getTooltipInfo(obj.id);
+  var offsets = getOffsets(obj);
+  var html = "<div id='tooltipHeader'>";
+
+  if (tooltipInfo !== undefined)
+    html += "Subgenre: " + tooltipInfo.genre + "<br><br>" + tooltipInfo.tooltip;
 
   html += "</div>";
 
@@ -247,4 +260,37 @@ function genreTooltip(obj) {
 function hideGenreTooltip() {
   document.getElementById('tooltip').style.width = "200px";
   hideTooltip();
+}
+
+function populateGenrePopUp(taskName) {
+  var popUp = document.getElementById("popUpContent");
+
+  popUp.innerHTML += "<p id='popUpGenreHeader'>Select A Sub-Genre To Explore</p>";
+
+  game.unlearnedLaptopSubgenres.forEach(function (genre) {
+    var genreRow = "<div class='genreRow'>";
+    var tooltipInfo = getTooltipInfo(genre);
+
+    if (tooltipInfo !== undefined) {
+      genreRow += "<button class='popUpGenreButton' onclick='selectGenre(\"" + genre + "\")'>" + tooltipInfo.genre + "</button>";
+      genreRow += "<p class='popUpGenreText'>" + tooltipInfo.tooltip + "</p>";
+    }
+
+    genreRow += "</div>"
+    popUp.innerHTML += genreRow;
+  });
+}
+
+function selectGenre(subgenre) {
+  var task = getTask("Explore A Sub-Genre");
+  var htmlObj = document.getElementById(subgenre);
+  var index = game.unlearnedLaptopSubgenres.indexOf(subgenre);
+
+  htmlObj.style.display = "inline";
+  setLaptopGenre(htmlObj);
+  appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
+  task.finishFn(task);
+  game.unlearnedLaptopSubgenres.splice(index, 1);
+  closePopUp();
+  updateView();
 }

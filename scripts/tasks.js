@@ -668,9 +668,7 @@ function makeExperimentWithTempoTask() {
   game.tasks.push(tempoTask);
 }
 
-function makeExploreSubgenreTask() {
-  var requiredBeats = 100;
-
+function makeExploreSubgenreTask(requiredBeats) {
   var checkFn = function() {
     return game.player.beats >= requiredBeats;
   }
@@ -680,28 +678,17 @@ function makeExploreSubgenreTask() {
   }
 
   var startFn = function(task) {
-    // TODO: Lightbox that allows user to pick the genre they want to explore
-    var subgenre = "house";
-    var htmlObj = document.getElementById(subgenre);
-    htmlObj.style.display = "inline";
-    setLaptopGenre(htmlObj);
-
-    // Remove after testing is done
-    document.getElementById("trance").style.display = "inline";
-    document.getElementById("industrial").style.display = "inline";
-    document.getElementById("hardstyle").style.display = "inline";
-    document.getElementById("dubstep").style.display = "inline";
-    document.getElementById("drumAndBass").style.display = "inline";
-    document.getElementById("electro").style.display = "inline";
-
-    game.player.beats -= requiredBeats;
-    appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
-    removeTask(task.name);
+    openPopUp(populateGenrePopUp);
   };
+
+  var finishFn = function(task) {
+    game.player.beats -= requiredBeats;
+    removeTask(task.name);
+  }
 
   var tooltip = {"description": "Experiment with different sub-genres of electronic music. Unlocks a bonus effect of your choice for your laptop, improving beat production.",
                  "cost": {"Beats": requiredBeats},
                  "flavor": "You're not a real artist if people aren't arguing about what sub-sub-sub-genre your music is in."};
-  var subgenreTask = new Task("Explore A Sub-Genre", tooltip, checkFn, failFn, startFn);
+  var subgenreTask = new Task("Explore A Sub-Genre", tooltip, checkFn, failFn, startFn, undefined, finishFn);
   game.tasks.push(subgenreTask);
 }

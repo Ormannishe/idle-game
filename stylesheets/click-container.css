@@ -232,8 +232,8 @@
 }
 
 #drumAndBass {
-  background-color: #2980B9;
-  border: 1px solid #5499C7;
+  background-color: #0064FA;
+  border: 1px solid #2177FA;
   display: none;
 }
 
@@ -283,6 +283,53 @@
 
 #dropProgressContainer > progress[value]::-webkit-progress-value {
   background-color: #8E44AD;
+}
+
+/* Sub-genre Pop-Up */
+#popUpButtons {
+  width: 100%;
+  text-align: center;
+}
+
+#popUpGenreHeader {
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.genreRow {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popUpGenreText {
+  font-size: 12px;
+  margin-left: 10px;
+  width: 75%;
+}
+
+.popUpGenreButton {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  border: 1px solid white;
+  color: white;
+  background-color: #222222;
+}
+
+.popUpGenreButton:hover {
+  cursor: pointer;
+  background-color: #333333;
+}
+
+.popUpGenreButton:focus {
+  outline: 0;
 }
 
 /*

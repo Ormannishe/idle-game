@@ -71,7 +71,15 @@ function fiftiethBeatTrigger() {
 function hundredthBeatTrigger() {
   if (game.player.lifetimeBeats >= 100) {
     appendToOutputContainer("As you make your hundredth beat, you can feel you're getting better at this.");
-    makeExploreSubgenreTask();
+    makeExploreSubgenreTask(100);
+    triggerFnSet.add(fiveHundredthBeatTrigger);
+    return true;
+  }
+}
+
+function fiveHundredthBeatTrigger() {
+  if (game.player.lifetimeBeats >= 500) {
+    makeExploreSubgenreTask(200);
     triggerFnSet.add(thousandthBeatTrigger);
     return true;
   }
@@ -79,6 +87,7 @@ function hundredthBeatTrigger() {
 
 function thousandthBeatTrigger() {
   if (game.player.lifetimeBeats >= 1000) {
+    makeExploreSubgenreTask(400);
     appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
     return true;
   }

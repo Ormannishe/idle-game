@@ -3,6 +3,7 @@ function Game() {
   this.tasks = [];
   this.laptopMultiplier = 1;
   this.activeLaptopSubgenre = "nogenre";
+  this.unlearnedLaptopSubgenres = ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"];
   this.clicksPerBeat = 30;
   this.beatsPerSample = 25;
   this.samplesPerSong = 50;
