@@ -1,34 +1,33 @@
+// Contains all game data and functions for manipulating top-level game data
+// Authoritative source for game constants (ie. how much things cost)
+
 function Game() {
   this.player = new Player();
   this.tasks = [];
-  this.laptopMultiplier = 1;
-  this.activeLaptopSubgenre = "nogenre";
-  this.unlearnedLaptopSubgenres = ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"];
-  this.clicksPerBeat = 30;
-  this.beatsPerSample = 25;
-  this.samplesPerSong = 50;
-  this.keyboardMultiplier = 1;
-  this.clicksPerNote = 50;
-  this.notesPerMeasure = 25;
-  this.measuresPerSong = 50;
-  this.xpPerBeat = 5;
-  this.xpPerSample = 50;
-  this.xpPerNote = 5;
-  this.xpPerMeasure = 50;
-  this.xpPerSong = 500;
+  this.resources = { fame: {},
+                     money: {},
+                     beats: { instruments: ["laptop"],
+                              resourcesPer: 30,
+                              validResources: ["clicks"],
+                              xpPer: 5 },
+                     samples: { instruments: ["laptop"],
+                               resourcesPer: 25,
+                               validResources: ["beats"],
+                               xpPer: 50 },
+                     notes: { instruments: ["keyboard"],
+                              resourcesPer: 50,
+                              validResources: ["clicks"],
+                              xpPer: 5 },
+                     measures: { instruments: ["keyboard"],
+                                 resourcesPer: 25,
+                                 validResources: ["notes"],
+                                 xpPer: 50 },
+                     songs: { instruments: ["laptop", "keyboard"],
+                              resourcesPer: 50,
+                              validResources: ["samples", "measures"],
+                              xpPer: 500 }
+                    };
 };
-
-function addFame(n) {
-  if (n == undefined)
-    n = 1;
-
-  game.player.fame += n;
-}
-
-function addMoney(n) {
-  game.player.money += n;
-  game.player.lifetimeMoney += n;
-}
 
 function addBeat(n) {
   if (n == undefined)

@@ -1,3 +1,6 @@
+var songInstructions = "Creating a song requires a total of 50 of any of the below resources. Every song you create will be of a given quality, determined by your skill level with the instruments used. Songs recieve a bonus to their quality when created using multiple instruments.";
+var tierTwoResources = ["samples", "measures"]; // TODO: Add more resources
+
 function Song(name, quality, popularity) {
   this.name = name;
   this.quality = quality;
@@ -10,27 +13,32 @@ function Song(name, quality, popularity) {
 function makeSong(songName, skills) {
   /*
   	Creates a new Song entity with the given name using the given list of skills.
-  	The popularity and revenue of a song increases as a function of it's quality
-    and the player's fame. It's quality is calculated below as such:
+    Calculates the popularity and quality of the song.
 
-  	Song Quality = The average skill level of the skills involved, plus 1 for each skill,
-  				         with a random modifier between 75% and 125% (rounded up)
+    Popularity: How many people are actively listening to your song. The starting
+                popularity of a song is the size of the player's dedicated fanbase,
+                which is assumed to be 20% of their fame.
+                Popularity then increases over time at a rate proportional to the
+                song's current Popularity and the song's Quality. The maximum
+                popularity of a song is also dependant on it's Quality.
+
+    Quality: How objectively good your song is, independent of how popular it is.
+             Quality is equal to your average skill level with all instruments used
+             to create the song, plus 10% per instrument used.
   */
 
-  if (game.player.samples >= game.samplesPerSong && skills.length > 0) {
+  if (skills.length > 0) {
     var newSong;
     var quality = 0;
     var popularity = 0;
-
-    game.player.samples -= game.samplesPerSong;
 
     skills.forEach(function(skill) {
       quality += game.player.skills[skill].level;
       game.player.addXp(skill, game.xpPerSong);
     })
 
-    quality = Math.ceil((quality / skills.length + skills.length) * (0.75 + (Math.random() / 2)));
-    popularity = Math.ceil(game.player.fame / 4);
+    quality = Math.ceil((quality / skills.length) * (1 + (0.1 * skills.length)));
+    popularity = Math.ceil(game.player.fame / 5);
     newSong = new Song(songName, quality, popularity);
     game.player.songs.push(newSong);
   }
@@ -86,4 +94,98 @@ function adjustSongStats() {
   });
 
   game.player.songs = songs;
+}
+
+function populateSongPopUp() {
+  var popUp = document.getElementById("popUpContent");
+
+  // Populate Header and Instructions
+  popUp.innerHTML += "<p class='popUpHeader'>Create A New Song</p>";
+  popUp.innerHTML += "<div class='popUpRow'>" + "<p>Song Name:</p>" + "<input id='songNameInput'></input>" + "</div>";
+  popUp.innerHTML += "<div id='songDetails'>" +
+                     "<p class='songDetails'>" + songInstructions + "</p>" +
+                     "</div>";
+
+  // Populate resource sliders
+  tierTwoResources.forEach(function(resource) {
+    var numResource = game.player[resource];
+
+    if (numResource > 0) {
+      var resourceRow = "<div class='popUpRow'>";
+
+      resourceRow += "<p class='resourceLabel'>" + resource + "</p>";
+      resourceRow += "<input id='" + resource + "Slider' class='popUpSlider' type='range' min='0' max='" +
+                     Math.min(game.samplesPerSong, numResource) +
+                     "' value='0' oninput='modifyResourceAmount(\""+ resource + "\")'></input>";
+      resourceRow += "<p id='" + resource + "Amount' class='resourceAmount'>0</p>";
+      resourceRow += "</div>";
+
+      popUp.innerHTML += resourceRow;
+    }
+  });
+
+  // Populate Total section
+  popUp.innerHTML += "<div id='totalRow' class='popUpRow'>" +
+                     "<p id='totalLabel' class='resourceLabel'>Total</p>" +
+                     "<input id='totalSlider' class='popUpSlider' type='range' min='0' max='1' value='0'></input>" +
+                     "<p id='totalAmount' class='resourceAmount'>0</p>" +
+                     "</div>";
+
+  popUp.innerHTML += "<div class='popUpHeader'><button class='popUpButton'" +
+                     "onclick='validateInput()'" +
+                     ">Make New Song</button></div>";
+}
+
+function modifyResourceAmount(resource) {
+  var slider = document.getElementById(resource + "Slider");
+  var amount = document.getElementById(resource + "Amount");
+  var totalAmount = document.getElementById("totalAmount");
+
+  totalAmount.innerHTML = parseInt(totalAmount.innerHTML) + parseInt(slider.value) - parseInt(amount.innerHTML);
+  amount.innerHTML = slider.value;
+
+}
+
+function validateInput() {
+  // Validate the user entered information before creating a new song.
+  var songNameInput = document.getElementById("songNameInput");
+  var totalAmount = document.getElementById("totalAmount");
+
+  if (songNameInput.value == "") {
+    songNameInput.classList.remove("backgroundColorError");
+    void songNameInput.offsetWidth; // css magic to replay the error animation
+    songNameInput.classList.add("backgroundColorError");
+  }
+  else if (parseInt(totalAmount.innerHTML) !== 50) {
+    totalAmount.classList.toggle("fontColorError");
+    void totalAmount.offsetWidth; // css magic to replay the error animation
+    totalAmount.classList.add("fontColorError");
+  }
+  // Determine how many of each resource is to be used. Determine relevant instruments, make song
+  else {
+    var instrumentsUsed = [];
+    var resourceToInstrument = {"samples": "laptop", "measures": "keyboard"};
+
+    tierTwoResources.forEach(function(resource) {
+      if (game.player[resource] > 0) {
+        var amount = document.getElementById(resource + "Amount").innerHTML;
+
+        if (amount > 0) {
+          game.player[resource] -= amount;
+          instrumentsUsed.push(resourceToInstrument[resource]);
+        }
+      }
+    });
+
+    if (game.player.songs.length == 0) {
+      appendToOutputContainer(songNameInput.value + " will be remembered as the start of a legacy!");
+      document.getElementById('songsTab').style.display = "inline";
+      removeTask(getTask("Make First Song").name);
+      makeNewSongTask();
+    }
+
+    makeSong(songNameInput.value, instrumentsUsed);
+    closePopUp();
+    updateView();
+  }
 }

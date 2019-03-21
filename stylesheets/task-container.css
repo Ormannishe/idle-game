@@ -29,10 +29,6 @@
   background-color: #333333;
 }
 
-#tasks > button:focus {
-  outline: 0;
-}
-
 #taskProgressContainer {
   width: 100%;
   height: 20%;

@@ -265,14 +265,14 @@ function hideGenreTooltip() {
 function populateGenrePopUp(taskName) {
   var popUp = document.getElementById("popUpContent");
 
-  popUp.innerHTML += "<p id='popUpGenreHeader'>Select A Sub-Genre To Explore</p>";
+  popUp.innerHTML += "<p class='popUpHeader'>Select A Sub-Genre To Explore</p>";
 
   game.unlearnedLaptopSubgenres.forEach(function (genre) {
-    var genreRow = "<div class='genreRow'>";
+    var genreRow = "<div class='popUpRow'>";
     var tooltipInfo = getTooltipInfo(genre);
 
     if (tooltipInfo !== undefined) {
-      genreRow += "<button class='popUpGenreButton' onclick='selectGenre(\"" + genre + "\")'>" + tooltipInfo.genre + "</button>";
+      genreRow += "<button class='popUpButton' onclick='selectGenre(\"" + genre + "\")'>" + tooltipInfo.genre + "</button>";
       genreRow += "<p class='popUpGenreText'>" + tooltipInfo.tooltip + "</p>";
     }
 

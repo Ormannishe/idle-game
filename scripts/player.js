@@ -1,62 +1,83 @@
-class Player {
+// Contains all player data and functions for manipulating player data
+// Authoritative source for all player information (ie. how many resources a player has)
 
+class Player {
   constructor() {
     this.name = "Michael Jackson";
-    this.instruments = ["Laptop"];
-    this.fame = 0;
-    this.money = 0;
-    this.lifetimeMoney = 0;
-    this.passiveBeatProgress = 0;
-    this.beats = 0;
-    this.lifetimeBeats = 0;
-    this.samples = 0;
-    this.lifetimeSamples = 0;
-    this.notes = 0;
-    this.lifetimeNotes = 0;
-    this.measures = 0;
-    this.songs = [];
-    this.albums = [];
-    this.skills = {
-      laptop: {
-        xp: 0,
-        level: 1,
-        toNextLevel: 100,
-        nextLevelXpRatio: 1.2
-      },
-      vocal: {
-        xp: 0,
-        level: 1,
-        toNextLevel: 100,
-        nextLevelXpRatio: 1.2
-      },
-      keyboard: {
-        xp: 0,
-        level: 1,
-        toNextLevel: 100,
-        nextLevelXpRatio: 1.2
-      },
-      guitar: {
-        xp: 0,
-        level: 1,
-        toNextLevel: 100,
-        nextLevelXpRatio: 1.2
-      },
-      drum: {
-        xp: 0,
-        level: 1,
-        toNextLevel: 100,
-        nextLevelXpRatio: 1.2
-      }
+    this.resources = { fame: { current: 0,
+                               lifetime: 0 },
+                       money: { current: 0,
+                                lifetime: 0 },
+                       beats: { current: 0,
+                                lifetime: 0 }.
+                       samples: { current: 0,
+                                  lifetime: 0 },
+                       notes: {current: 0,
+                               lifetime: 0,
+                               passiveProgress: 0 },
+                       measures: { current: 0,
+                                   lifetime: 0 },
+                       songs: [],
+                       albums: []
+                     };
+    this.bonuses = { laptop: { multiplier: 1,
+                               passiveProgress: 0,
+                               subgenre: undefined,
+                               unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"]},
+                     keyboard: { multiplier: 1,
+                                 passiveProgress: 0 }
+                   };
+    this.skills = { laptop: { xp: 0,
+                              level: 1,
+                              toNextLevel: 100,
+                              nextLevelXpRatio: 1.2 },
+                    vocal: { xp: 0,
+                             level: 1,
+                             toNextLevel: 100,
+                             nextLevelXpRatio: 1.2 },
+                    keyboard: { xp: 0,
+                                level: 1,
+                                toNextLevel: 100,
+                                nextLevelXpRatio: 1.2 },
+                    guitar: { xp: 0,
+                              level: 1,
+                              toNextLevel: 100,
+                              nextLevelXpRatio: 1.2 },
+                    drum: { xp: 0,
+                            level: 1,
+                            toNextLevel: 100,
+                            nextLevelXpRatio: 1.2 }
+                    };
+  }
+
+  addXp(s, n) {
+    this.skills[s].xp += n;
+    while (this.skills[s].toNextLevel <= this.skills[s].xp) {
+      this.skills[s].xp = this.skills[s].xp - this.skills[s].toNextLevel;
+      this.skills[s].level++;
+      this.skills[s].toNextLevel = Math.round(this.skills[s].toNextLevel * this.skills[s].nextLevelXpRatio);
+      appendToOutputContainer("Your " + s + " skill has reached level " + this.skills[s].level + "!");
     }
   }
 
-  addXp(skill, n) {
-    this.skills[skill].xp += n;
-    while (this.skills[skill].toNextLevel <= this.skills[skill].xp) {
-      this.skills[skill].xp = this.skills[skill].xp - this.skills[skill].toNextLevel;
-      this.skills[skill].level++;
-      this.skills[skill].toNextLevel = Math.round(this.skills[skill].toNextLevel * this.skills[skill].nextLevelXpRatio);
-      appendToOutputContainer("Your " + skill + " skill has reached level " + this.skills[skill].level + "!");
+  addResource(resource, amount) {
+    var relevantSkill = game.resources[resource].instrument;
+
+    if (amount == undefined)
+      amount = 1;
+
+    this.resources[resource].current += n;
+    this.resources[resource].lifetime += n;
+
+    if (relevantSkill !== undefined) {
+      this.addXp(relevantSkill, (game.xpPerNote * n));
+
     }
   }
+
+  addMoney(n) {
+    this.resources.money.current += n;
+    this.resources.money.lifetime += n;
+  }
+
 };

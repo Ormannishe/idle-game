@@ -27,6 +27,8 @@ There are two types of triggers:
 2. Event Triggers, which have a chance to trigger ONLY on a natural tick.
 */
 
+/* Starting Triggers */
+
 function oddJobsEventTrigger(natural) {
   // The expected number of ticks this event takes to trigger
   var avgTicks = 60;
@@ -79,6 +81,7 @@ function hundredthBeatTrigger() {
 
 function fiveHundredthBeatTrigger() {
   if (game.player.lifetimeBeats >= 500) {
+    appendToOutputContainer("Time to widen your horizons by delving into another sub-genre.");
     makeExploreSubgenreTask(200);
     triggerFnSet.add(thousandthBeatTrigger);
     return true;
@@ -89,23 +92,6 @@ function thousandthBeatTrigger() {
   if (game.player.lifetimeBeats >= 1000) {
     makeExploreSubgenreTask(400);
     appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
-    return true;
-  }
-}
-
-function firstSampleTrigger() {
-  if (game.player.beats >= game.beatsPerSample) {
-    appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
-    makeFirstSampleTask();
-    triggerFnSet.add(firstSongTrigger);
-    return true;
-  }
-}
-
-function firstSongTrigger() {
-  if (game.player.samples >= game.samplesPerSong) {
-    appendToOutputContainer("With a handful of samples, you feel like you might have enough material to make a full song!");
-    makeFirstSongTask();
     return true;
   }
 }
@@ -121,15 +107,6 @@ function firstNoteTrigger() {
   }
 }
 
-function firstMeasureTrigger() {
-  if (game.player.notes >= game.notesPerMeasure) {
-    appendToOutputContainer("After playing several notes, you're ready to record your first measure.");
-    triggerFnSet.add(hundredthNoteTrigger);
-    makeFirstMeasureTask();
-    return true;
-  }
-}
-
 function hundredthNoteTrigger() {
   if (game.player.lifetimeNotes >= 100) {
     appendToOutputContainer("One hundred notes later, and you can almost play with both hands!");
@@ -141,6 +118,38 @@ function hundredthNoteTrigger() {
 function thousandthNoteTrigger() {
   if (game.player.lifetimeNotes >= 1000) {
     appendToOutputContainer("As you play your thousandth note, you realize you've gotten quite good at this.");
+    return true;
+  }
+}
+
+/* Tier Two Resource Progression */
+
+function firstSampleTrigger() {
+  if (game.player.beats >= game.beatsPerSample) {
+    appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
+    makeFirstSampleTask();
+    triggerFnSet.add(firstSongTrigger);
+    return true;
+  }
+}
+
+function firstMeasureTrigger() {
+  if (game.player.notes >= game.notesPerMeasure) {
+    appendToOutputContainer("After playing several notes, you're ready to record your first measure.");
+    triggerFnSet.add(hundredthNoteTrigger);
+    makeFirstMeasureTask();
+    return true;
+  }
+}
+
+/* Tier Three Resource Progression */
+
+function firstSongTrigger() {
+  var totalResources = game.player.samples + game.player.measures;
+
+  if (totalResources >= game.samplesPerSong) {
+    appendToOutputContainer("After days of effort, you feel like you might finally have enough material to make a full song!");
+    makeFirstSongTask();
     return true;
   }
 }
@@ -172,7 +181,7 @@ function djPartyTrigger(natural) {
     avgTicks = 30;
 
   if (natural && Math.random() < (1 / avgTicks)) {
-    var partyTypes = ["Birthday Party", "House Party", "Corporate Party"]
+    var partyTypes = ["Birthday Party", "House Party", "Corporate Party", "Wedding", "Frat Party"]
     var party = partyTypes[Math.floor(Math.random() * partyTypes.length)]
     appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + party.toLowerCase() + "!");
     makeDJAtPartyTask(party);

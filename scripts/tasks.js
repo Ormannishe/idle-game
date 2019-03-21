@@ -112,7 +112,7 @@ function makeSampleTask() {
   }
 
   var finishFn = function(task) {
-    // Only required for active tasks
+    // Only required for active tasks or tasks that require user input
     // What should be done when the task has completed
   };
 
@@ -138,9 +138,9 @@ function makeCheatTask() {
   }
 
   var startFn = function(task) {
-    addBeat(25);
-    addMoney(100);
-    addFame(1);
+    addBeat(1500);
+    addNote(1000);
+    addMoney(1000);
   };
 
   var tooltip = {"description": "Gives free beats and money. Cheater.",
@@ -199,10 +199,11 @@ function makeFirstMeasureTask() {
 }
 
 function makeFirstSongTask() {
-  var timeTaken = 10;
 
   var checkFn = function() {
-    return game.player.samples >= game.samplesPerSong;
+    var totalResources = game.player.samples + game.player.measures;
+
+    return totalResources >= game.samplesPerSong;
   };
 
   var failFn = function() {
@@ -210,38 +211,22 @@ function makeFirstSongTask() {
   };
 
   var startFn = function(task) {
-    var songName = prompt("Please enter your song name:", "Sandstorm");
-
-    if (songName !== null) {
-      task.songName = songName;
-      if (startActiveTask(task)) {
-        removeTask(task.name);
-      }
-    }
-  };
-
-  var finishFn = function() {
-    makeSong(activeTask.songName, ["laptop"]);
-    appendToOutputContainer(activeTask.songName + " will be remembered as the start of a legacy!");
-    document.getElementById('songsTab').style.display = "inline";
-    stopActiveTask();
-    makeNewSongTask();
+    openPopUp(populateSongPopUp);
   };
 
   var tooltip = {"description": "Create your first ever song!",
-                 "cost": {"Samples": game.samplesPerSong,
-                          "Time": timeTaken},
+                 "cost": {"Tier Two Resources": game.samplesPerSong},
                  "flavor": "You'll probably be embarassed by this one in a few years."};
 
-  var firstSongTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
+  var firstSongTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn);
   game.tasks.push(firstSongTask);
 }
 
 function makeNewSongTask() {
-  var timeTaken = 10;
 
   var checkFn = function() {
-    return game.player.samples >= game.samplesPerSong;
+    var totalResources = game.player.samples + game.player.measures;
+    return totalResources >= game.samplesPerSong;
   };
 
   var failFn = function() {
@@ -249,26 +234,14 @@ function makeNewSongTask() {
   };
 
   var startFn = function(task) {
-    var songName = prompt("Please enter your song name:", "Sandstorm");
-
-    if (songName !== null) {
-      task.songName = songName;
-      startActiveTask(task);
-    }
-  };
-
-  var finishFn = function() {
-    makeSong(activeTask.songName, ["laptop"]);
-    appendToOutputContainer("You've created a new song!");
-    stopActiveTask();
+    openPopUp(populateSongPopUp);
   };
 
   var tooltip = {"description": "Create a new song!",
-                 "cost": {"Samples": game.samplesPerSong,
-                          "Time": timeTaken},
+                 "cost": {"Tier Two Resources": game.samplesPerSong},
                  "flavor": "Every new song is a new chance. Unless you're Nickelback. Then it's just the same chance over and over."};
 
-  var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn, undefined, finishFn, timeTaken);
+  var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn);
   game.tasks.push(newSongTask);
 }
 

@@ -51,10 +51,6 @@
   width: 20%;
 }
 
-.instrument, .activeInstrument:focus {
-  outline: 0;
-}
-
 .activeInstrument {
   background-color: var(--my-background-color);
 }
@@ -187,10 +183,6 @@
   font-size: 12px;
 }
 
-#beatButtonContainer > button:focus {
-  outline: 0;
-}
-
 #beatButtonContainer > button:hover {
   cursor: pointer;
   background-color: #333333;
@@ -213,10 +205,6 @@
   width: 2%;
   height: 50%;
   cursor: pointer;
-}
-
-.subgenre:focus {
-  outline: 0;
 }
 
 #trance {
@@ -286,50 +274,11 @@
 }
 
 /* Sub-genre Pop-Up */
-#popUpButtons {
-  width: 100%;
-  text-align: center;
-}
-
-#popUpGenreHeader {
-  text-align: center;
-  margin-bottom: 15px;
-  margin-top: 15px;
-}
-
-.genreRow {
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .popUpGenreText {
   font-size: 12px;
   margin-left: 10px;
   width: 75%;
-}
-
-.popUpGenreButton {
-  width: 120px;
-  height: 30px;
-  margin-top: 6px;
-  margin-right: 10px;
-  margin-left: 10px;
-  margin-bottom: 6px;
-  font-size: 12px;
-  border: 1px solid white;
-  color: white;
-  background-color: #222222;
-}
-
-.popUpGenreButton:hover {
-  cursor: pointer;
-  background-color: #333333;
-}
-
-.popUpGenreButton:focus {
-  outline: 0;
 }
 
 /*
@@ -386,10 +335,6 @@
   text-align: center;
   font-size: 10;
   margin-left: 3.3%;
-}
-
-.blackKey:focus, .whiteKey:focus {
-  outline: 0;
 }
 
 .whiteKey:before, .blackKey:before { /* Bit of a hack to push the text to the bottom of the keys */

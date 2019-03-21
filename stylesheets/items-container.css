@@ -18,10 +18,6 @@
   width: 33.3333333%;
 }
 
-.tab, .active-tab:focus {
-  outline: 0;
-}
-
 .active-tab {
   background-color: var(--my-background-color);
 }
@@ -173,10 +169,6 @@
   position: static;
 }
 
-#songsHeader > button:focus {
-  outline: 0;
-}
-
 #songsHeader > button:hover {
   cursor: pointer;
   background-color: #333333;
@@ -212,4 +204,53 @@
 
 .songContent > p {
   margin-bottom: 6px;
+}
+
+/* Song PopUp */
+
+#songNameInput {
+  margin-left: 5px;
+}
+
+.songDetails {
+  margin: 15px;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+}
+
+/*
+#songDetails {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5%;
+  font-size: 12px;
+}
+
+li {
+  margin-top: 10px;
+}
+*/
+
+.resourceLabel {
+  width: 15%;
+  text-transform: capitalize;
+}
+
+.resourceAmount {
+  width: 5%;
+  text-align: center;
+}
+
+#totalLabel {
+  padding-top: 10px;
+}
+
+#totalAmount {
+  padding-top: 10px;
+  border-top: 1px solid white;
+}
+
+#totalSlider {
+  opacity: 0;
 }

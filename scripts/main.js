@@ -21,6 +21,7 @@ function init() {
   game = new Game();
   startLaptop();
   startTicking();
+  makeCheatTask();
   updateView();
   console.log("Initialized!");
 }
