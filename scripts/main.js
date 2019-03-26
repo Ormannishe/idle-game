@@ -1,9 +1,6 @@
-// TODO: Add Achievements
-// TODO: Make Albums and other cool resources
-
-var game;
-
-/* Initialization */
+/*
+  Initializes the game state and holds the game object
+*/
 
 $(document).ready(function() {
   $(window).keydown(function(event) {
@@ -16,12 +13,14 @@ $(document).ready(function() {
   init();
 });
 
+var game;
+
 function init() {
   // TODO: Check for a save
   game = new Game();
+  initTriggers();
   startLaptop();
   startTicking();
   makeCheatTask();
   updateView();
-  console.log("Initialized!");
 }

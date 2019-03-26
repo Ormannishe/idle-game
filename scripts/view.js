@@ -1,3 +1,7 @@
+/*
+  Contains generic functions for updating or manipulating the view
+*/
+
 var tickInterval;
 
 /* View Update Functions */
@@ -7,6 +11,7 @@ function startTicking() {
 }
 
 function naturalTick() {
+  game.player.stats.timePlayed++;
   passiveResourceGeneration();
   updateActiveTask();
   adjustSongStats();
@@ -15,12 +20,13 @@ function naturalTick() {
 
 function passiveResourceGeneration() {
   var progress = document.getElementById('laptopBeatProgress');
-  var progressAmount = game.player.passiveBeatProgress;
+  var progressAmount = game.player.bonuses.laptop.passiveProgress;
+  var triggerFn = function () {game.player.addResource("beats")};
 
-  if (game.activeLaptopSubgenre == "trance")
+  if (game.player.bonuses.laptop.subgenre == "trance")
     progressAmount *= 2;
 
-  updateProgress(progress, (progress.value + progressAmount), game.clicksPerBeat, addBeat);
+  updateProgress(progress, (progress.value + progressAmount), game.resources.beats.clicksPer, triggerFn);
 }
 
 function updateView(natural) {
@@ -32,16 +38,28 @@ function updateView(natural) {
 }
 
 function updateResourcesTab() {
-  var sampleSuffix = getResourceNumbers(game.player.beats, game.beatsPerSample, "makeSample");
-  var measureSuffix = getResourceNumbers(game.player.notes, game.notesPerMeasure, "makeMeasure");
+  for (var resource in game.resources) {
+    var amount = game.player.resources[resource];
 
-  document.getElementById('fameAmount').innerHTML = game.player.fame;
-  document.getElementById('moneyAmount').innerHTML = "$" + round(game.player.money, 2);
-  document.getElementById('beatAmount').innerHTML = game.player.beats;
-  document.getElementById('samples').innerHTML = "<p>Samples</p><p>" + game.player.samples + "</p>" + sampleSuffix;
-  document.getElementById('noteAmount').innerHTML = game.player.notes;
-  document.getElementById('measures').innerHTML = "<p>Measures</p><p>" + game.player.measures + "</p>" + measureSuffix;
+    if (resource == "money")
+      amount = "$" + round(amount, 2);
 
+    document.getElementById(resource + "Amount").innerHTML = amount;
+
+    var requiredResource = game.resources[resource].requiredResource;
+
+    if (requiredResource !== undefined) {
+      var cost = game.resources[resource].resourcesPer;
+      var numReqResource = game.player.resources[requiredResource];
+
+      if (numReqResource >= cost) {
+        modifyResourceNumber(resource, cost, numReqResource);
+        modifyResourceNumber(resource, cost, numReqResource, 1);
+        modifyResourceNumber(resource, cost, numReqResource, 10);
+        modifyResourceNumber(resource, cost, numReqResource, 100);
+      }
+    }
+  }
 }
 
 function updateSongsTab() {
@@ -91,11 +109,11 @@ function updateTasks() {
 }
 
 function updateSkills() {
-  document.getElementById('laptopLevel').innerHTML = "<p>" + game.player.skills.laptop.level + "</p>";
-  document.getElementById('vocalLevel').innerHTML = "<p>" + game.player.skills.vocal.level + "</p>";
-  document.getElementById('keyboardLevel').innerHTML = "<p>" + game.player.skills.keyboard.level + "</p>";
-  document.getElementById('guitarLevel').innerHTML = "<p>" + game.player.skills.guitar.level + "</p>";
-  document.getElementById('drumLevel').innerHTML = "<p>" + game.player.skills.drum.level + "</p>";
+  document.getElementById('laptopLevel').innerHTML = game.player.skills.laptop.level;
+  document.getElementById('vocalLevel').innerHTML = game.player.skills.vocal.level;
+  document.getElementById('keyboardLevel').innerHTML = game.player.skills.keyboard.level;
+  document.getElementById('guitarLevel').innerHTML = game.player.skills.guitar.level;
+  document.getElementById('drumLevel').innerHTML = game.player.skills.drum.level;
 
   updateProgress(document.getElementById('laptopSkillProgress'), game.player.skills.laptop.xp, game.player.skills.laptop.toNextLevel);
   updateProgress(document.getElementById('vocalSkillProgress'), game.player.skills.vocal.xp, game.player.skills.vocal.toNextLevel);
@@ -144,15 +162,15 @@ function showTooltip(obj, taskName) {
 	var task = getTask(taskName);
 	var html = "<div id='tooltipHeader'>" + task.tooltip["description"] + "</div>";
 
-	for (var key in task.tooltip["cost"]) {
+	for (var key in task.tooltip.cost) {
 		html += "<div class='tooltipPriceInfo'>" +
 							"<p class='tooltipResource'>" + key + "</p>" +
-							"<p class='tooltipCost'>" + task.tooltip["cost"][key] + "</p>" +
+							"<p class='tooltipCost'>" + task.tooltip.cost[key] + "</p>" +
 						"</div>";
 	};
 
-	if (task.tooltip["flavor"] !== undefined) {
-		html += "<div class='tooltipFlavor'>" + task.tooltip["flavor"] + "</div>";
+	if (task.tooltip.flavor !== undefined) {
+		html += "<div class='tooltipFlavor'>" + task.tooltip.flavor + "</div>";
 	}
 
 	tooltip.innerHTML = html;
@@ -242,6 +260,9 @@ function updateProgress(progress, value, max, triggerFn) {
 }
 
 function updateMultiplier(multiplier, elementId) {
+  if (multiplier < 1)
+    multiplier = 1;
+
   var colorAndFontShift = Math.min(10, multiplier);
   var multDiv = document.getElementById(elementId);
   var r = 250 - (colorAndFontShift - 1) * 30;
@@ -263,32 +284,32 @@ function getOffsets(e) {
   };
 }
 
-function getResourceNumbers(numReqResource, cost, onClickFn) {
-	var oneTime = "<p>-</p>";
-	var tenTimes = "<p>-</p>";
-	var hundredTimes = "<p>-</p>";
-	var allTimes = "<p>-</p>";
-	var maxResource = Math.floor(numReqResource / cost);
+function modifyResourceNumber(resource, cost, numReqResource, amount) {
+  var htmlObj;
 
-	if (numReqResource >= cost) {
-		oneTime = "<p onclick=" + onClickFn + "()>1</p>";
-		allTimes = "<p onclick=" + onClickFn + "(" + maxResource + ")" + ">" + maxResource + "</p>";
-	}
+  if (amount == undefined) {
+    amount = Math.floor(numReqResource / cost);
+    htmlObj = document.getElementById(resource + "All");
+  }
+  else {
+    htmlObj = document.getElementById(resource + amount);
+  }
 
-	if (numReqResource >= (cost * 10))
-		tenTimes = "<p onclick=" + onClickFn + "(10)>10</p>";
-
-	if (numReqResource >= (cost * 100))
-		hundredTimes = "<p onclick=" + onClickFn + "(100)>100</p>";
-
-	return oneTime + tenTimes + hundredTimes + allTimes;
+  if (numReqResource >= cost * amount) {
+    htmlObj.innerHTML = amount;
+    htmlObj.onclick = function () { game.player.addResource(resource, amount)};
+  }
+  else {
+    htmlObj.innerHTML = "-";
+    htmlObj.removeAttribute("onclick");
+  }
 }
 
 function makeTaskButton(task) {
 	var html = "";
 	var htmlClass = "class='invalidTask'";
 
-	if (task.checkFn() && (task.finishFn == undefined || activeTask == undefined))
+	if (task.checkFn() && (task.timeToComplete == undefined || game.activeTask == undefined))
 		htmlClass = "class='validTask'";
 
 	html += "<button " + htmlClass;

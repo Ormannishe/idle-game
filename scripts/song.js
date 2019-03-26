@@ -1,5 +1,6 @@
-var songInstructions = "Creating a song requires a total of 50 of any of the below resources. Every song you create will be of a given quality, determined by your skill level with the instruments used. Songs recieve a bonus to their quality when created using multiple instruments.";
-var tierTwoResources = ["samples", "measures"]; // TODO: Add more resources
+/*
+  Contains all functionality for songs
+*/
 
 function Song(name, quality, popularity) {
   this.name = name;
@@ -34,11 +35,11 @@ function makeSong(songName, skills) {
 
     skills.forEach(function(skill) {
       quality += game.player.skills[skill].level;
-      game.player.addXp(skill, game.xpPerSong);
+      game.player.addXp(skill, game.specialResources.songs.xpPer);
     })
 
     quality = Math.ceil((quality / skills.length) * (1 + (0.1 * skills.length)));
-    popularity = Math.ceil(game.player.fame / 5);
+    popularity = Math.ceil(game.player.resources.fame / 5);
     newSong = new Song(songName, quality, popularity);
     game.player.songs.push(newSong);
   }
@@ -88,7 +89,7 @@ function adjustSongStats() {
     // Calculate new revenue stats and give player money
     if (revenueMod > 0) {
       song.moneyPerSec = song.popularity / revenueMod;
-      addMoney(song.moneyPerSec);
+      game.player.addResource("money", song.moneyPerSec);
       song.totalEarnings += song.moneyPerSec;
     }
   });
@@ -97,6 +98,7 @@ function adjustSongStats() {
 }
 
 function populateSongPopUp() {
+  var songInstructions = "Creating a song requires a total of 50 of any of the below resources. Every song you create will be of a given quality, determined by your skill level with the instruments used. Songs recieve a bonus to their quality when created using multiple instruments.";
   var popUp = document.getElementById("popUpContent");
 
   // Populate Header and Instructions
@@ -107,17 +109,17 @@ function populateSongPopUp() {
                      "</div>";
 
   // Populate resource sliders
-  tierTwoResources.forEach(function(resource) {
-    var numResource = game.player[resource];
+  game.specialResources.songs.validResources.forEach(function(resource) {
+    var numResource = game.player.resources[resource];
 
     if (numResource > 0) {
       var resourceRow = "<div class='popUpRow'>";
 
       resourceRow += "<p class='resourceLabel'>" + resource + "</p>";
       resourceRow += "<input id='" + resource + "Slider' class='popUpSlider' type='range' min='0' max='" +
-                     Math.min(game.samplesPerSong, numResource) +
+                     Math.min(game.specialResources.songs.resourcesPer, numResource) +
                      "' value='0' oninput='modifyResourceAmount(\""+ resource + "\")'></input>";
-      resourceRow += "<p id='" + resource + "Amount' class='resourceAmount'>0</p>";
+      resourceRow += "<p id='" + resource + "SliderAmount' class='resourceAmount'>0</p>";
       resourceRow += "</div>";
 
       popUp.innerHTML += resourceRow;
@@ -128,7 +130,7 @@ function populateSongPopUp() {
   popUp.innerHTML += "<div id='totalRow' class='popUpRow'>" +
                      "<p id='totalLabel' class='resourceLabel'>Total</p>" +
                      "<input id='totalSlider' class='popUpSlider' type='range' min='0' max='1' value='0'></input>" +
-                     "<p id='totalAmount' class='resourceAmount'>0</p>" +
+                     "<p id='totalSliderAmount' class='resourceAmount'>0</p>" +
                      "</div>";
 
   popUp.innerHTML += "<div class='popUpHeader'><button class='popUpButton'" +
@@ -138,41 +140,39 @@ function populateSongPopUp() {
 
 function modifyResourceAmount(resource) {
   var slider = document.getElementById(resource + "Slider");
-  var amount = document.getElementById(resource + "Amount");
-  var totalAmount = document.getElementById("totalAmount");
+  var amount = document.getElementById(resource + "SliderAmount");
+  var totalAmount = document.getElementById("totalSliderAmount");
 
   totalAmount.innerHTML = parseInt(totalAmount.innerHTML) + parseInt(slider.value) - parseInt(amount.innerHTML);
   amount.innerHTML = slider.value;
-
 }
 
 function validateInput() {
   // Validate the user entered information before creating a new song.
   var songNameInput = document.getElementById("songNameInput");
-  var totalAmount = document.getElementById("totalAmount");
+  var totalAmount = document.getElementById("totalSliderAmount");
 
   if (songNameInput.value == "") {
     songNameInput.classList.remove("backgroundColorError");
-    void songNameInput.offsetWidth; // css magic to replay the error animation
+    void songNameInput.offsetWidth; // css magic to allow replay of the error animation
     songNameInput.classList.add("backgroundColorError");
   }
-  else if (parseInt(totalAmount.innerHTML) !== 50) {
+  else if (parseInt(totalAmount.innerHTML) !== game.specialResources.songs.resourcesPer) {
     totalAmount.classList.toggle("fontColorError");
-    void totalAmount.offsetWidth; // css magic to replay the error animation
+    void totalAmount.offsetWidth; // css magic to allow replay of the error animation
     totalAmount.classList.add("fontColorError");
   }
   // Determine how many of each resource is to be used. Determine relevant instruments, make song
   else {
     var instrumentsUsed = [];
-    var resourceToInstrument = {"samples": "laptop", "measures": "keyboard"};
 
-    tierTwoResources.forEach(function(resource) {
-      if (game.player[resource] > 0) {
-        var amount = document.getElementById(resource + "Amount").innerHTML;
+    game.specialResources.songs.validResources.forEach(function(resource) {
+      if (game.player.resources[resource] > 0) {
+        var amount = document.getElementById(resource + "SliderAmount").innerHTML;
 
         if (amount > 0) {
-          game.player[resource] -= amount;
-          instrumentsUsed.push(resourceToInstrument[resource]);
+          game.player.resources[resource] -= amount;
+          instrumentsUsed.push(game.resources[resource].instrument);
         }
       }
     });

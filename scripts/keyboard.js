@@ -1,9 +1,11 @@
+/*
+	Contains all functionality that is specific to the keyboard instrument
+	ie. Animations, event handlers, etc.
+*/
+
 // TODO: Add support for songs with chords
 // TODO: Add mute button
 // TODO: Add lightbox for buying new instrument
-
-var currentSong;
-var currentNote;
 
 // Maps keyboard keys to piano notes
 var keyToKeyMap = { // White Keys
@@ -20,7 +22,7 @@ var keyToKeyMap = { // White Keys
 function startKeyboard() {
   document.addEventListener('keydown', keyboardKeyDownEvent);
   document.addEventListener('keyup', keyboardKeyUpEvent);
-  if (currentSong == undefined)
+  if (game.instruments.keyboard.currentSong == undefined)
     playKeyboardSong();
 }
 
@@ -42,10 +44,11 @@ function keyboardKeyDownEvent(event) {
 	var notePlayed = keyToKeyMap[event.code];
 
 	if (notePlayed !== undefined && event.repeat == false) {
-    var progressAmount = 0.5;
+    var progressAmount = 0;
     var progress = document.getElementById('keyboardBeatProgress');
     var audio = new Audio("resources/audio/Piano.mf." + notePlayed + ".mp3");
     var keyboardKey = document.getElementById(notePlayed + "Key");
+		var triggerFn = function () { game.player.addResource("notes") };
 
     // For Debug functionality
     if (makingSong == true)
@@ -58,20 +61,21 @@ function keyboardKeyDownEvent(event) {
 
 		audio.play()
 
-    if (notePlayed == currentNote) {
-      progressAmount = game.keyboardMultiplier;
+    if (notePlayed == game.instruments.keyboard.currentNote) {
+      progressAmount = game.player.bonuses.keyboard.multiplier;
 
-      if (game.keyboardMultiplier < 10)
-        game.keyboardMultiplier++;
+      if (game.player.bonuses.keyboard.multiplier < game.player.bonuses.keyboard.maxMultiplier)
+        game.player.bonuses.keyboard.multiplier++;
 
       playKeyboardSong();
     }
     else {
-      game.keyboardMultiplier = 1;
+			progressAmount = 0.5;
+      game.player.bonuses.keyboard.multiplier = 1;
     }
 
-    updateProgress(progress, (progress.value + progressAmount), game.clicksPerNote, addNote);
-    updateMultiplier(game.keyboardMultiplier, "keyboardMultiplier");
+    updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, triggerFn);
+    updateMultiplier(game.player.bonuses.keyboard.multiplier, "keyboardMultiplier");
 	}
 }
 
@@ -81,7 +85,7 @@ function keyboardKeyUpEvent(event) {
   */
 	var notePlayed = keyToKeyMap[event.code];
 
-	if (notePlayed !== undefined && notePlayed != currentNote) {
+	if (notePlayed !== undefined && notePlayed != game.instruments.keyboard.currentNote) {
 		var keyboardKey = document.getElementById(notePlayed + "Key");
 
 		if (keyboardKey.className == "whiteKey") {
@@ -102,17 +106,17 @@ function playKeyboardSong() {
     Selects the next key in the song to be pressed and highlights it on the keyboard.
     If no song is currently active, selects a new one at random.
   */
-  if (currentSong == undefined || currentSong.length == 0) {
-    currentSong = pickRandomSong();
+  if (game.instruments.keyboard.currentSong == undefined || game.instruments.keyboard.currentSong.length == 0) {
+    game.instruments.keyboard.currentSong = pickRandomSong();
   }
 
-  currentNote = currentSong[0];
-  document.getElementById(currentNote + "Key").style.backgroundColor = "grey";
-  currentSong = currentSong.slice(1);
+  game.instruments.keyboard.currentNote = game.instruments.keyboard.currentSong[0];
+  document.getElementById(game.instruments.keyboard.currentNote + "Key").style.backgroundColor = "grey";
+  game.instruments.keyboard.currentSong = game.instruments.keyboard.currentSong.slice(1);
 }
 
 function nextSong() {
-  var keyboardKey = document.getElementById(currentNote + "Key");
+  var keyboardKey = document.getElementById(game.instruments.keyboard.currentNote + "Key");
 
   if (keyboardKey.className == "whiteKey") {
     keyboardKey.style.backgroundColor = "white";
@@ -121,7 +125,7 @@ function nextSong() {
     keyboardKey.style.backgroundColor = "black";
   }
 
-  currentSong = undefined;
+  game.instruments.keyboard.currentSong = undefined;
   playKeyboardSong();
 }
 

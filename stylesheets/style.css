@@ -19,6 +19,7 @@
 
 body {
   background-color: var(--my-background-color);
+  overflow: hidden;
 }
 
 button:focus, input:focus {

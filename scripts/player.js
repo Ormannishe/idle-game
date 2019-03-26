@@ -1,30 +1,25 @@
-// Contains all player data and functions for manipulating player data
-// Authoritative source for all player information (ie. how many resources a player has)
+/*
+  Contains all player data and functions for manipulating player data
+  Authoritative source for all player information (ie. how many resources a player has)
+*/
 
 class Player {
   constructor() {
     this.name = "Michael Jackson";
-    this.resources = { fame: { current: 0,
-                               lifetime: 0 },
-                       money: { current: 0,
-                                lifetime: 0 },
-                       beats: { current: 0,
-                                lifetime: 0 }.
-                       samples: { current: 0,
-                                  lifetime: 0 },
-                       notes: {current: 0,
-                               lifetime: 0,
-                               passiveProgress: 0 },
-                       measures: { current: 0,
-                                   lifetime: 0 },
-                       songs: [],
-                       albums: []
+    this.resources = { fame: 0,
+                       money: 0,
+                       beats: 0,
+                       samples: 0,
+                       notes: 0,
+                       measures: 0,
                      };
     this.bonuses = { laptop: { multiplier: 1,
+                               maxMultiplier: 10,
                                passiveProgress: 0,
                                subgenre: undefined,
                                unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"]},
                      keyboard: { multiplier: 1,
+                                 maxMultiplier: 10,
                                  passiveProgress: 0 }
                    };
     this.skills = { laptop: { xp: 0,
@@ -48,36 +43,61 @@ class Player {
                             toNextLevel: 100,
                             nextLevelXpRatio: 1.2 }
                     };
+    this.stats = { timePlayed: 0, // in seconds
+                   fame: {lifetime: 0},
+                   money: {lifetime: 0},
+                   beats: {lifetime: 0},
+                   samples: {lifetime: 0},
+                   notes: {lifetime: 0},
+                   measures: {lifetime: 0}
+                 };
+    this.songs = [];
+    this.albums = [];
+    this.achievements = [];
   }
 
-  addXp(s, n) {
-    this.skills[s].xp += n;
-    while (this.skills[s].toNextLevel <= this.skills[s].xp) {
-      this.skills[s].xp = this.skills[s].xp - this.skills[s].toNextLevel;
-      this.skills[s].level++;
-      this.skills[s].toNextLevel = Math.round(this.skills[s].toNextLevel * this.skills[s].nextLevelXpRatio);
-      appendToOutputContainer("Your " + s + " skill has reached level " + this.skills[s].level + "!");
+  addXp(skill, amount) {
+    this.skills[skill].xp += amount;
+    while (this.skills[skill].toNextLevel <= this.skills[skill].xp) {
+      this.skills[skill].xp = this.skills[skill].xp - this.skills[skill].toNextLevel;
+      this.skills[skill].level++;
+      this.skills[skill].toNextLevel = Math.round(this.skills[skill].toNextLevel * this.skills[skill].nextLevelXpRatio);
+      appendToOutputContainer("Your " + skill + " skill has reached level " + this.skills[skill].level + "!");
     }
   }
 
   addResource(resource, amount) {
-    var relevantSkill = game.resources[resource].instrument;
-
     if (amount == undefined)
       amount = 1;
 
-    this.resources[resource].current += n;
-    this.resources[resource].lifetime += n;
+    var requiredResource = game.resources[resource].requiredResource;
 
-    if (relevantSkill !== undefined) {
-      this.addXp(relevantSkill, (game.xpPerNote * n));
+    if (requiredResource !== undefined) {
+      var totalCost = game.resources[resource].resourcesPer * amount;
+      var currentAmount = this.resources[requiredResource];
 
+      if (totalCost <= currentAmount)
+        this.removeResource(requiredResource, totalCost);
+      else
+        return;
     }
+
+    this.resources[resource] += amount;
+    this.stats[resource].lifetime += amount;
+
+    var relevantSkill = game.resources[resource].instrument;
+
+    if (relevantSkill !== undefined)
+      this.addXp(relevantSkill, (game.resources[resource].xpPer * amount));
+
+    updateView();
   }
 
-  addMoney(n) {
-    this.resources.money.current += n;
-    this.resources.money.lifetime += n;
-  }
+  removeResource(resource, amount) {
+    if (amount == undefined)
+      amount = 1;
 
+    this.resources[resource] -= amount;
+    updateView();
+  }
 };

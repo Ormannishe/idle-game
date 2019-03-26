@@ -1,85 +1,42 @@
-// Contains all game data and functions for manipulating top-level game data
-// Authoritative source for game constants (ie. how much things cost)
+/*
+  Contains all game data and functions for manipulating top-level game data
+  Authoritative source for game constants (ie. how much things cost)
+*/
 
 function Game() {
   this.player = new Player();
+  this.triggerFnSet = new Set();
   this.tasks = [];
+  this.activeTask = undefined;
   this.resources = { fame: {},
                      money: {},
-                     beats: { instruments: ["laptop"],
-                              resourcesPer: 30,
-                              validResources: ["clicks"],
+                     beats: { instrument: "laptop",
+                              clicksPer: 30,
                               xpPer: 5 },
-                     samples: { instruments: ["laptop"],
+                     samples: { instrument: "laptop",
                                resourcesPer: 25,
-                               validResources: ["beats"],
+                               requiredResource: "beats",
                                xpPer: 50 },
-                     notes: { instruments: ["keyboard"],
-                              resourcesPer: 50,
-                              validResources: ["clicks"],
+                     notes: { instrument: "keyboard",
+                              clicksPer: 50,
                               xpPer: 5 },
-                     measures: { instruments: ["keyboard"],
+                     measures: { instrument: "keyboard",
                                  resourcesPer: 25,
-                                 validResources: ["notes"],
-                                 xpPer: 50 },
-                     songs: { instruments: ["laptop", "keyboard"],
-                              resourcesPer: 50,
-                              validResources: ["samples", "measures"],
-                              xpPer: 500 }
+                                 requiredResource: "notes",
+                                 xpPer: 50 }
                     };
+  this.specialResources = { songs: { instruments: ["laptop", "keyboard"],
+                                     resourcesPer: 50,
+                                     validResources: ["samples", "measures"],
+                                     xpPer: 500 }};
+  this.instruments = { laptop: { level: 1,
+                                 currentTempo: "slow",
+                                 tempoSpeeds: { slowest: 25,
+                                                slow: 15,
+                                                fast: 10,
+                                                fastest: 5 },
+                                 dropActive: false },
+                       keyboard: { currentNote: undefined,
+                                   currentSong: undefined }
+                     };
 };
-
-function addBeat(n) {
-  if (n == undefined)
-    n = 1;
-
-  game.player.beats += n;
-  game.player.lifetimeBeats += n;
-  game.player.addXp("laptop", (game.xpPerBeat * n));
-
-  updateView();
-}
-
-function addNote(n) {
-  if (n == undefined)
-    n = 1;
-
-  game.player.notes += n;
-  game.player.lifetimeNotes += n;
-  game.player.addXp('keyboard', (game.xpPerNote * n));
-  updateView();
-}
-
-function makeSample(numToMake) {
-  var totalCost;
-
-  if (numToMake == undefined)
-    numToMake = 1;
-
-  totalCost = (game.beatsPerSample * numToMake);
-
-  if (game.player.beats >= totalCost) {
-    game.player.beats -= totalCost;
-    game.player.samples += numToMake;
-    game.player.addXp('laptop', game.xpPerSample * numToMake);
-  }
-
-  updateView();
-}
-
-function makeMeasure(numToMake) {
-  var totalCost;
-
-  if (numToMake == undefined)
-    numToMake = 1;
-
-  totalCost = (game.notesPerMeasure * numToMake);
-
-  if (game.player.notes >= totalCost) {
-    game.player.notes -= totalCost;
-    game.player.measures += numToMake;
-    game.player.addXp('keyboard', game.xpPerMeasure * numToMake);
-  }
-
-  updateView();
-}
