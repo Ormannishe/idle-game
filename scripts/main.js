@@ -21,6 +21,5 @@ function init() {
   initTriggers();
   startLaptop();
   startTicking();
-  makeCheatTask();
   updateView();
 }
