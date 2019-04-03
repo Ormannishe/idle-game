@@ -17,6 +17,18 @@ function Task(name, tooltip, checkFn, failFn, startFn, tickFn, finishFn, timeToC
     this.timeToComplete = timeToComplete;
 }
 
+function makeTask(taskFn, argument) {
+  // Add a reference to the original task function
+  // When saving, store just the task functions for all tasks (as strings)
+  // When loading, re-run the task functions to repopulate the task list
+  // Likely need to store args too in some cases
+  var newTask = taskFn(argument);
+  newTask.taskFnRef = taskFn.name;
+  newTask.argument = argument;
+  game.tasks.push(newTask);
+  return newTask;
+}
+
 function doTask(taskName) {
   let task = getTask(taskName);
 
@@ -96,7 +108,7 @@ There are two types of Tasks:
 
 ---- Structure of Tasks -----
 
-function makeSampleTask() {
+function exampleTask() {
   var checkFn = function() {
     // the check to see if a task doable
   };
@@ -120,17 +132,20 @@ function makeSampleTask() {
     // What should be done when the task has completed
   };
 
-  var tooltip = { "description": "This is a sample task",
+  var tooltip = { "description": "This is an example task",
                  "cost": {"Resource1": "Amount",
                           "Resource2": "Amount"},
                  "flavor": "Try to come up with something clever."};
 
   // x = time required to complete the task (only required for active tasks)
-  var sampleTask = new Task("Task Name", tooltip, checkFn, failFn, tickFn, finishFn, x);
+  var newTask = new Task("Task Name", tooltip, checkFn, failFn, tickFn, finishFn, x);
 
-  // Add the task to the game's task list
-  game.tasks.push(sampleTask);
+  // return the task
+  return newTask;
 }
+
+// make the task using the makeTask function
+makeTask(exampleTask, args);
 
 ------- Flow to Tasks -------
 
@@ -139,26 +154,27 @@ checkFn --> (if true) --> startFn --> tickFn (per natural tick) --> finishFn
 */
 
 // Use this to debug whatever you want
-function makeCheatTask() {
+function cheatTask() {
   var checkFn = function() {
     return true;
   }
 
   var startFn = function(task) {
-    game.player.addResource("beats", 1500);
-    game.player.addResource("notes", 1000);
-    game.player.addResource("money", 1000);
+    addResource("beats", 1500);
+    addResource("notes", 1000);
+    addResource("money", 1000);
   };
 
   var tooltip = {"description": "Gives free beats and money. Cheater.",
                  "cost": {"No Cost": ""},
                  "flavor": "Cheaters never prosper. Except for right now."};
 
-  var cheatTask = new Task("CHEAT", tooltip, checkFn, undefined, startFn);
-  game.tasks.push(cheatTask);
+  var newTask = new Task("CHEAT", tooltip, checkFn, undefined, startFn);
+
+  return newTask;
 }
 
-function makeFirstSampleTask() {
+function firstSampleTask() {
   var checkFn = function() {
     return game.player.resources.beats >= game.resources.samples.resourcesPer;
   };
@@ -168,7 +184,7 @@ function makeFirstSampleTask() {
   };
 
   var startFn = function(task) {
-    game.player.addResource("samples");
+    addResource("samples");
     document.getElementById('samples').style.display = "block";
     appendToOutputContainer("You've created your first musical sample! Your eyes glow with pride as you take one more step toward your destiny.");
     removeTask(task.name);
@@ -178,11 +194,12 @@ function makeFirstSampleTask() {
                  "cost": {"Beats": game.resources.samples.resourcesPer},
                  "flavor": "Free samples are always great. These samples are okay too."};
 
-  var firstSampleTask = new Task("Make First Sample", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(firstSampleTask);
+  var newTask = new Task("Make First Sample", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeFirstMeasureTask() {
+function firstMeasureTask() {
   var checkFn = function() {
     return game.player.resources.notes >= game.resources.measures.resourcesPer;
   };
@@ -192,7 +209,7 @@ function makeFirstMeasureTask() {
   };
 
   var startFn = function(task) {
-    game.player.addResource("measures");
+    addResource("measures");
     document.getElementById('measures').style.display = "block";
     appendToOutputContainer("You've recorded your first measure!");
     removeTask(task.name);
@@ -202,11 +219,12 @@ function makeFirstMeasureTask() {
                  "cost": {"Notes": game.resources.measures.resourcesPer},
                  "flavor": "Measure twice, cut once."};
 
-  var firstMeasureTask = new Task("Make First Measure", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(firstMeasureTask);
+  var newTask = new Task("Make First Measure", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeFirstSongTask() {
+function firstSongTask() {
   var checkFn = function() {
     var totalResources = 0;
     var validResources = game.specialResources.songs.validResources;
@@ -230,11 +248,12 @@ function makeFirstSongTask() {
                  "cost": {"Tier Two Resources": game.specialResources.songs.resourcesPer},
                  "flavor": "You'll probably be embarassed by this one in a few years."};
 
-  var firstSongTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(firstSongTask);
+  var newTask = new Task("Make First Song", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeNewSongTask() {
+function newSongTask() {
   var checkFn = function() {
     var totalResources = 0;
     var validResources = game.specialResources.songs.validResources;
@@ -258,14 +277,14 @@ function makeNewSongTask() {
                  "cost": {"Tier Two Resources": game.specialResources.songs.resourcesPer},
                  "flavor": "Every new song is a new chance. Unless you're Nickelback. Then it's just the same chance over and over."};
 
-  var newSongTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(newSongTask);
+  var newTask = new Task("Make New Song", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeOddJobsTask() {
+function oddJobsTask(job) {
   var timeTaken = 60;
   var moneyReward = 10;
-  var job = oddJobs[Math.floor(Math.random() * oddJobs.length)];
 
   var checkFn = function() {
     return true;
@@ -278,7 +297,7 @@ function makeOddJobsTask() {
   };
 
   var finishFn = function() {
-    game.player.addResource("money", moneyReward);
+    addResource("money", moneyReward);
     appendToOutputContainer("After an hour of labor, you take home a measly " + moneyReward + " bucks.");
     stopActiveTask();
 
@@ -290,11 +309,12 @@ function makeOddJobsTask() {
                  "cost": {"Time": timeTaken},
                  "flavor": "Even the most famous of legends have humble beginnings."};
 
-  var oddJobsTask = new Task(job, tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
-  game.tasks.push(oddJobsTask);
+  var newTask = new Task(job, tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
+
+  return newTask;
 }
 
-function makeOnlinePortfolioTask() {
+function onlinePortfolioTask() {
   var requiredSamples = 5;
 
   var checkFn = function() {
@@ -306,7 +326,7 @@ function makeOnlinePortfolioTask() {
   }
 
   var startFn = function(task) {
-    game.player.removeResource("samples", requiredSamples);
+    removeResource("samples", requiredSamples);
     game.triggerFnSet.add(djPartyTrigger);
     appendToOutputContainer("You've completed your online portfolio. Now you just have to wait for the clients to pour in!");
     removeTask(task.name);
@@ -316,11 +336,12 @@ function makeOnlinePortfolioTask() {
                  "cost": {"Samples": requiredSamples},
                  "flavor": "Turns out the hardest part about becoming an artist is getting other people to like your music."};
 
-  var onlinePortfolioTask = new Task("Make Online Portfolio", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(onlinePortfolioTask);
+  var newTask = new Task("Make Online Portfolio", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeDJAtPartyTask(partyType) {
+function DJAtPartyTask(partyType) {
   var timeTaken = 180;
   var moneyReward = 50;
   var maxFameReward = 5;
@@ -337,9 +358,9 @@ function makeDJAtPartyTask(partyType) {
   };
 
   var finishFn = function() {
-    game.player.addResource("fame", Math.ceil(Math.random() * maxFameReward));
-    game.player.addResource("money", moneyReward);
-    game.player.addXp("laptop", xpReward);
+    addResource("fame", Math.ceil(Math.random() * maxFameReward));
+    addResource("money", moneyReward);
+    addXp("laptop", xpReward);
     appendToOutputContainer("After a few hours work at a party, you manage to make $" + moneyReward + "!");
     stopActiveTask();
     game.triggerFnSet.add(djPartyTrigger);
@@ -350,11 +371,12 @@ function makeDJAtPartyTask(partyType) {
                  "flavor": "Turns out, parties are a lot less fun when you're working."};
 
   var taskName = "DJ At " + partyType;
-  var DJAtBirthdayPartyTask = new Task(taskName, tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
-  game.tasks.push(DJAtBirthdayPartyTask);
+  var newTask = new Task(taskName, tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
+
+  return newTask;
 }
 
-function makeMeetWithNightclubOwnersTask() {
+function meetWithNightclubOwnersTask() {
   var requiredSamples = 30;
 
   var checkFn = function() {
@@ -366,7 +388,7 @@ function makeMeetWithNightclubOwnersTask() {
   }
 
   var startFn = function(task) {
-    game.player.removeResource("samples", requiredSamples);
+    removeResource("samples", requiredSamples);
     game.triggerFnSet.add(djNightclubEventTrigger);
     appendToOutputContainer("Several nightclub owners liked the samples you showed them!");
     removeTask(task.name);
@@ -376,11 +398,12 @@ function makeMeetWithNightclubOwnersTask() {
                  "cost": {"Samples": requiredSamples},
                  "flavor": "Nightclubs during the day are... weird."};
 
-  var meetWithNightclubOwnersTask = new Task("Meet With Nightclub Owners", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(meetWithNightclubOwnersTask);
+  var newTask = new Task("Meet With Nightclub Owners", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeDJAtNightclubTask() {
+function DJAtNightclubTask() {
   var timeTaken = 180;
   var moneyReward = 150;
   var xpReward = 150;
@@ -396,8 +419,8 @@ function makeDJAtNightclubTask() {
   };
 
   var finishFn = function() {
-    game.player.addResource("fame", 10 + Math.ceil(Math.random() * 5));
-    game.player.addResource("money", moneyReward);
+    addResource("fame", 10 + Math.ceil(Math.random() * 5));
+    addResource("money", moneyReward);
     game.player.addXp("laptop", xpReward);
     appendToOutputContainer("You earn a solid $" + moneyReward + " DJing at a nightclub!");
     stopActiveTask();
@@ -408,11 +431,12 @@ function makeDJAtNightclubTask() {
                  "cost": {"Time": timeTaken},
                  "flavor": "It's true - this IS their song and they HAVE to dance!"};
 
-  var DJAtNightclubTask = new Task("DJ At Nightclub", tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
-  game.tasks.push(DJAtNightclubTask);
+  var newTask = new Task("DJ At Nightclub", tooltip, checkFn, undefined, startFn, undefined, finishFn, timeTaken);
+
+  return newTask;
 }
 
-function makeBuyBeatBookTask() {
+function buyBeatBookTask() {
   var requiredMoney = 10;
 
   var checkFn = function() {
@@ -424,7 +448,7 @@ function makeBuyBeatBookTask() {
   };
 
   var startFn = function(task) {
-    game.player.removeResource("money", requiredMoney);
+    removeResource("money", requiredMoney);
     game.player.bonuses.laptop.passiveProgress++;
     removeTask(task.name);
   };
@@ -433,11 +457,12 @@ function makeBuyBeatBookTask() {
                  "cost": {"Money": requiredMoney},
                  "flavor": "Some people like playing games. Others prefer when the game plays itself."};
 
-  var buyBeatBookTask = new Task("Book Of Beats", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(buyBeatBookTask);
+  var newTask = new Task("Book Of Beats", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeBuyNewLaptopTask() {
+function buyNewLaptopTask() {
   var requiredMoney = 500;
 
   var checkFn = function() {
@@ -450,10 +475,10 @@ function makeBuyNewLaptopTask() {
 
   var startFn = function(task) {
     var beatProgress = document.getElementById('laptopBeatProgress');
-    var progressTriggerFn = function () { game.player.addResource("beats") };
+    var progressTriggerFn = function () { addResource("beats") };
 
     game.resources.beats.clicksPer = Math.ceil(game.resources.beats.clicksPer * 0.75);
-    game.player.removeResource("money", requiredMoney);
+    removeResource("money", requiredMoney);
     game.instruments.laptop.level++;
     updateProgress(beatProgress, beatProgress.value, game.resources.beats.clicksPer, progressTriggerFn);
     removeTask(task.name);
@@ -463,11 +488,12 @@ function makeBuyNewLaptopTask() {
                  "cost": {"Money": requiredMoney},
                  "flavor": "Your old one kept overheating because your beats are too hot."};
 
-  var buyNewLaptopTask = new Task("Buy New Laptop", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(buyNewLaptopTask);
+  var newTask = new Task("Buy New Laptop", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeBuyMicrophoneTask() {
+function buyMicrophoneTask() {
   var requiredMoney = 1000;
 
   var checkFn = function() {
@@ -479,7 +505,7 @@ function makeBuyMicrophoneTask() {
   };
 
   var startFn = function(task) {
-    game.player.removeResource("money", requiredMoney);
+    removeResource("money", requiredMoney);
     appendToOutputContainer("You purchase a microphone. Maybe your voice will add another element to your music.");
     document.getElementById('vocalTab').style.display = "inline";
     document.getElementById('vocalSkill').style.display = "inline";
@@ -491,10 +517,11 @@ function makeBuyMicrophoneTask() {
                  "flavor": "You could never really tell if you were good at singing or just bad at hearing."};
 
   var buyMicrophoneTask = new Task("Buy a Microphone", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(buyMicrophoneTask);
+
+  return newTask;
 }
 
-function makeBuyKeyboardTask() {
+function buyKeyboardTask() {
   var requiredMoney = 1000;
 
   var checkFn = function() {
@@ -506,7 +533,7 @@ function makeBuyKeyboardTask() {
   };
 
   var startFn = function(task) {
-    game.player.removeResource("money", requiredMoney);
+    removeResource("money", requiredMoney);
     appendToOutputContainer("You purchase a keyboard - a new skill to master.");
     document.getElementById('keyboardTab').style.display = "inline";
     document.getElementById('keyboardSkill').style.display = "inline";
@@ -518,11 +545,12 @@ function makeBuyKeyboardTask() {
                  "cost": {"Money": requiredMoney},
                  "flavor": "A keyboard is an electric piano. Not to be confused with a computer keyboard, which you'll actually be using to play this keyboard. Make sense?"};
 
-  var buyKeyboardTask = new Task("Buy a Keyboard", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(buyKeyboardTask);
+  var newTask = new Task("Buy a Keyboard", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeStudyOnlineTask() {
+function studyOnlineTask() {
   var timeTaken = 60;
 
   var checkFn = function() {
@@ -536,11 +564,14 @@ function makeStudyOnlineTask() {
 
   var tickFn = function() {
     if (game.activeTask.tickCounter >= 5) {
-      game.player.addResource("beats");
+      addResource("beats");
       game.activeTask.tickCounter = 1;
     }
-    else {
+    else if (game.activeTask.tickCounter !== undefined) {
       game.activeTask.tickCounter++;
+    }
+    else {
+      game.activeTask.tickCounter = 1;
     }
   };
 
@@ -552,11 +583,12 @@ function makeStudyOnlineTask() {
                  "cost": {"Time": timeTaken},
                  "flavor": "You came here to procrastinate, but you ended up studying."};
 
-  var studyOnlineTask = new Task("Study Music Online", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
-  game.tasks.push(studyOnlineTask);
+  var newTask = new Task("Study Music Online", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
+
+  return newTask;
 }
 
-function makeMusicClassTask() {
+function musicClassTask() {
   var timeTaken = 120;
   var requiredMoney = 100;
 
@@ -572,24 +604,27 @@ function makeMusicClassTask() {
     task.tickCounter = 1;
 
     if (startActiveTask(task)) {
-      game.player.removeResource("money", requiredMoney);
+      removeResource("money", requiredMoney);
     }
   };
 
   var tickFn = function() {
     if (game.activeTask.tickCounter >= 2) {
-      game.player.addResource("beats");
+      addResource("beats");
       game.activeTask.tickCounter = 1;
     }
-    else {
+    else if (game.activeTask.tickCounter !== undefined) {
       game.activeTask.tickCounter++;
+    }
+    else {
+      game.activeTask.tickCounter = 1;
     }
   };
 
   var finishFn = function() {
     if (Math.random() <= 0.25) {
       appendToOutputContainer("Some friends from your music class invite you to a jam session!");
-      makeJamSessionTask();
+      makeTask(jamSessionTask);
     }
 
     stopActiveTask();
@@ -600,11 +635,12 @@ function makeMusicClassTask() {
                           "Time": timeTaken},
                  "flavor": "$" + requiredMoney + " per class? Why does the world hate students?"};
 
-  var musicClassTask = new Task("Take A Music Class", tooltip, checkFn, failFn, startFn, tickFn, finishFn, timeTaken);
-  game.tasks.push(musicClassTask);
+  var newTask = new Task("Take A Music Class", tooltip, checkFn, failFn, startFn, tickFn, finishFn, timeTaken);
+
+  return newTask;
 }
 
-function makeJamSessionTask() {
+function jamSessionTask() {
   var timeTaken = 60;
 
   var checkFn = function() {
@@ -620,11 +656,14 @@ function makeJamSessionTask() {
 
   var tickFn = function() {
     if (game.activeTask.tickCounter >= 2) {
-      game.player.addResource("beats");
+      addResource("beats");
       game.activeTask.tickCounter = 1;
     }
-    else {
+    else if (game.activeTask.tickCounter !== undefined) {
       game.activeTask.tickCounter++;
+    }
+    else {
+      game.activeTask.tickCounter = 1;
     }
   };
 
@@ -636,11 +675,12 @@ function makeJamSessionTask() {
                  "cost": {"Time": timeTaken},
                  "flavor": "Friends are great to have. Especially when they produce free beats."};
 
-  var jamSessionTask = new Task("Attend Jam Session", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
-  game.tasks.push(jamSessionTask);
+  var newTask = new Task("Attend Jam Session", tooltip, checkFn, undefined, startFn, tickFn, finishFn, timeTaken);
+
+  return newTask;
 }
 
-function makeExperimentWithTempoTask() {
+function experimentWithTempoTask() {
   var requiredBeats = 50;
 
   var checkFn = function() {
@@ -654,18 +694,19 @@ function makeExperimentWithTempoTask() {
   var startFn = function(task) {
     var tempoSelector = document.getElementById("tempoSelector");
     tempoSelector.style.display = "inline";
-    game.player.removeResource("beats", requiredBeats);
+    removeResource("beats", requiredBeats);
     removeTask(task.name);
   };
 
   var tooltip = {"description": "Experiment with making beats at different tempos. Unlocks the tempo selector for your laptop.",
                  "cost": {"Beats": requiredBeats},
                  "flavor": "The ability to alter time itself, for the low cost of " + requiredBeats + " beats."};
-  var tempoTask = new Task("Experiment With Tempo", tooltip, checkFn, failFn, startFn);
-  game.tasks.push(tempoTask);
+  var newTask = new Task("Experiment With Tempo", tooltip, checkFn, failFn, startFn);
+
+  return newTask;
 }
 
-function makeExploreSubgenreTask(requiredBeats) {
+function exploreSubgenreTask(requiredBeats) {
   var checkFn = function() {
     return game.player.resources.beats >= requiredBeats;
   }
@@ -679,13 +720,14 @@ function makeExploreSubgenreTask(requiredBeats) {
   };
 
   var finishFn = function(task) {
-    game.player.removeResource("beats", requiredBeats);
+    removeResource("beats", requiredBeats);
     removeTask(task.name);
   }
 
   var tooltip = {"description": "Experiment with different sub-genres of electronic music. Unlocks a bonus effect of your choice for your laptop, improving beat production.",
                  "cost": {"Beats": requiredBeats},
                  "flavor": "You're not a real artist if people aren't arguing about what sub-sub-sub-genre your music is in."};
-  var subgenreTask = new Task("Explore A Sub-Genre", tooltip, checkFn, failFn, startFn, undefined, finishFn);
-  game.tasks.push(subgenreTask);
+  var newTask = new Task("Explore A Sub-Genre", tooltip, checkFn, failFn, startFn, undefined, finishFn);
+
+  return newTask;
 }

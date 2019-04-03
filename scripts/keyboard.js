@@ -48,7 +48,7 @@ function keyboardKeyDownEvent(event) {
     var progress = document.getElementById('keyboardBeatProgress');
     var audio = new Audio("resources/audio/Piano.mf." + notePlayed + ".mp3");
     var keyboardKey = document.getElementById(notePlayed + "Key");
-		var triggerFn = function () { game.player.addResource("notes") };
+		var triggerFn = function () { addResource("notes") };
 
     // For Debug functionality
     if (makingSong == true)

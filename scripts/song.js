@@ -35,7 +35,7 @@ function makeSong(songName, skills) {
 
     skills.forEach(function(skill) {
       quality += game.player.skills[skill].level;
-      game.player.addXp(skill, game.specialResources.songs.xpPer);
+      addXp(skill, game.specialResources.songs.xpPer);
     })
 
     quality = Math.ceil((quality / skills.length) * (1 + (0.1 * skills.length)));
@@ -89,7 +89,7 @@ function adjustSongStats() {
     // Calculate new revenue stats and give player money
     if (revenueMod > 0) {
       song.moneyPerSec = song.popularity / revenueMod;
-      game.player.addResource("money", song.moneyPerSec);
+      addResource("money", song.moneyPerSec);
       song.totalEarnings += song.moneyPerSec;
     }
   });
@@ -181,7 +181,7 @@ function validateInput() {
       appendToOutputContainer(songNameInput.value + " will be remembered as the start of a legacy!");
       document.getElementById('songsTab').style.display = "inline";
       removeTask(getTask("Make First Song").name);
-      makeNewSongTask();
+      makeTask(newSongTask());
     }
 
     makeSong(songNameInput.value, instrumentsUsed);

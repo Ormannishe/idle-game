@@ -16,12 +16,13 @@ function naturalTick() {
   updateActiveTask();
   adjustSongStats();
   updateView(true);
+  saveGame();
 }
 
 function passiveResourceGeneration() {
   var progress = document.getElementById('laptopBeatProgress');
   var progressAmount = game.player.bonuses.laptop.passiveProgress;
-  var triggerFn = function () {game.player.addResource("beats")};
+  var triggerFn = function () { addResource("beats") };
 
   if (game.player.bonuses.laptop.subgenre == "trance")
     progressAmount *= 2;
@@ -52,12 +53,10 @@ function updateResourcesTab() {
       var cost = game.resources[resource].resourcesPer;
       var numReqResource = game.player.resources[requiredResource];
 
-      if (numReqResource >= cost) {
-        modifyResourceNumber(resource, cost, numReqResource);
-        modifyResourceNumber(resource, cost, numReqResource, 1);
-        modifyResourceNumber(resource, cost, numReqResource, 10);
-        modifyResourceNumber(resource, cost, numReqResource, 100);
-      }
+      modifyResourceNumber(resource, cost, numReqResource);
+      modifyResourceNumber(resource, cost, numReqResource, 1);
+      modifyResourceNumber(resource, cost, numReqResource, 10);
+      modifyResourceNumber(resource, cost, numReqResource, 100);
     }
   }
 }
@@ -295,9 +294,9 @@ function modifyResourceNumber(resource, cost, numReqResource, amount) {
     htmlObj = document.getElementById(resource + amount);
   }
 
-  if (numReqResource >= cost * amount) {
+  if (numReqResource >= cost * amount && amount > 0) {
     htmlObj.innerHTML = amount;
-    htmlObj.onclick = function () { game.player.addResource(resource, amount)};
+    htmlObj.onclick = function () { addResource(resource, amount) };
   }
   else {
     htmlObj.innerHTML = "-";

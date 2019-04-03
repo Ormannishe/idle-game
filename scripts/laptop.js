@@ -70,7 +70,7 @@ function clickBeat() {
   var greenOffsets = getOffsets(document.getElementById('greenZone'));
   var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
   var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
-  var triggerFn = function () {game.player.addResource("beats")};
+  var triggerFn = function () { addResource("beats") };
 
   switch(game.player.bonuses.laptop.subgenre) {
     case "house":
@@ -277,7 +277,7 @@ function hideGenreTooltip() {
   hideTooltip();
 }
 
-function populateGenrePopUp(taskName) {
+function populateGenrePopUp() {
   var popUp = document.getElementById("popUpContent");
 
   popUp.innerHTML += "<p class='popUpHeader'>Select A Sub-Genre To Explore</p>";

@@ -16,9 +16,8 @@ $(document).ready(function() {
 var game;
 
 function init() {
-  // TODO: Check for a save
-  game = new Game();
-  initTriggers();
+  loadGame();
+  if (game == undefined) newGame();
   startLaptop();
   startTicking();
   updateView();
