@@ -16,9 +16,21 @@ $(document).ready(function() {
 var game;
 
 function init() {
-  loadGame();
+  //loadGame();
   if (game == undefined) newGame();
-  startLaptop();
+  startInstrument(game.activeInstrument);
   startTicking();
+  addCheatTask();
   updateView();
+}
+
+/* Debug Functionality */
+
+function addCheatTask() {
+  var context = {
+    taskId: "cheatTask",
+    taskName: "CHEAT!"
+  };
+
+  addTask(context);
 }

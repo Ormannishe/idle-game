@@ -5,55 +5,101 @@
 
 function Player() {
   this.name = "Michael Jackson";
-  this.resources = { fame: 0,
-                     money: 0,
-                     beats: 0,
-                     samples: 0,
-                     notes: 0,
-                     measures: 0,
-                   };
-  this.bonuses = { laptop: { multiplier: 1,
-                             maxMultiplier: 10,
-                             passiveProgress: 0,
-                             subgenre: undefined,
-                             unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"]},
-                   keyboard: { multiplier: 1,
-                               maxMultiplier: 10,
-                               passiveProgress: 0 }
-                 };
-  this.skills = { laptop: { xp: 0,
-                            level: 1,
-                            toNextLevel: 100,
-                            nextLevelXpRatio: 1.2 },
-                  vocal: { xp: 0,
-                           level: 1,
-                           toNextLevel: 100,
-                           nextLevelXpRatio: 1.2 },
-                  keyboard: { xp: 0,
-                              level: 1,
-                              toNextLevel: 100,
-                              nextLevelXpRatio: 1.2 },
-                  guitar: { xp: 0,
-                            level: 1,
-                            toNextLevel: 100,
-                            nextLevelXpRatio: 1.2 },
-                  drum: { xp: 0,
-                          level: 1,
-                          toNextLevel: 100,
-                          nextLevelXpRatio: 1.2 }
-                  };
-  this.stats = { timePlayed: 0, // in seconds
-                 fame: {lifetime: 0},
-                 money: {lifetime: 0},
-                 beats: {lifetime: 0},
-                 samples: {lifetime: 0},
-                 notes: {lifetime: 0},
-                 measures: {lifetime: 0}
-               };
+  this.triggers = new Set();
+  this.tasks = [];
+  this.activeTask = undefined;
+  this.resources = {
+    fame: 0,
+    money: 0,
+    beats: 0,
+    samples: 0,
+    notes: 0,
+    measures: 0,
+  };
   this.songs = [];
   this.albums = [];
   this.achievements = [];
-}
+  this.bonuses = {
+    laptop: {
+      reqClicksMod: 1.0,
+      multiplier: 1,
+      maxMultiplier: 10,
+      passiveProgress: 0,
+      subgenre: undefined,
+      unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"]
+    },
+    keyboard: {
+      reqClicksMod: 1.0,
+      multiplier: 1,
+      maxMultiplier: 10,
+      passiveProgress: 0
+    },
+    event: {
+      oddJobs: {
+        bonusChance: 0
+      },
+      djParty: {
+        bonusChance: 0
+      },
+      djNightclub: {
+        bonusChance: 0
+      }
+    },
+  };
+  this.skills = {
+    laptop: {
+      xp: 0,
+      level: 1,
+      toNextLevel: 100,
+      nextLevelXpRatio: 1.2
+    },
+    vocal: {
+      xp: 0,
+      level: 1,
+      toNextLevel: 100,
+      nextLevelXpRatio: 1.2
+    },
+    keyboard: {
+      xp: 0,
+      level: 1,
+      toNextLevel: 100,
+      nextLevelXpRatio: 1.2
+    },
+    guitar: {
+      xp: 0,
+      level: 1,
+      toNextLevel: 100,
+      nextLevelXpRatio: 1.2
+    },
+    drum: {
+      xp: 0,
+      level: 1,
+      toNextLevel: 100,
+      nextLevelXpRatio: 1.2
+    }
+  };
+  this.stats = {
+    timePlayed: 0, // in seconds
+    fame: {
+      lifetime: 0
+    },
+    money: {
+      lifetime: 0
+    },
+    beats: {
+      lifetime: 0
+    },
+    samples: {
+      lifetime: 0
+    },
+    notes: {
+      lifetime: 0
+    },
+    measures: {
+      lifetime: 0
+    }
+  };
+};
 
 function addXp(skill, amount) {
   game.player.skills[skill].xp += amount;

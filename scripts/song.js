@@ -105,8 +105,8 @@ function populateSongPopUp() {
   popUp.innerHTML += "<p class='popUpHeader'>Create A New Song</p>";
   popUp.innerHTML += "<div class='popUpRow'>" + "<p>Song Name:</p>" + "<input id='songNameInput'></input>" + "</div>";
   popUp.innerHTML += "<div id='songDetails'>" +
-                     "<p class='songDetails'>" + songInstructions + "</p>" +
-                     "</div>";
+    "<p class='songDetails'>" + songInstructions + "</p>" +
+    "</div>";
 
   // Populate resource sliders
   game.specialResources.songs.validResources.forEach(function(resource) {
@@ -117,8 +117,8 @@ function populateSongPopUp() {
 
       resourceRow += "<p class='resourceLabel'>" + resource + "</p>";
       resourceRow += "<input id='" + resource + "Slider' class='popUpSlider' type='range' min='0' max='" +
-                     Math.min(game.specialResources.songs.resourcesPer, numResource) +
-                     "' value='0' oninput='modifyResourceAmount(\""+ resource + "\")'></input>";
+        Math.min(game.specialResources.songs.resourcesPer, numResource) +
+        "' value='0' oninput='modifyResourceAmount(\"" + resource + "\")'></input>";
       resourceRow += "<p id='" + resource + "SliderAmount' class='resourceAmount'>0</p>";
       resourceRow += "</div>";
 
@@ -128,14 +128,14 @@ function populateSongPopUp() {
 
   // Populate Total section
   popUp.innerHTML += "<div id='totalRow' class='popUpRow'>" +
-                     "<p id='totalLabel' class='resourceLabel'>Total</p>" +
-                     "<input id='totalSlider' class='popUpSlider' type='range' min='0' max='1' value='0'></input>" +
-                     "<p id='totalSliderAmount' class='resourceAmount'>0</p>" +
-                     "</div>";
+    "<p id='totalLabel' class='resourceLabel'>Total</p>" +
+    "<input id='totalSlider' class='popUpSlider' type='range' min='0' max='1' value='0'></input>" +
+    "<p id='totalSliderAmount' class='resourceAmount'>0</p>" +
+    "</div>";
 
   popUp.innerHTML += "<div class='popUpHeader'><button class='popUpButton'" +
-                     "onclick='validateInput()'" +
-                     ">Make New Song</button></div>";
+    "onclick='validateInput()'" +
+    ">Make New Song</button></div>";
 }
 
 function modifyResourceAmount(resource) {
@@ -156,8 +156,7 @@ function validateInput() {
     songNameInput.classList.remove("backgroundColorError");
     void songNameInput.offsetWidth; // css magic to allow replay of the error animation
     songNameInput.classList.add("backgroundColorError");
-  }
-  else if (parseInt(totalAmount.innerHTML) !== game.specialResources.songs.resourcesPer) {
+  } else if (parseInt(totalAmount.innerHTML) !== game.specialResources.songs.resourcesPer) {
     totalAmount.classList.toggle("fontColorError");
     void totalAmount.offsetWidth; // css magic to allow replay of the error animation
     totalAmount.classList.add("fontColorError");
