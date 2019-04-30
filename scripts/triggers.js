@@ -359,7 +359,7 @@ function unlockNightclubTrigger() {
       level: 2,
       requiredSamples: 30,
       outputText: "Many of the nightclub owners liked the samples you showed them!",
-      description: "Unlocks more lucrative opportunities to DJ at nightclubs. Removes Freelance DJ opportunities.",
+      description: "Unlocks more lucrative opportunities to DJ at nightclubs.",
       flavor: "Nightclubs during the day are... strange."
     };
 
@@ -421,7 +421,7 @@ function nightclubDJEventTrigger(natural) {
       fameReward: 30,
       timeToComplete: 180,
       outputText: "After a crazy night at a club, you manage to make a solid $250!",
-      flavor: "'This isss myyy soooooooong!' - That White Girl"
+      flavor: "'This isss myyy sooooooooong!' - That White Girl"
     };
 
     appendToOutputContainer("An opportunity to DJ at a nightclub has opened up!");

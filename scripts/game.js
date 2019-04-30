@@ -106,6 +106,7 @@ function loadGame() {
 
   if (playerData !== null) {
     // Restore game in a sane state
+    game = new Game();
     game.player = playerData;
     game.player.triggers = new Set();
 

@@ -605,11 +605,11 @@ function exploreSubgenreTask(context) {
   ];
 
   var tooltip = {
-    "description": "Experiment with different sub-genres of electronic music. Unlocks a bonus effect of your choice for your laptop, improving beat production.",
+    "description": "Unlocks a bonus effect of your choice for your laptop, improving beat production.",
     "cost": {
       "Beats": context.requiredBeats
     },
-    "flavor": "You're not a real artist if people aren't arguing about what sub-sub-sub-genre your music is in."
+    "flavor": "Are you even a real artist if people aren't arguing about what sub-genre your music is in?"
   };
 
   return {

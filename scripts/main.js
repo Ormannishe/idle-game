@@ -16,7 +16,7 @@ $(document).ready(function() {
 var game;
 
 function init() {
-  //loadGame();
+  loadGame();
   if (game == undefined) newGame();
   startInstrument(game.activeInstrument);
   startTicking();
@@ -27,10 +27,14 @@ function init() {
 /* Debug Functionality */
 
 function addCheatTask() {
-  var context = {
-    taskId: "cheatTask",
-    taskName: "CHEAT"
-  };
+  var cheatTask = getTask("CHEAT");
 
-  addTask(context);
+  if (cheatTask == undefined) {
+    var context = {
+      taskId: "cheatTask",
+      taskName: "CHEAT"
+    };
+
+    addTask(context);
+  }
 }
