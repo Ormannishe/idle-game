@@ -116,7 +116,7 @@ function clickBeat() {
   }
 
   updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
-  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, anonymize(addResource, ["beats"]));
+  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
 }
 
 /* Sub-genre functionality */
@@ -283,7 +283,7 @@ function hideGenreTooltip() {
   hideTooltip();
 }
 
-function populateGenrePopUp() {
+function populateGenrePopUp(taskName) {
   var popUp = document.getElementById("popUpContent");
 
   popUp.innerHTML += "<p class='popUpHeader'>Select A Sub-Genre To Explore</p>";
@@ -293,7 +293,8 @@ function populateGenrePopUp() {
     var tooltipInfo = getTooltipInfo(genre);
 
     if (tooltipInfo !== undefined) {
-      genreRow += "<button class='popUpButton' onclick='selectGenre(\"" + genre + "\")'>" + tooltipInfo.genre + "</button>";
+      var onclick = "onclick='selectGenre(\"" + genre + "\", \"" + taskName + "\")'";
+      genreRow += "<button class='popUpButton'" + onclick + ">" + tooltipInfo.genre + "</button>";
       genreRow += "<p class='popUpGenreText'>" + tooltipInfo.tooltip + "</p>";
     }
 
@@ -302,15 +303,16 @@ function populateGenrePopUp() {
   });
 }
 
-function selectGenre(subgenre) {
-  var task = getTask("Explore A Sub-Genre");
+function selectGenre(subgenre, taskName) {
+  var context = getTask(taskName);
   var htmlObj = document.getElementById(subgenre);
   var index = game.player.bonuses.laptop.unexploredSubgenres.indexOf(subgenre);
 
   htmlObj.style.display = "inline";
   setLaptopGenre(htmlObj);
   appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
-  task.finishFn(task);
+  removeResource("beats", context.requiredBeats);
+  removeTask(taskName);
   game.player.bonuses.laptop.unexploredSubgenres.splice(index, 1);
   closePopUp();
   updateView();

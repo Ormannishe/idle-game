@@ -29,7 +29,7 @@ function init() {
 function addCheatTask() {
   var context = {
     taskId: "cheatTask",
-    taskName: "CHEAT!"
+    taskName: "CHEAT"
   };
 
   addTask(context);

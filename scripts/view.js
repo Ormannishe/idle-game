@@ -27,7 +27,7 @@ function passiveResourceGeneration() {
   if (game.player.bonuses.laptop.subgenre == "trance")
     progressAmount *= 2;
 
-  updateProgress(progress, (progress.value + progressAmount), requiredProgress, anonymize(addResource, ["beats"]));
+  updateProgress(progress, (progress.value + progressAmount), requiredProgress, partial(addResource, "beats"));
 }
 
 function updateView(natural) {
@@ -131,12 +131,22 @@ function appendToOutputContainer(message) {
   ---- Event Handlers -----
 */
 
-function openPopUp(populateFn) {
+function openPopUp(populateFn, taskName) {
+  /*
+    Opens the popup box and calls the passed in populateFn, which should,
+    determine the popup box content.
+
+    If this was called by a task, you can optionally pass in the taskName to the
+    populateFn.
+  */
   document.getElementById("popUpBox").style.display = "block";
-  populateFn();
+  populateFn(taskName);
 }
 
 function closePopUp() {
+  /*
+    Closes the popup box and clears its contents.
+  */
   document.getElementById("popUpBox").style.display = "none";
   document.getElementById("popUpContent").innerHTML = "";
 }

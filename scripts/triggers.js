@@ -263,7 +263,8 @@ function firstSongTrigger() {
       taskId: "newSongTask",
       taskName: "Make First Song",
       description: "Create a new song! Unlocks a new tier three resource.",
-      flavor: "You'll probably be embarassed by this one in a few years."
+      flavor: "You'll probably be embarassed by this one in a few years.",
+      repeatable: true
     };
 
     appendToOutputContainer("After days of effort, you feel like you might finally have enough material to make a full song!");
@@ -284,7 +285,7 @@ function levelFiveLaptopTrigger() {
       level: 1,
       requiredSamples: 5,
       outputText: "You've completed your online portfolio. Now you just need clients!",
-      description: "Become a Freelance DJ, unlocking opportunities to play at small gatherings. Removes Odd Job opportunities.",
+      description: "Become a Freelance DJ, unlocking opportunities to play at small gatherings.",
       flavor: "Turns out the hardest part about becoming an artist is getting other people to like your music."
     };
 
@@ -384,10 +385,10 @@ function freelanceDJEventTrigger(natural) {
     var eventTypes = [
       "Birthday Party", "House Party", "Corporate Event", "Wedding", "Frat Party"
     ];
-    var djEvent = "DJ At " + eventTypes[Math.floor(Math.random() * eventTypes.length)];
+    var djEvent = eventTypes[Math.floor(Math.random() * eventTypes.length)];
     var context = {
       taskId: "workAsDJTask",
-      taskName: djEvent,
+      taskName: "DJ At " + djEvent,
       level: 1,
       xpReward: 50,
       moneyReward: 50,

@@ -92,7 +92,7 @@ function keyboardKeyDownEvent(event) {
       game.player.bonuses.keyboard.multiplier = 1;
     }
 
-    updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, anonymize(addResource, ["notes"]));
+    updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, partial(addResource, "notes"));
     updateMultiplier(game.player.bonuses.keyboard.multiplier, "keyboardMultiplier");
   }
 }

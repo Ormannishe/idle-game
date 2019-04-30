@@ -170,17 +170,25 @@ function validateInput() {
         var amount = document.getElementById(resource + "SliderAmount").innerHTML;
 
         if (amount > 0) {
-          game.player.resources[resource] -= amount;
+          removeResource(resource, amount);
           instrumentsUsed.push(game.resources[resource].instrument);
         }
       }
     });
 
     if (game.player.songs.length == 0) {
+      var context = {
+        taskId: "newSongTask",
+        taskName: "Make New Song",
+        description: "Creates a new song!",
+        flavor: "Every song is a new opportunity. Unless you're Nickleback. Then it's kind of just the same every time.",
+        repeatable: true
+      };
+
       appendToOutputContainer(songNameInput.value + " will be remembered as the start of a legacy!");
       document.getElementById('songsTab').style.display = "inline";
-      removeTask(getTask("Make First Song").name);
-      makeTask(newSongTask());
+      removeTask("Make First Song");
+      addTask(context);
     }
 
     makeSong(songNameInput.value, instrumentsUsed);

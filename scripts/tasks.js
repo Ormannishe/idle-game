@@ -59,7 +59,7 @@ function doTask(taskName) {
   var context = getTask(taskName);
   var task = getTaskDetails(context);
 
-  if (task.checkFns == undefined || runCheckFns(task)) {
+  if (task.checkFns == undefined || runCheckFns(task, true)) {
     if (task.timeToComplete == undefined || startActiveTask(context)) {
       if (task.startFns !== undefined)
         task.startFns.forEach(function(startFn) {
@@ -76,14 +76,17 @@ function doTask(taskName) {
   updateView();
 }
 
-function runCheckFns(task) {
+function runCheckFns(task, outputOnFailure) {
   /*
     Run all of the checkFns for a given task. If any of them return false,
     return false. Otherwise returns true.
+
+    Optional arguement 'outputOnFailure' can be set to true to log the reason
+    for failure.
   */
   for (var i = 0; i < task.checkFns.length; i++) {
     var checkFn = task.checkFns[i];
-    if (!checkFn())
+    if (!checkFn(outputOnFailure))
       return false;
   }
 
@@ -163,22 +166,29 @@ function cancelTask() {
   ---- Generic Task Functions -----
 */
 
-function hasEnoughResources(resource, numRequired) {
+function hasEnoughResources(resource, numRequired, outputOnFailure) {
   /*
     CheckFn to ensure the player has enough of the given resource.
+
+    Optional arguement 'outputOnFailure' can be set to true to log the reason
+    for failure.
   */
   if (game.player.resources[resource] >= numRequired) {
     return true;
   } else {
-    appendToOutputContainer("You don't have enough " + resource + "!");
+    if (outputOnFailure)
+      appendToOutputContainer("You don't have enough " + resource + "!");
     return false;
   }
 }
 
-function hasEnoughResourcesForSong() {
+function hasEnoughResourcesForSong(outputOnFailure) {
   /*
     CheckFn to ensure the player has enough resources to create a song.
     Songs are special because they can be created using any tier two resources.
+
+    Optional arguement 'outputOnFailure' can be set to true to log the reason
+    for failure.
   */
   var totalResources = 0;
   var validResources = game.specialResources.songs.validResources;
@@ -190,7 +200,8 @@ function hasEnoughResourcesForSong() {
   if (totalResources >= game.specialResources.songs.resourcesPer) {
     return true;
   } else {
-    appendToOutputContainer("You don't have enough material to create a song!");
+    if (outputOnFailure)
+      appendToOutputContainer("You don't have enough material to create a song!");
     return false;
   }
 };
@@ -207,6 +218,7 @@ function addResourcesPerTick(resource, numResource, numTicks) {
     game.player.activeTask.tickCounter++;
   } else {
     game.player.activeTask.tickCounter = 1;
+    game.player.activeTask.tickCounter++;
   }
 }
 
@@ -252,7 +264,7 @@ function exampleTask(context) {
 
 ------- Flow to Tasks -------
 
-checkFn --> (if true) --> startFn --> if timeToComplete !== undefined --> tickFn (per natural tick) --> after timeToComplete ticks --> finishFn
+checkFns --> (if true) --> startFns --> if timeToComplete !== undefined --> tickFns (per natural tick) --> after timeToComplete ticks --> finishFns
 */
 
 /*
@@ -264,9 +276,9 @@ function cheatTask(context) {
     Use this to debug whatever you want
   */
   var startFns = [
-    //anonymize(addResource, ["money", 10]),
-    anonymize(addResource, ["beats", 10]),
-    //anonymize(addResource, ["notes", 1000])
+    partial(addResource, "money", 10),
+    partial(addResource, "beats", 10),
+    //partial(addResource, "notes", 1000)
   ];
 
   var tooltip = {
@@ -296,13 +308,13 @@ function unlockResourceTask(context) {
   var tooltipResource = requiredResource.charAt(0).toUpperCase() + requiredResource.slice(1);
 
   var checkFns = [
-    anonymize(hasEnoughResources, [requiredResource, game.resources[context.resource].resourcesPer])
+    partial(hasEnoughResources, requiredResource, game.resources[context.resource].resourcesPer)
   ];
 
   var startFns = [
-    anonymize(addResource, [context.resource]),
-    anonymize(appendToOutputContainer, [context.outputText]),
-    anonymize(showUiElement, [context.resource, "block"])
+    partial(addResource, context.resource),
+    partial(appendToOutputContainer, context.outputText),
+    partial(showUiElement, context.resource, "block")
   ];
 
   var tooltip = {
@@ -330,7 +342,7 @@ function newSongTask(context) {
     is started.
   */
   var checkFns = [hasEnoughResourcesForSong];
-  var startFns = [anonymize(openPopUp, [populateSongPopUp])];
+  var startFns = [partial(openPopUp, populateSongPopUp)];
 
   var tooltip = {
     "description": context.description,
@@ -344,7 +356,8 @@ function newSongTask(context) {
     name: context.taskName,
     checkFns: checkFns,
     startFns: startFns,
-    tooltip: tooltip
+    tooltip: tooltip,
+    repeatable: context.repeatable
   };
 }
 
@@ -362,9 +375,9 @@ function oddJobsTask(context) {
   var moneyReward = 10;
 
   var finishFns = [
-    anonymize(addResource, ["money", moneyReward]),
-    anonymize(appendToOutputContainer, ["After an hour of labor, you take home a measly " + moneyReward + " bucks."]),
-    anonymize(addTrigger, [oddJobsEventTrigger])
+    partial(addResource, "money", moneyReward),
+    partial(appendToOutputContainer, "After an hour of labor, you take home a measly " + moneyReward + " bucks."),
+    partial(addTrigger, oddJobsEventTrigger)
   ];
 
   var tooltip = {
@@ -403,13 +416,13 @@ function advanceDJCareerTask(context) {
   };
 
   var checkFns = [
-    anonymize(hasEnoughResources, ["samples", context.requiredSamples])
+    partial(hasEnoughResources, "samples", context.requiredSamples)
   ];
 
   var startFns = [
-    anonymize(removeResource, ["samples", context.requiredSamples]),
-    anonymize(addTrigger, [eventTrigger]),
-    anonymize(appendToOutputContainer, [context.outputText])
+    partial(removeResource, "samples", context.requiredSamples),
+    partial(addTrigger, eventTrigger),
+    partial(appendToOutputContainer, context.outputText)
   ];
 
   var tooltip = {
@@ -450,11 +463,11 @@ function workAsDJTask(context) {
   };
 
   var finishFns = [
-    anonymize(addXp, ["laptop", context.xpReward]),
-    anonymize(addResource, ["money", context.moneyReward]),
-    anonymize(addResource, ["fame", context.fameReward]),
-    anonymize(appendToOutputContainer, [context.outputText]),
-    anonymize(addTrigger, [eventTrigger])
+    partial(addXp, "laptop", context.xpReward),
+    partial(addResource, "money", context.moneyReward),
+    partial(addResource, "fame", context.fameReward),
+    partial(appendToOutputContainer, context.outputText),
+    partial(addTrigger, eventTrigger)
   ];
 
   var tooltip = {
@@ -490,11 +503,11 @@ function practiceDJTask(context) {
     unit = " beats";
 
   var tickFns = [
-    anonymize(addResourcesPerTick, ["beats", context.beatsPerInterval, context.interval])
+    partial(addResourcesPerTick, "beats", context.beatsPerInterval, context.interval)
   ];
 
   var finishFns = [
-    anonymize(addXp, ["laptop", context.xpReward])
+    partial(addXp, "laptop", context.xpReward)
   ];
 
   var tooltip = {
@@ -528,11 +541,11 @@ function buyBeatBookTask(context) {
   var requiredMoney = 10;
 
   var checkFns = [
-    anonymize(hasEnoughResources, ["money", requiredMoney])
+    partial(hasEnoughResources, "money", requiredMoney)
   ];
 
   var startFns = [
-    anonymize(removeResource, ["money", requiredMoney]),
+    partial(removeResource, "money", requiredMoney),
     function() {
       game.player.bonuses.laptop.passiveProgress++;
     }
@@ -558,12 +571,12 @@ function unlockLaptopTempoTask(context) {
   var requiredBeats = 50;
 
   var checkFns = [
-    anonymize(hasEnoughResources, ["beats", requiredBeats])
+    partial(hasEnoughResources, "beats", requiredBeats)
   ];
 
   var startFns = [
-    anonymize(removeResource, ["beats", requiredBeats]),
-    anonymize(showUiElement, ["tempoSelector", "inline"])
+    partial(removeResource, "beats", requiredBeats),
+    partial(showUiElement, "tempoSelector", "inline")
   ];
 
   var tooltip = {
@@ -584,15 +597,11 @@ function unlockLaptopTempoTask(context) {
 
 function exploreSubgenreTask(context) {
   var checkFns = [
-    anonymize(hasEnoughResources, ["beats", context.requiredBeats])
+    partial(hasEnoughResources, "beats", context.requiredBeats)
   ];
 
   var startFns = [
-    anonymize(openPopUp, [populateGenrePopUp])
-  ];
-
-  var finishFns = [
-    anonymize(removeResource, ["beats", context.requiredBeats])
+    partial(openPopUp, populateGenrePopUp, context.taskName)
   ];
 
   var tooltip = {
@@ -607,8 +616,8 @@ function exploreSubgenreTask(context) {
     name: context.taskName,
     checkFns: checkFns,
     startFns: startFns,
-    finishFns: finishFns,
     tooltip: tooltip,
+    repeatable: true // This task isn't actually repeatable, it gets removed when the user selects a subgenre
   };
 }
 
@@ -618,7 +627,7 @@ function upgradeLaptopTask(context) {
     more generic, but for now, it will always apply a 25% reduction (rounded up).
   */
   var checkFns = [
-    anonymize(hasEnoughResources, ["money", context.requiredMoney])
+    partial(hasEnoughResources, "money", context.requiredMoney)
   ];
 
   var applyLaptopBonus = function() {
@@ -627,11 +636,11 @@ function upgradeLaptopTask(context) {
 
     var beatProgress = document.getElementById('laptopBeatProgress');
     var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
-    updateProgress(beatProgress, beatProgress.value, requiredProgress, anonymize(addResource, ["beats"]));
+    updateProgress(beatProgress, beatProgress.value, requiredProgress, partial(addResource, "beats"));
   };
 
   var startFns = [
-    anonymize(removeResource, ["money", context.requiredMoney]),
+    partial(removeResource, "money", context.requiredMoney),
     applyLaptopBonus
   ];
 
@@ -662,14 +671,15 @@ function newInstrumentTask(context) {
   var vocalFlavor = "You could never really tell if you were good at singing or just bad at hearing.";
 
   var checkFns = [
-    anonymize(hasEnoughResources, ["money", context.requiredMoney])
+    partial(hasEnoughResources, "money", context.requiredMoney)
   ];
 
   var startFns = [
-    anonymize(removeResource, ["money", context.requiredMoney]),
-    anonymize(appendToOutputContainer, [outputText]),
-    anonymize(showUiElement, ["keyboardTab", "inline"]),
-    anonymize(showUiElement, ["keyboardSkill", "inline"]),
+    partial(removeResource, "money", context.requiredMoney),
+    partial(appendToOutputContainer, outputText),
+    partial(showUiElement, "keyboardTab", "inline"),
+    partial(showUiElement, "keyboardSkill", "inline"),
+    partial(addTrigger, firstNoteTrigger)
   ];
 
   var tooltip = {

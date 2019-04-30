@@ -7,18 +7,26 @@ function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
-function anonymize(fn, args) {
+function partial() {
   /*
-    Returns an anonymous function for deferred execution, which calls the passed
-    in fn against a passed in list of args.
+    Takes a function, fn, and fewer than the normal arguments to fn, and returns
+    a function that takes a variable number of additional args. When called, the
+    returned function calls fn with args + additional args.
   */
-  var returnFn = function() { return fn.apply(null, args)};
+  var fn = arguments[0];
+  var args = Object.values(arguments).slice(1);
+  var returnFn = function () {
+    if (arguments.length > 0)
+      args = args.concat(Object.values(arguments));
+
+    return fn.apply(null, args);
+  };
 
   return returnFn;
 }
 
-function showUiElement(elementId, styleType) {
-  document.getElementById(elementId).style.display = styleType;
+function showUiElement(elementId, displayType) {
+  document.getElementById(elementId).style.display = displayType;
 }
 
 function updateProgress(progress, value, max, triggerFn) {
