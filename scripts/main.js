@@ -18,7 +18,23 @@ var game;
 function init() {
   loadGame();
   if (game == undefined) newGame();
-  startLaptop();
+  startInstrument(game.activeInstrument);
   startTicking();
+  addCheatTask();
   updateView();
+}
+
+/* Debug Functionality */
+
+function addCheatTask() {
+  var cheatTask = getTask("CHEAT");
+
+  if (cheatTask == undefined) {
+    var context = {
+      taskId: "cheatTask",
+      taskName: "CHEAT"
+    };
+
+    addTask(context);
+  }
 }

@@ -22,12 +22,12 @@ function naturalTick() {
 function passiveResourceGeneration() {
   var progress = document.getElementById('laptopBeatProgress');
   var progressAmount = game.player.bonuses.laptop.passiveProgress;
-  var triggerFn = function () { addResource("beats") };
+  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
 
   if (game.player.bonuses.laptop.subgenre == "trance")
     progressAmount *= 2;
 
-  updateProgress(progress, (progress.value + progressAmount), game.resources.beats.clicksPer, triggerFn);
+  updateProgress(progress, (progress.value + progressAmount), requiredProgress, partial(addResource, "beats"));
 }
 
 function updateView(natural) {
@@ -64,12 +64,12 @@ function updateResourcesTab() {
 function updateSongsTab() {
   var totalRevenue = 0;
   var html = "";
-	var songTask = getTask("Make New Song");
-	var newSongButton = "";
+  var songContext = getTask("Make New Song");
+  var newSongButton = "";
 
-	if (songTask != undefined) {
-		newSongButton = makeTaskButton(songTask);
-	}
+  if (songContext != undefined) {
+    newSongButton = makeTaskButton(songContext);
+  }
 
   game.player.songs.forEach(function(song) {
     var songRow = "<div class='songRow'>" +
@@ -97,12 +97,12 @@ function updateSongsTab() {
 
 function updateTasks() {
   var html = "";
-  var tasks = game.tasks;
+  var contexts = game.player.tasks;
 
-	tasks.forEach(function(task) {
-		if (task.name != "Make New Song")
-			html += makeTaskButton(task);
-	});
+  contexts.forEach(function(context) {
+    if (context.taskName != "Make New Song")
+      html += makeTaskButton(context);
+  });
 
   document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
 }
@@ -121,24 +121,88 @@ function updateSkills() {
 }
 
 function appendToOutputContainer(message) {
-	var outputContainer = document.getElementById('outputContainer');
+  var outputContainer = document.getElementById('outputContainer');
 
-	outputContainer.innerHTML += "<p>" + message + "</p>";
-	outputContainer.scrollTop = outputContainer.scrollHeight;
+  outputContainer.innerHTML += "<p>" + message + "</p>";
+  outputContainer.scrollTop = outputContainer.scrollHeight;
 }
 
-/* Event Handlers */
+/*
+  ---- Event Handlers -----
+*/
+
+function openPopUp(populateFn, taskName) {
+  /*
+    Opens the popup box and calls the passed in populateFn, which should,
+    determine the popup box content.
+
+    If this was called by a task, you can optionally pass in the taskName to the
+    populateFn.
+  */
+  document.getElementById("popUpBox").style.display = "block";
+  populateFn(taskName);
+}
+
+function closePopUp() {
+  /*
+    Closes the popup box and clears its contents.
+  */
+  document.getElementById("popUpBox").style.display = "none";
+  document.getElementById("popUpContent").innerHTML = "";
+}
+
+function startInstrument(instrument) {
+  // Enables event listeners and animations for respective instrument
+  switch (instrument) {
+    case "laptop":
+      startLaptop();
+      game.activeInstrument = "laptop";
+      break;
+    case "keyboard":
+      startKeyboard();
+      game.activeInstrument = "keyboard";
+      break;
+  }
+}
+
+function showTooltip(obj, taskName) {
+  var offsets = getOffsets(obj);
+  var tooltip = document.getElementById('tooltip');
+  var context = getTask(taskName);
+  var task = getTaskDetails(context);
+  var html = "<div id='tooltipHeader'>" + task.tooltip.description + "</div>";
+
+  for (var key in task.tooltip.cost) {
+    html += "<div class='tooltipPriceInfo'>" +
+      "<p class='tooltipResource'>" + key + "</p>" +
+      "<p class='tooltipCost'>" + task.tooltip.cost[key] + "</p>" +
+      "</div>";
+  };
+
+  if (task.tooltip.flavor !== undefined) {
+    html += "<div class='tooltipFlavor'>" + task.tooltip.flavor + "</div>";
+  }
+
+  tooltip.innerHTML = html;
+  tooltip.style.left = offsets.left - (obj.offsetWidth / 3);
+  tooltip.style.top = offsets.top + obj.offsetHeight + 5;
+  tooltip.style.display = "inline";
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').style.display = "none";
+}
 
 function fameTooltip() {
   var obj = document.getElementById('fameTooltip');
   var tooltip = document.getElementById('tooltip');
   var offsets = getOffsets(obj);
   var html = "<div id='tooltipHeader'>" +
-             "Fame is a measure of how well known you are as an artist.<br><br>" +
-             "You can increase your fame through various tasks or by releasing high quality songs and albums.<br><br>" +
-             "The more famous you are, the larger your fanbase will be. Songs and Albums created by you will gain popularity faster if you have an established fanbase.<br><br>" +
-             "Increased fame also leads to more lucrative opportunities such as playing at prestigious events with other famous artists or attending VIP social events." +
-             "</div>";
+    "Fame is a measure of how well known you are as an artist.<br><br>" +
+    "You can increase your fame through various tasks or by releasing high quality songs and albums.<br><br>" +
+    "The more famous you are, the larger your fanbase will be. Songs and Albums created by you will gain popularity faster if you have an established fanbase.<br><br>" +
+    "Increased fame also leads to more lucrative opportunities such as playing at prestigious events with other famous artists or attending VIP social events." +
+    "</div>";
 
   tooltip.innerHTML = html;
   tooltip.style.left = offsets.left + 20;
@@ -153,33 +217,6 @@ function fameTooltip() {
 function hideFameTooltip() {
   tooltip.style.width = "200px";
   hideTooltip();
-}
-
-function showTooltip(obj, taskName) {
-	var offsets = getOffsets(obj);
-	var tooltip = document.getElementById('tooltip');
-	var task = getTask(taskName);
-	var html = "<div id='tooltipHeader'>" + task.tooltip["description"] + "</div>";
-
-	for (var key in task.tooltip.cost) {
-		html += "<div class='tooltipPriceInfo'>" +
-							"<p class='tooltipResource'>" + key + "</p>" +
-							"<p class='tooltipCost'>" + task.tooltip.cost[key] + "</p>" +
-						"</div>";
-	};
-
-	if (task.tooltip.flavor !== undefined) {
-		html += "<div class='tooltipFlavor'>" + task.tooltip.flavor + "</div>";
-	}
-
-	tooltip.innerHTML = html;
-	tooltip.style.left = offsets.left - (obj.offsetWidth / 3);
-	tooltip.style.top = offsets.top + obj.offsetHeight + 5;
-	tooltip.style.display = "inline";
-}
-
-function hideTooltip() {
-	document.getElementById('tooltip').style.display = "none";
 }
 
 function toggleItemTab(evt, tab) {
@@ -224,15 +261,7 @@ function toggleInstrument(evt, instrument) {
     activeInstrument[i].className = "instrument";
   }
 
-  // Enable event listeners and animations for respective instrument
-  switch(instrument) {
-    case "laptop":
-      startLaptop();
-      break;
-    case "keyboard":
-      startKeyboard();
-      break;
-  }
+  startInstrument(instrument);
 
   // Show the new instrument content, and make the new instrument 'active',
   document.getElementById(instrument).style.display = "block";
@@ -241,45 +270,13 @@ function toggleInstrument(evt, instrument) {
 
 /* Helper Functions */
 
-function round(value, decimals) {
-  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
-
-function updateProgress(progress, value, max, triggerFn) {
-  progress.max = max;
-
-  while (value >= max) {
-    value = value - max;
-
-    if (triggerFn != undefined)
-      triggerFn();
-  }
-
-  progress.value = value;
-}
-
-function updateMultiplier(multiplier, elementId) {
-  if (multiplier < 1)
-    multiplier = 1;
-
-  var colorAndFontShift = Math.min(10, multiplier);
-  var multDiv = document.getElementById(elementId);
-  var r = 250 - (colorAndFontShift - 1) * 30;
-  var g = 250 - Math.abs(colorAndFontShift - 5) * 30;
-  var b = (colorAndFontShift - 5) * 50;
-
-  multDiv.innerHTML = "x" + multiplier;
-  multDiv.style.fontSize = 15 + colorAndFontShift;
-  multDiv.style.color = "rgb(" + r + "," + g + "," + b + ")";
-}
-
 function getOffsets(e) {
   var offsets = e.getBoundingClientRect();
 
   return {
     left: offsets.left + window.scrollX,
     right: offsets.right + window.scrollX,
-		top: offsets.top + window.scrollY
+    top: offsets.top + window.scrollY
   };
 }
 
@@ -289,49 +286,38 @@ function modifyResourceNumber(resource, cost, numReqResource, amount) {
   if (amount == undefined) {
     amount = Math.floor(numReqResource / cost);
     htmlObj = document.getElementById(resource + "All");
-  }
-  else {
+  } else {
     htmlObj = document.getElementById(resource + amount);
   }
 
   if (numReqResource >= cost * amount && amount > 0) {
     htmlObj.innerHTML = amount;
-    htmlObj.onclick = function () { addResource(resource, amount) };
-  }
-  else {
+    htmlObj.onclick = function() {
+      addResource(resource, amount)
+    };
+  } else {
     htmlObj.innerHTML = "-";
     htmlObj.removeAttribute("onclick");
   }
 }
 
-function makeTaskButton(task) {
-	var html = "";
-	var htmlClass = "class='invalidTask'";
+function makeTaskButton(context) {
+  var html = "";
+  var htmlClass = "class='invalidTask'";
+  var task = getTaskDetails(context);
 
-	if (task.checkFn() && (task.timeToComplete == undefined || game.activeTask == undefined))
-		htmlClass = "class='validTask'";
+  if ((task.checkFns == undefined || runCheckFns(task)) && (task.timeToComplete == undefined || game.player.activeTask == undefined))
+    htmlClass = "class='validTask'";
 
-	html += "<button " + htmlClass;
+  html += "<button " + htmlClass;
 
-	// Add onclick event and tooltip mouseover events
-	if (task != undefined) {
-		html += " onclick='doTask(\"" + task.name + "\")'";
-		html += " onmouseover='showTooltip(this, \"" + task.name + "\")'";
-		html += " onmouseout='hideTooltip()'";
-	}
+  // Add onclick event and tooltip mouseover events
+  html += " onclick='doTask(\"" + task.name + "\")'";
+  html += " onmouseover='showTooltip(this, \"" + task.name + "\")'";
+  html += " onmouseout='hideTooltip()'";
 
-	// Add button label and closing tag
-	html +=  ">" + task.name + "</button>";
+  // Add button label and closing tag
+  html += ">" + task.name + "</button>";
 
-	return html;
-}
-
-function openPopUp(populateFn) {
-  document.getElementById("popUpBox").style.display = "block";
-  populateFn();
-}
-
-function closePopUp() {
-  document.getElementById("popUpBox").style.display = "none";
-  document.getElementById("popUpContent").innerHTML = "";
+  return html;
 }

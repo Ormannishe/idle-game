@@ -10,10 +10,14 @@ var markerReverse = false;
 function startLaptop() {
   var tempo = game.instruments.laptop.currentTempo;
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
+
+  if (game.player.bonuses.laptop.subgenre == "dubstep")
+    dropInterval = setInterval(dropTick, 100);
 }
 
 function stopLaptop() {
   clearInterval(beatInterval);
+  clearInterval(dropInterval);
 }
 
 function animateBeat() {
@@ -62,6 +66,7 @@ function clickBeat() {
   */
 
   var progressAmount = 0;
+  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
   var progressMultiplier = 1;
   var maxMultiplier = game.player.bonuses.laptop.maxMultiplier;
   var progress = document.getElementById('laptopBeatProgress');
@@ -70,16 +75,15 @@ function clickBeat() {
   var greenOffsets = getOffsets(document.getElementById('greenZone'));
   var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
   var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
-  var triggerFn = function () { addResource("beats") };
 
-  switch(game.player.bonuses.laptop.subgenre) {
+  switch (game.player.bonuses.laptop.subgenre) {
     case "house":
       if (game.instruments.laptop.currentTempo == "slowest")
         progressMultiplier *= 2;
       break;
     case "hardstyle":
       if (game.instruments.laptop.currentTempo == "fastest")
-        progressMultiplier *=2;
+        progressMultiplier *= 2;
     case "dubstep":
       if (game.instruments.laptop.dropActive == true)
         progressMultiplier *= 10;
@@ -98,14 +102,12 @@ function clickBeat() {
       game.player.bonuses.laptop.multiplier++;
     else
       game.player.bonuses.laptop.multiplier = maxMultiplier;
-  }
-  else if (leftYellowPoint <= markerPoint && markerPoint <= rightYellowPoint) {
+  } else if (leftYellowPoint <= markerPoint && markerPoint <= rightYellowPoint) {
     progressAmount = Math.ceil(game.player.bonuses.laptop.multiplier / 2);
 
     if (game.player.bonuses.laptop.multiplier > 1)
       game.player.bonuses.laptop.multiplier--;
-  }
-  else {
+  } else {
     if (game.player.bonuses.laptop.subgenre == "industrial")
       progressMultiplier *= 5;
 
@@ -114,7 +116,7 @@ function clickBeat() {
   }
 
   updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
-  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), game.resources.beats.clicksPer, triggerFn);
+  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
 }
 
 /* Sub-genre functionality */
@@ -132,20 +134,16 @@ function setLaptopGenre(obj) {
     greenZone.style.width = "15%";
     leftYellowZone.style.width = "18%";
     rightYellowZone.style.width = "18%";
-  }
-  else if (activeSubgenre == "dubstep") {
+  } else if (activeSubgenre == "dubstep") {
     document.getElementById("dropProgressContainer").style.visibility = "hidden";
     clearInterval(dropInterval);
     game.instruments.laptop.dropActive = false;
     document.getElementById("laptop").style.boxShadow = "none";
-  }
-  else if (activeSubgenre == "drumAndBass") {
+  } else if (activeSubgenre == "drumAndBass") {
     game.player.bonuses.laptop.maxMultiplier -= 20;
-    game.player.bonuses.laptop.multiplier = Math.min(game.player.bonuses.laptop.multiplier,
-                                                     game.player.bonuses.laptop.maxMultiplier);
+    game.player.bonuses.laptop.multiplier = Math.min(game.player.bonuses.laptop.multiplier, game.player.bonuses.laptop.maxMultiplier);
     updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
-  }
-  else if (activeSubgenre == "trance") {
+  } else if (activeSubgenre == "trance") {
     game.player.bonuses.laptop.maxMultiplier += 10;
   }
 
@@ -154,8 +152,7 @@ function setLaptopGenre(obj) {
     obj.style.boxShadow = "none";
     progressContainer.style.boxShadow = "none"
     game.player.bonuses.laptop.subgenre = undefined;
-  }
-  else {
+  } else {
     var glowColor = getComputedStyle(obj).borderColor;
 
     if (activeSubgenre !== undefined) {
@@ -173,18 +170,14 @@ function setLaptopGenre(obj) {
       greenZone.style.width = "27%";
       leftYellowZone.style.width = "12%";
       rightYellowZone.style.width = "12%";
-    }
-    else if (obj.id == "dubstep") {
+    } else if (obj.id == "dubstep") {
       document.getElementById("dropProgressContainer").style.visibility = "visible";
       dropInterval = setInterval(dropTick, 100);
-    }
-    else if (obj.id == "drumAndBass") {
+    } else if (obj.id == "drumAndBass") {
       game.player.bonuses.laptop.maxMultiplier += 20;
-    }
-    else if (obj.id == "trance") {
+    } else if (obj.id == "trance") {
       game.player.bonuses.laptop.maxMultiplier -= 10;
-      game.player.bonuses.laptop.multiplier = Math.min(game.player.bonuses.laptop.multiplier,
-                                                       game.player.bonuses.laptop.maxMultiplier);
+      game.player.bonuses.laptop.multiplier = Math.min(game.player.bonuses.laptop.multiplier, game.player.bonuses.laptop.maxMultiplier);
       updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
     }
 
@@ -201,8 +194,7 @@ function dropTick() {
       game.instruments.laptop.dropActive = false;
       document.getElementById("laptop").style.boxShadow = "none";
     }
-  }
-  else {
+  } else {
     var dropProgress = document.getElementById("theDropProgress");
     dropProgress.value = dropProgress.value + 1;
 
@@ -217,34 +209,48 @@ function dropTick() {
 }
 
 function getTooltipInfo(subgenre) {
-  switch(subgenre) {
+  switch (subgenre) {
     case "trance":
-      return {"genre": "Trance",
-              "tooltip": "Reduces the maximum combo by 10 (but not lower than 1). Generates 2x passive beat progress."};
+      return {
+        "genre": "Trance",
+        "tooltip": "Reduces the maximum combo by 10 (but not lower than 1). Generates 2x passive beat progress."
+      };
       break;
     case "house":
-      return {"genre": "House",
-              "tooltip": "Clicking generates 2x beat progress when using the slowest tempo."};
+      return {
+        "genre": "House",
+        "tooltip": "Clicking generates 2x beat progress when using the slowest tempo."
+      };
       break;
     case "drumAndBass":
-      return {"genre": "Drum and Bass",
-              "tooltip": "Increases the maximum combo by 20."};
+      return {
+        "genre": "Drum and Bass",
+        "tooltip": "Increases the maximum combo by 20."
+      };
       break;
     case "hardstyle":
-      return {"genre": "Hardstyle",
-              "tooltip": "Clicking generates 2x beat progress when using the fastest tempo."};
+      return {
+        "genre": "Hardstyle",
+        "tooltip": "Clicking generates 2x beat progress when using the fastest tempo."
+      };
       break;
     case "electro":
-      return {"genre": "Electro",
-              "tooltip": "Increases the size of the green zone and reduces the size of the yellow zones."};
+      return {
+        "genre": "Electro",
+        "tooltip": "Increases the size of the green zone and reduces the size of the yellow zones."
+      };
       break;
     case "industrial":
-      return {"genre": "Industrial",
-              "tooltip": "Clicking in the red zones generates 5x more beat progress."};
+      return {
+        "genre": "Industrial",
+        "tooltip": "Clicking in the red zones generates 5x more beat progress."
+      };
       break;
     case "dubstep":
-      return {"genre": "Dubstep",
-              "tooltip": "Every 50 seconds, enter The Drop. When The Drop occurs, clicking generates 10x beat progress for 10 seconds."};
+      return {
+        "genre": "Dubstep",
+        "tooltip": "Every 50 seconds, enter The Drop. When The Drop occurs, clicking generates 10x beat progress for 10 seconds."
+      };
       break;
     default:
       break;
@@ -277,17 +283,18 @@ function hideGenreTooltip() {
   hideTooltip();
 }
 
-function populateGenrePopUp() {
+function populateGenrePopUp(taskName) {
   var popUp = document.getElementById("popUpContent");
 
   popUp.innerHTML += "<p class='popUpHeader'>Select A Sub-Genre To Explore</p>";
 
-  game.player.bonuses.laptop.unexploredSubgenres.forEach(function (genre) {
+  game.player.bonuses.laptop.unexploredSubgenres.forEach(function(genre) {
     var genreRow = "<div class='popUpRow'>";
     var tooltipInfo = getTooltipInfo(genre);
 
     if (tooltipInfo !== undefined) {
-      genreRow += "<button class='popUpButton' onclick='selectGenre(\"" + genre + "\")'>" + tooltipInfo.genre + "</button>";
+      var onclick = "onclick='selectGenre(\"" + genre + "\", \"" + taskName + "\")'";
+      genreRow += "<button class='popUpButton'" + onclick + ">" + tooltipInfo.genre + "</button>";
       genreRow += "<p class='popUpGenreText'>" + tooltipInfo.tooltip + "</p>";
     }
 
@@ -296,15 +303,16 @@ function populateGenrePopUp() {
   });
 }
 
-function selectGenre(subgenre) {
-  var task = getTask("Explore A Sub-Genre");
+function selectGenre(subgenre, taskName) {
+  var context = getTask(taskName);
   var htmlObj = document.getElementById(subgenre);
   var index = game.player.bonuses.laptop.unexploredSubgenres.indexOf(subgenre);
 
   htmlObj.style.display = "inline";
   setLaptopGenre(htmlObj);
   appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
-  task.finishFn(task);
+  removeResource("beats", context.requiredBeats);
+  removeTask(taskName);
   game.player.bonuses.laptop.unexploredSubgenres.splice(index, 1);
   closePopUp();
   updateView();
