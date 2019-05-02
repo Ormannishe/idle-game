@@ -158,11 +158,11 @@ function startInstrument(instrument) {
   switch (instrument) {
     case "laptop":
       startLaptop();
-      game.player.activeInstrument = "laptop";
+      game.player.instruments.active = "laptop";
       break;
     case "keyboard":
       startKeyboard();
-      game.player.activeInstrument = "keyboard";
+      game.player.instruments.active = "keyboard";
       break;
   }
 }
