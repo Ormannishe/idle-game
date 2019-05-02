@@ -547,7 +547,7 @@ function buyBeatBookTask(context) {
   var startFns = [
     partial(removeResource, "money", requiredMoney),
     function() {
-      game.player.bonuses.laptop.passiveProgress++;
+      game.player.instruments.laptop.passiveProgress++;
     }
   ];
 
@@ -631,11 +631,11 @@ function upgradeLaptopTask(context) {
   ];
 
   var applyLaptopBonus = function() {
-    game.player.bonuses.laptop.reqClicksMod *= 0.75;
-    game.instruments.laptop.level++;
+    game.player.instruments.laptop.reqClicksMod *= 0.75;
+    game.player.instruments.laptop.level++;
 
     var beatProgress = document.getElementById('laptopBeatProgress');
-    var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
+    var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
     updateProgress(beatProgress, beatProgress.value, requiredProgress, partial(addResource, "beats"));
   };
 
