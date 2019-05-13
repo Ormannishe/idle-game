@@ -8,7 +8,7 @@
 
 function Player() {
   this.name = "Michael Jackson";
-  this.triggers = new Set();
+  this.triggers = [];
   this.tasks = [];
   this.activeTask = undefined;
   this.resources = {

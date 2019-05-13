@@ -72,21 +72,10 @@ function saveGame() {
   /*
     Serializes and stores all necessary player data in local storage.
     Stored data requires deserialization in the loadGame function.
-
-    Triggers require special serialization because functions cannot be stored in
-    local storage.
   */
-  var triggers = [];
-
-  game.player.triggers.forEach(function(trigger) {
-    triggers.push(trigger.name);
-  });
 
   // Serialize regular player data
   window.localStorage.setItem('playerData', JSON.stringify(game.player));
-
-  // Serialize triggers
-  window.localStorage.setItem('triggers', JSON.stringify(triggers))
 
   // Serialize HTML
   window.localStorage.setItem('html', JSON.stringify(document.body.innerHTML));
@@ -95,28 +84,15 @@ function saveGame() {
 function loadGame() {
   /*
     Deserializes local storage and restores game state.
-
-    Triggers require special restoration because functions cannot be stored in
-    local storage.
   */
 
   var playerData = JSON.parse(window.localStorage.getItem('playerData'));
-  var triggers = JSON.parse(window.localStorage.getItem('triggers'));
   var html = JSON.parse(window.localStorage.getItem('html'));
 
   if (playerData !== null) {
     // Restore game in a sane state
     game = new Game();
     game.player = playerData;
-    game.player.triggers = new Set();
-
-    // Re-add triggers to trigger set
-    triggers.forEach(function(trigger) {
-      var triggerFn = window[trigger];
-      if (triggerFn !== undefined)
-        game.player.triggers.add(triggerFn);
-    });
-
     document.body.innerHTML = html;
   }
 }

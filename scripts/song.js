@@ -186,7 +186,7 @@ function validateInput() {
       };
 
       appendToOutputContainer(songNameInput.value + " will be remembered as the start of a legacy!");
-      document.getElementById('songsTab').style.display = "inline";
+      showUiElement("songsTab", "inline");
       removeTask("Make First Song");
       addTask(context);
     }

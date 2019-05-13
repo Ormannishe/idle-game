@@ -308,7 +308,7 @@ function selectGenre(subgenre, taskName) {
   var htmlObj = document.getElementById(subgenre);
   var index = game.player.instruments.laptop.unexploredSubgenres.indexOf(subgenre);
 
-  htmlObj.style.display = "inline";
+  showUiElement(subgenre, "inline");
   setLaptopGenre(htmlObj);
   appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
   removeResource("beats", context.requiredBeats);

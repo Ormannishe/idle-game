@@ -7,12 +7,12 @@
 */
 
 function addTrigger(triggerFn) {
-  // Add the given triggerFn to the set
-  game.player.triggers.add(triggerFn);
+  // Add the name of the given triggerFn to the triggers list
+  game.player.triggers.push(triggerFn.name);
 }
 
 function initTriggers() {
-  // Populate trigger set for the start of the game
+  // Populate triggers list for the start of the game
   addTrigger(oddJobsEventTrigger);
   addTrigger(firstBeatTrigger);
   addTrigger(levelTwoLaptopTrigger);
@@ -21,12 +21,16 @@ function initTriggers() {
 }
 
 function checkTriggers(natural) {
-  // Execute each triggerFn. If a triggerFn returns true, remove it from the set
-  game.player.triggers.forEach(function(triggerFn) {
+  /*
+    Execute each triggerFn in the triggers list.
+    If a triggerFn returns true, remove it from the list
+  */
+  for (var i = 0; i < game.player.triggers.length; i++) {
+    var triggerFn = window[game.player.triggers[i]];
     if (triggerFn(natural)) {
-      game.player.triggers.delete(triggerFn);
+      game.player.triggers.splice(i, 1);
     }
-  });
+  }
 }
 
 /* ------ TRIGGERS ------
