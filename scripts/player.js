@@ -1,11 +1,14 @@
 /*
   Contains all player data and functions for manipulating player data
   Authoritative source for all player information (ie. how many resources a player has)
+
+  The player object should store all player-driven state changes and must be pure
+  so player state can be stored properly.
 */
 
 function Player() {
   this.name = "Michael Jackson";
-  this.triggers = new Set();
+  this.triggers = [];
   this.tasks = [];
   this.activeTask = undefined;
   this.resources = {
@@ -19,21 +22,29 @@ function Player() {
   this.songs = [];
   this.albums = [];
   this.achievements = [];
-  this.bonuses = {
+  this.instruments = {
+    active: "laptop",
     laptop: {
+      level: 1,
+      currentTempo: "slow",
       reqClicksMod: 1.0,
       multiplier: 1,
-      maxMultiplier: 10,
+      bonusMaxMultiplier: 0,
       passiveProgress: 0,
       subgenre: undefined,
-      unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"]
+      unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"],
+      dropActive: false
     },
     keyboard: {
+      currentNote: undefined,
+      currentSong: undefined,
       reqClicksMod: 1.0,
       multiplier: 1,
-      maxMultiplier: 10,
+      bonusMaxMultiplier: 0,
       passiveProgress: 0
     },
+  };
+  this.bonuses = {
     event: {
       oddJobs: {
         bonusChance: 0
@@ -44,7 +55,7 @@ function Player() {
       djNightclub: {
         bonusChance: 0
       }
-    },
+    }
   };
   this.skills = {
     laptop: {

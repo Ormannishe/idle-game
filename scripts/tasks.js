@@ -100,7 +100,6 @@ function startActiveTask(context) {
   */
   if (game.player.activeTask == undefined) {
     var task = getTaskDetails(context);
-    var container = document.getElementById('taskProgressContainer');
     var label = document.getElementById('taskLabel');
     var progress = document.getElementById('taskProgress');
 
@@ -108,7 +107,7 @@ function startActiveTask(context) {
     label.innerHTML = task.name;
     progress.value = 0;
     progress.max = task.timeToComplete;
-    container.style.display = "inline-block";
+    showUiElement("taskProgressContainer", "inline-block");
 
     return true;
   }
@@ -144,10 +143,8 @@ function updateActiveTask() {
 
 function stopActiveTask() {
   // Stop the currently active task
-  var container = document.getElementById('taskProgressContainer');
-
   game.player.activeTask = undefined;
-  container.style.display = "none";
+  showUiElement("taskProgressContainer", "none");
 }
 
 function cancelTask() {
@@ -447,7 +444,7 @@ function workAsDJTask(context) {
     levels of DJ work available. Rewards Laptop XP, Money, and Fame and requires
     timeToComplete depending on the context.
 
-    On completion, reinsert the given level of event trigger to the trigger set.
+    On completion, reinsert the given level of event trigger to the triggers list.
   */
   var eventTrigger;
 
@@ -547,7 +544,7 @@ function buyBeatBookTask(context) {
   var startFns = [
     partial(removeResource, "money", requiredMoney),
     function() {
-      game.player.bonuses.laptop.passiveProgress++;
+      game.player.instruments.laptop.passiveProgress++;
     }
   ];
 
@@ -631,11 +628,11 @@ function upgradeLaptopTask(context) {
   ];
 
   var applyLaptopBonus = function() {
-    game.player.bonuses.laptop.reqClicksMod *= 0.75;
-    game.instruments.laptop.level++;
+    game.player.instruments.laptop.reqClicksMod *= 0.75;
+    game.player.instruments.laptop.level++;
 
     var beatProgress = document.getElementById('laptopBeatProgress');
-    var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
+    var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
     updateProgress(beatProgress, beatProgress.value, requiredProgress, partial(addResource, "beats"));
   };
 

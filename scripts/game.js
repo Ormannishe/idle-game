@@ -1,9 +1,12 @@
 /*
   Contains all game data and functions for manipulating top-level game data
   Authoritative source for game constants (ie. how much things cost)
+
+  The game object should be pure and stateless. This enables changing of game
+  constants in the future that can be applied regardless of player progress.
 */
 
-function Game() { // TODO: Remove state from Game object. Player object holds all state.
+function Game() {
   this.player = new Player();
   this.resources = {
     fame: {},
@@ -42,19 +45,16 @@ function Game() { // TODO: Remove state from Game object. Player object holds al
   this.activeInstrument = "laptop";
   this.instruments = {
     laptop: {
-      level: 1,
-      currentTempo: "slow",
+      maxMultiplier: 10,
       tempoSpeeds: {
         slowest: 25,
         slow: 15,
         fast: 10,
         fastest: 5
-      },
-      dropActive: false
+      }
     },
     keyboard: {
-      currentNote: undefined,
-      currentSong: undefined
+      maxMultiplier: 10
     }
   };
 };
@@ -72,21 +72,10 @@ function saveGame() {
   /*
     Serializes and stores all necessary player data in local storage.
     Stored data requires deserialization in the loadGame function.
-
-    Triggers require special serialization because functions cannot be stored in
-    local storage.
   */
-  var triggers = [];
-
-  game.player.triggers.forEach(function(trigger) {
-    triggers.push(trigger.name);
-  });
 
   // Serialize regular player data
   window.localStorage.setItem('playerData', JSON.stringify(game.player));
-
-  // Serialize triggers
-  window.localStorage.setItem('triggers', JSON.stringify(triggers))
 
   // Serialize HTML
   window.localStorage.setItem('html', JSON.stringify(document.body.innerHTML));
@@ -95,28 +84,15 @@ function saveGame() {
 function loadGame() {
   /*
     Deserializes local storage and restores game state.
-
-    Triggers require special restoration because functions cannot be stored in
-    local storage.
   */
 
   var playerData = JSON.parse(window.localStorage.getItem('playerData'));
-  var triggers = JSON.parse(window.localStorage.getItem('triggers'));
   var html = JSON.parse(window.localStorage.getItem('html'));
 
   if (playerData !== null) {
     // Restore game in a sane state
     game = new Game();
     game.player = playerData;
-    game.player.triggers = new Set();
-
-    // Re-add triggers to trigger set
-    triggers.forEach(function(trigger) {
-      var triggerFn = window[trigger];
-      if (triggerFn !== undefined)
-        game.player.triggers.add(triggerFn);
-    });
-
     document.body.innerHTML = html;
   }
 }

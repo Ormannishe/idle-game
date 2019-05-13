@@ -8,10 +8,10 @@ var dropInterval;
 var markerReverse = false;
 
 function startLaptop() {
-  var tempo = game.instruments.laptop.currentTempo;
+  var tempo = game.player.instruments.laptop.currentTempo;
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
 
-  if (game.player.bonuses.laptop.subgenre == "dubstep")
+  if (game.player.instruments.laptop.subgenre == "dubstep")
     dropInterval = setInterval(dropTick, 100);
 }
 
@@ -49,7 +49,7 @@ function animateBeat() {
 }
 
 function adjustTempo(tempo) {
-  game.instruments.laptop.currentTempo = tempo;
+  game.player.instruments.laptop.currentTempo = tempo;
   stopLaptop();
   startLaptop();
 }
@@ -66,9 +66,9 @@ function clickBeat() {
   */
 
   var progressAmount = 0;
-  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
+  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
   var progressMultiplier = 1;
-  var maxMultiplier = game.player.bonuses.laptop.maxMultiplier;
+  var maxMultiplier = game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier;
   var progress = document.getElementById('laptopBeatProgress');
   var markerOffsets = getOffsets(document.querySelector('#marker'));
   var markerPoint = (markerOffsets.left + markerOffsets.right) / 2;
@@ -76,16 +76,16 @@ function clickBeat() {
   var leftYellowPoint = getOffsets(document.getElementById('leftYellowZone')).left;
   var rightYellowPoint = getOffsets(document.getElementById('rightYellowZone')).right;
 
-  switch (game.player.bonuses.laptop.subgenre) {
+  switch (game.player.instruments.laptop.subgenre) {
     case "house":
-      if (game.instruments.laptop.currentTempo == "slowest")
+      if (game.player.instruments.laptop.currentTempo == "slowest")
         progressMultiplier *= 2;
       break;
     case "hardstyle":
-      if (game.instruments.laptop.currentTempo == "fastest")
+      if (game.player.instruments.laptop.currentTempo == "fastest")
         progressMultiplier *= 2;
     case "dubstep":
-      if (game.instruments.laptop.dropActive == true)
+      if (game.player.instruments.laptop.dropActive == true)
         progressMultiplier *= 10;
     default:
       break;
@@ -96,33 +96,33 @@ function clickBeat() {
 
   // Determine how much to advance the progress bar
   if (greenOffsets.left <= markerPoint && markerPoint <= greenOffsets.right) {
-    progressAmount = game.player.bonuses.laptop.multiplier;
+    progressAmount = game.player.instruments.laptop.multiplier;
 
-    if (game.player.bonuses.laptop.multiplier < maxMultiplier)
-      game.player.bonuses.laptop.multiplier++;
+    if (game.player.instruments.laptop.multiplier < maxMultiplier)
+      game.player.instruments.laptop.multiplier++;
     else
-      game.player.bonuses.laptop.multiplier = maxMultiplier;
+      game.player.instruments.laptop.multiplier = maxMultiplier;
   } else if (leftYellowPoint <= markerPoint && markerPoint <= rightYellowPoint) {
-    progressAmount = Math.ceil(game.player.bonuses.laptop.multiplier / 2);
+    progressAmount = Math.ceil(game.player.instruments.laptop.multiplier / 2);
 
-    if (game.player.bonuses.laptop.multiplier > 1)
-      game.player.bonuses.laptop.multiplier--;
+    if (game.player.instruments.laptop.multiplier > 1)
+      game.player.instruments.laptop.multiplier--;
   } else {
-    if (game.player.bonuses.laptop.subgenre == "industrial")
+    if (game.player.instruments.laptop.subgenre == "industrial")
       progressMultiplier *= 5;
 
     progressAmount = 0.2;
-    game.player.bonuses.laptop.multiplier = 1;
+    game.player.instruments.laptop.multiplier = 1;
   }
 
-  updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
+  updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
 }
 
 /* Sub-genre functionality */
 
 function setLaptopGenre(obj) {
-  var activeSubgenre = game.player.bonuses.laptop.subgenre;
+  var activeSubgenre = game.player.instruments.laptop.subgenre;
   var progressContainer = document.getElementById("laptopBeatProgress");
 
   // Revert sub-genre specific effects
@@ -137,21 +137,21 @@ function setLaptopGenre(obj) {
   } else if (activeSubgenre == "dubstep") {
     document.getElementById("dropProgressContainer").style.visibility = "hidden";
     clearInterval(dropInterval);
-    game.instruments.laptop.dropActive = false;
+    game.player.instruments.laptop.dropActive = false;
     document.getElementById("laptop").style.boxShadow = "none";
   } else if (activeSubgenre == "drumAndBass") {
-    game.player.bonuses.laptop.maxMultiplier -= 20;
-    game.player.bonuses.laptop.multiplier = Math.min(game.player.bonuses.laptop.multiplier, game.player.bonuses.laptop.maxMultiplier);
-    updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
+    game.player.instruments.laptop.bonusMaxMultiplier -= 20;
+    game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
+    updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   } else if (activeSubgenre == "trance") {
-    game.player.bonuses.laptop.maxMultiplier += 10;
+    game.player.instruments.laptop.bonusMaxMultiplier += 10;
   }
 
   // Apply glow and sub-genre specific effects, change the active sub-genre
   if (activeSubgenre == obj.id) {
     obj.style.boxShadow = "none";
     progressContainer.style.boxShadow = "none"
-    game.player.bonuses.laptop.subgenre = undefined;
+    game.player.instruments.laptop.subgenre = undefined;
   } else {
     var glowColor = getComputedStyle(obj).borderColor;
 
@@ -174,24 +174,24 @@ function setLaptopGenre(obj) {
       document.getElementById("dropProgressContainer").style.visibility = "visible";
       dropInterval = setInterval(dropTick, 100);
     } else if (obj.id == "drumAndBass") {
-      game.player.bonuses.laptop.maxMultiplier += 20;
+      game.player.instruments.laptop.bonusMaxMultiplier += 20;
     } else if (obj.id == "trance") {
-      game.player.bonuses.laptop.maxMultiplier -= 10;
-      game.player.bonuses.laptop.multiplier = Math.min(game.player.bonuses.laptop.multiplier, game.player.bonuses.laptop.maxMultiplier);
-      updateMultiplier(game.player.bonuses.laptop.multiplier, "laptopMultiplier");
+      game.player.instruments.laptop.bonusMaxMultiplier -= 10;
+      game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
+      updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
     }
 
-    game.player.bonuses.laptop.subgenre = obj.id;
+    game.player.instruments.laptop.subgenre = obj.id;
   }
 }
 
 function dropTick() {
-  if (game.instruments.laptop.dropActive == true) {
+  if (game.player.instruments.laptop.dropActive == true) {
     var dropProgress = document.getElementById("theDropProgress");
     dropProgress.value = dropProgress.value - 5;
 
     if (dropProgress.value <= 0) {
-      game.instruments.laptop.dropActive = false;
+      game.player.instruments.laptop.dropActive = false;
       document.getElementById("laptop").style.boxShadow = "none";
     }
   } else {
@@ -202,7 +202,7 @@ function dropTick() {
       var laptopContainer = document.getElementById("laptop");
       var glowColor = getComputedStyle(document.getElementById("dubstep")).borderColor;
 
-      game.instruments.laptop.dropActive = true;
+      game.player.instruments.laptop.dropActive = true;
       laptopContainer.style.boxShadow = "inset 0px 0px 150px 1px " + glowColor;
     }
   }
@@ -288,7 +288,7 @@ function populateGenrePopUp(taskName) {
 
   popUp.innerHTML += "<p class='popUpHeader'>Select A Sub-Genre To Explore</p>";
 
-  game.player.bonuses.laptop.unexploredSubgenres.forEach(function(genre) {
+  game.player.instruments.laptop.unexploredSubgenres.forEach(function(genre) {
     var genreRow = "<div class='popUpRow'>";
     var tooltipInfo = getTooltipInfo(genre);
 
@@ -306,14 +306,14 @@ function populateGenrePopUp(taskName) {
 function selectGenre(subgenre, taskName) {
   var context = getTask(taskName);
   var htmlObj = document.getElementById(subgenre);
-  var index = game.player.bonuses.laptop.unexploredSubgenres.indexOf(subgenre);
+  var index = game.player.instruments.laptop.unexploredSubgenres.indexOf(subgenre);
 
-  htmlObj.style.display = "inline";
+  showUiElement(subgenre, "inline");
   setLaptopGenre(htmlObj);
   appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
   removeResource("beats", context.requiredBeats);
   removeTask(taskName);
-  game.player.bonuses.laptop.unexploredSubgenres.splice(index, 1);
+  game.player.instruments.laptop.unexploredSubgenres.splice(index, 1);
   closePopUp();
   updateView();
 }

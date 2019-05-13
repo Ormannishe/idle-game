@@ -18,7 +18,7 @@ var game;
 function init() {
   loadGame();
   if (game == undefined) newGame();
-  startInstrument(game.activeInstrument);
+  startInstrument(game.player.instruments.active);
   startTicking();
   addCheatTask();
   updateView();

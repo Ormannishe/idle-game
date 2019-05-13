@@ -21,10 +21,10 @@ function naturalTick() {
 
 function passiveResourceGeneration() {
   var progress = document.getElementById('laptopBeatProgress');
-  var progressAmount = game.player.bonuses.laptop.passiveProgress;
-  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.bonuses.laptop.reqClicksMod);
+  var progressAmount = game.player.instruments.laptop.passiveProgress;
+  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
 
-  if (game.player.bonuses.laptop.subgenre == "trance")
+  if (game.player.instruments.laptop.subgenre == "trance")
     progressAmount *= 2;
 
   updateProgress(progress, (progress.value + progressAmount), requiredProgress, partial(addResource, "beats"));
@@ -139,7 +139,8 @@ function openPopUp(populateFn, taskName) {
     If this was called by a task, you can optionally pass in the taskName to the
     populateFn.
   */
-  document.getElementById("popUpBox").style.display = "block";
+  showUiElement("popUpBlocker", "block");
+  showUiElement("popUpBox", "block");
   populateFn(taskName);
 }
 
@@ -147,7 +148,8 @@ function closePopUp() {
   /*
     Closes the popup box and clears its contents.
   */
-  document.getElementById("popUpBox").style.display = "none";
+  showUiElement("popUpBlocker", "none");
+  showUiElement("popUpBox", "none");
   document.getElementById("popUpContent").innerHTML = "";
 }
 
@@ -156,11 +158,11 @@ function startInstrument(instrument) {
   switch (instrument) {
     case "laptop":
       startLaptop();
-      game.activeInstrument = "laptop";
+      game.player.instruments.active = "laptop";
       break;
     case "keyboard":
       startKeyboard();
-      game.activeInstrument = "keyboard";
+      game.player.instruments.active = "keyboard";
       break;
   }
 }
