@@ -473,14 +473,14 @@ function genericStudyTask(context) {
     case 1:
       interval = 10;
       resourcesPerInterval = 1;
-      xpReward = Math.round(50 * game.player.studies[instrument].practice.xpMod);
+      xpReward = Math.round(20 * game.player.studies[instrument].practice.xpMod);
       timeToComplete = 60;
       flavor = "Practice makes perfect, but the skill levels have no cap so...";
       break;
     case 2:
       interval = 5;
       resourcesPerInterval = 1;
-      xpReward = Math.round(100 * game.player.studies[instrument].studyOnline.xpMod);
+      xpReward = Math.round(60 * game.player.studies[instrument].studyOnline.xpMod);
       timeToComplete = 120;
       flavor = "If you're procrastinating studying right now, this doesn't count.";
       break;
@@ -1034,7 +1034,7 @@ function increaseResourceXpTask(context) {
     case "samples":
       requiredResource = 1000;
       bonusXpAmount = 10;
-      flavor = "You finally understand the meaning of life... and more importantly, how to get more XP from samples!";
+      flavor = "You finally understand the meaning of life... and more importantly, how to get more XP from samples.";
       break;
     default:
       return null;

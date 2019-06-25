@@ -309,7 +309,7 @@ function levelEightLaptopTrigger() {
 }
 
 function levelNineLaptopTrigger() {
-  // Upgrades Level 1 DJ Job
+  // Improves DJ XP Gain from Beats
   if (game.player.skills.laptop.level >= 9) {
     var context = {
       taskId: "increaseResourceXpTask",
@@ -333,6 +333,7 @@ function levelTenLaptopTrigger() {
 }
 
 function levelElevenLaptopTrigger() {
+  // Second Laptop Combo Upgrade
   if (game.player.skills.laptop.level >= 11) {
     var context = {
       taskId: "increaseComboTask",
@@ -383,7 +384,8 @@ function levelThirteenLaptopTrigger() {
 }
 
 function levelFourteenLaptopTrigger() {
-  // Upgrades Level 2 DJ Study Task
+  // Level 2 DJ Job
+  // TODO: Make Fame requirement part of task
   if (game.player.skills.laptop.level >= 14) {
     if (game.player.resources.fame.amount >= 25) {
       var context = {
@@ -392,7 +394,7 @@ function levelFourteenLaptopTrigger() {
         level: 2
       };
 
-      appendToOutputContainer("You're starting to become well known as a freelance artist, but your sound is destined for a larger venue...");
+      appendToOutputContainer("You're starting to become well known as a freelance artist, but your sound is destined for a larger venue.");
       addTask(context);
       addTrigger(nightclubDJEventTrigger);
       addTrigger(levelFifteenLaptopTrigger);
@@ -402,7 +404,7 @@ function levelFourteenLaptopTrigger() {
 }
 
 function levelFifteenLaptopTrigger() {
-  // Upgrades Laptop
+  // Level 2 Laptop Upgrade
   // TODO: Requires level 1 laptop upgrade ?
   if (game.player.skills.laptop.level >= 15) {
     var context = {
