@@ -15,12 +15,50 @@ function addTask(context) {
   game.player.tasks.push(context);
 }
 
-function getTask(taskName) {
+function getContext(taskName) {
   /*
-    Given a task name, return the associated context in the task list
+    Given a task name, return the associated context in the task list.
+
+    A task context stores the associated task function ID, task name, and
+    any necessary paramameters for the task. To retrieve a proper task in its
+    entirety, use getTask or getTaskFromContext.
   */
   var index = game.player.tasks.findIndex(context => context.taskName === taskName);
   return game.player.tasks[index];
+}
+
+function getContextFromTask(task) {
+  /*
+    Given a proper task, return its associated context
+  */
+  return getContext(task.name);
+}
+
+function getTask(taskName) {
+  /*
+    Given a task name, retrieve the associated context in the task list and
+    return the task in its entirety.
+
+    To retrieve a task fully, you must execute the task function for a given
+    context, passing the context as an arguement. A proper task returns
+    additional task information that is required to actually do the task
+    (ie. checkFns, startFns, tickFns, finishFns, timeToComplete, etc.).
+  */
+  var context = getContext(taskName);
+
+  if (context !== undefined) {
+    var taskFn = window[context.taskId];
+    return taskFn(context);
+  }
+}
+
+function getTaskFromContext(context) {
+  /*
+    Returns a proper task, similar to the getTask function, but takes in an
+    already fetched context object.
+  */
+  var taskFn = window[context.taskId];
+  return taskFn(context);
 }
 
 function removeTask(taskName) {
@@ -30,19 +68,6 @@ function removeTask(taskName) {
   var index = game.player.tasks.findIndex(context => context.taskName === taskName);
   if (index > -1)
     game.player.tasks.splice(index, 1);
-}
-
-function getTaskDetails(context) {
-  /*
-    A task context stores the associated task function ID, task name, and
-    any necessary paramameters for the task.
-
-    This function runs the task function for a given context and returns
-    additional task information that is required to actually do the task
-    (ie. checkFns, startFns, tickFns, finishFns, timeToComplete, etc.).
-  */
-  var taskFn = window[context.taskId];
-  return taskFn(context);
 }
 
 function doTask(taskName) {
@@ -56,27 +81,25 @@ function doTask(taskName) {
     If the task is not repeatable and has successfully started, remove it from
     the task list.
   */
-  var context = getTask(taskName);
-  var task = getTaskDetails(context);
+  var task = getTask(taskName);
 
-  if (task.checkFns == undefined || runCheckFns(task, true)) {
-    if (task.timeToComplete == undefined || startActiveTask(context)) {
-      if (task.startFns !== undefined)
-        task.startFns.forEach(function(startFn) {
-          startFn()
-        });
-
-      if (!task.repeatable)
-        removeTask(taskName);
-
-      hideTooltip();
+  if (task.checkFns == undefined || checkTask(task, true)) {
+    if (task.timeToComplete == undefined) {
+      startTask(task);
+      // If a task does not have any tickFns or finishFns, then it is done
+      if (task.tickFns == undefined && task.finishFns == undefined)
+        finishTask(task);
+    }
+    else {
+      if (startActiveTask(task))
+        startTask(task);
     }
   }
 
   updateView();
 }
 
-function runCheckFns(task, outputOnFailure) {
+function checkTask(task, outputOnFailure) {
   /*
     Run all of the checkFns for a given task. If any of them return false,
     return false. Otherwise returns true.
@@ -93,13 +116,48 @@ function runCheckFns(task, outputOnFailure) {
   return true;
 }
 
-function startActiveTask(context) {
+function startTask(task) {
+  /*
+    Run all of the startFns for a given task before removing the task from the
+    task list. If the task cannot be started (ie. there is already an active
+    task), returns false.
+
+    If a task is repeatable, do not remove it from the task list.
+  */
+  if (task.startFns !== undefined)
+    task.startFns.forEach(function(startFn) {
+      startFn();
+    });
+
+  if (!task.repeatable)
+    removeTask(task.name);
+
+  hideTooltip();
+}
+
+function finishTask(task) {
+  /*
+    Run all of the finishFns for a given task, before adding it to the
+    player.completedTasks array (if it is not already present).
+  */
+
+  if (task.finishFns !== undefined) {
+    task.finishFns.forEach(function(finishFn) {
+      finishFn();
+    });
+  }
+
+  if (game.player.completedTasks.indexOf(task.name) == -1)
+    game.player.completedTasks.push(task.name);
+}
+
+function startActiveTask(task) {
   /*
     Set the given task context as the active task.
     Returns false if there is already an active task and true otherwise.
   */
   if (game.player.activeTask == undefined) {
-    var task = getTaskDetails(context);
+    var context = getContextFromTask(task);
     var label = document.getElementById('taskLabel');
     var progress = document.getElementById('taskProgress');
 
@@ -123,8 +181,7 @@ function updateActiveTask() {
     If the task has completed, execute its finishFns and stop the active task.
   */
   if (game.player.activeTask !== undefined) {
-    var task = getTaskDetails(game.player.activeTask);
-    var finishFns = task.finishFns;
+    var task = getTaskFromContext(game.player.activeTask);
     var progress = document.getElementById('taskProgress');
 
     if (task.tickFns !== undefined)
@@ -132,12 +189,9 @@ function updateActiveTask() {
         tickFn()
       });
 
-    if (finishFns !== undefined)
-      finishFns.push(stopActiveTask);
-    else
-      finishFns = [stopActiveTask];
+    task.finishFns.push(stopActiveTask);
 
-    updateProgress(progress, (progress.value + 1), task.timeToComplete, finishFns);
+    updateProgress(progress, (progress.value + 1), task.timeToComplete, partial(finishTask, task));
   }
 }
 
@@ -152,7 +206,7 @@ function cancelTask() {
     Cancels the currently active task.
     If the task was removed from the task list, reinsert it.
   */
-  if (getTask(game.player.activeTask.taskName) == undefined)
+  if (getContext(game.player.activeTask.taskName) == undefined)
     game.player.tasks.push(game.player.activeTask);
 
   stopActiveTask();
@@ -170,7 +224,7 @@ function hasEnoughResources(resource, numRequired, outputOnFailure) {
     Optional arguement 'outputOnFailure' can be set to true to log the reason
     for failure.
   */
-  if (game.player.resources[resource] >= numRequired) {
+  if (game.player.resources[resource].amount >= numRequired) {
     return true;
   } else {
     if (outputOnFailure)
@@ -191,7 +245,7 @@ function hasEnoughResourcesForSong(outputOnFailure) {
   var validResources = game.specialResources.songs.validResources;
 
   validResources.forEach(function(resource) {
-    totalResources += game.player.resources[resource];
+    totalResources += game.player.resources[resource].amount;
   });
 
   if (totalResources >= game.specialResources.songs.resourcesPer) {
@@ -300,9 +354,23 @@ function unlockResourceTask(context) {
     any resource that is composed of basic resources (ie. beats, notes, etc.)
     The resource to unlock should be specified in the context.
   */
+
   var requiredResource = game.resources[context.resource].requiredResource;
-  // Capitalized version of the required resource for the tooltip
-  var tooltipResource = requiredResource.charAt(0).toUpperCase() + requiredResource.slice(1);
+  var outputText;
+  var flavor;
+
+  switch(context.resource) {
+    case "samples":
+      outputText = "You've created your first musical sample! Your eyes glow with pride as you take one more step toward your destiny.";
+      flavor = "Free samples are always great. These samples are okay too.";
+      break;
+    case "measures":
+      outputText = "You've created your first measure!";
+      flavor = "Measure twice, cut once.";
+      break;
+    default:
+      return null;
+  }
 
   var checkFns = [
     partial(hasEnoughResources, requiredResource, game.resources[context.resource].resourcesPer)
@@ -310,17 +378,17 @@ function unlockResourceTask(context) {
 
   var startFns = [
     partial(addResource, context.resource),
-    partial(appendToOutputContainer, context.outputText),
+    partial(appendToOutputContainer, outputText),
     partial(showUiElement, context.resource, "block")
   ];
 
   var tooltip = {
     "description": "Unlocks a new tier two resource.",
     "cost": {},
-    "flavor": context.flavor
+    "flavor": flavor
   };
 
-  tooltip.cost[tooltipResource] = game.resources[context.resource].resourcesPer;
+  tooltip.cost[capitalize(context.resource)] = game.resources[context.resource].resourcesPer;
 
   return {
     name: context.taskName,
@@ -338,28 +406,164 @@ function newSongTask(context) {
     Song details are gathered in a pop up panel, which is created when this task
     is started.
   */
+  var description;
+  var flavor;
   var checkFns = [hasEnoughResourcesForSong];
   var startFns = [partial(openPopUp, populateSongPopUp)];
+  var finishFns;
+
+  if (context.taskName == "Make First Song") {
+    var newContext = {
+      taskId: "newSongTask",
+      taskName: "Make New Song"
+    };
+
+    finishFns = [
+      partial(showUiElement, "songsTab", "inline"),
+      partial(removeTask, "Make First Song"),
+      partial(addTask, newContext)
+    ];
+
+    description = "Unlocks a new tier three resource.";
+    flavor = "You'll probably be embarassed by this one in a few years.";
+  }
+  else {
+    description = "Create a new song!";
+    flavor = "Every song is a new opportunity. Unless you're Nickleback. Then it's kind of just the same every time.";
+  }
 
   var tooltip = {
-    "description": context.description,
+    "description": description,
     "cost": {
       "Tier Two Resources": game.specialResources.songs.resourcesPer
     },
-    "flavor": context.flavor
+    "flavor": flavor
   };
 
   return {
     name: context.taskName,
     checkFns: checkFns,
     startFns: startFns,
+    finishFns: finishFns,
     tooltip: tooltip,
-    repeatable: context.repeatable
+    repeatable: true
   };
 }
 
 /*
-  ---- Job Related Tasks -----
+  ---- Study Tasks -----
+*/
+
+function genericStudyTask(context) {
+  /*
+    This is a generic task for passive resource production. A number of resources
+    is rewarded after every number of ticks, depending on the level of study,
+    provided in the context.
+    This process repeats for the specified timeToComplete, before rewarding the
+    appropriate type of XP upon completion.
+  */
+  var interval;
+  var resourcesPerInterval;
+  var xpReward;
+  var timeToComplete;
+  var flavor;
+  var instrument = game.resources[context.resource].instrument;
+
+  switch (context.level) {
+    case 1:
+      interval = 10;
+      resourcesPerInterval = 1;
+      xpReward = Math.round(50 * game.player.studies[instrument].practice.xpMod);
+      timeToComplete = 60;
+      flavor = "Practice makes perfect, but the skill levels have no cap so...";
+      break;
+    case 2:
+      interval = 5;
+      resourcesPerInterval = 1;
+      xpReward = Math.round(100 * game.player.studies[instrument].studyOnline.xpMod);
+      timeToComplete = 120;
+      flavor = "If you're procrastinating studying right now, this doesn't count.";
+      break;
+    default:
+      return null;
+  }
+
+  var tickFns = [
+    partial(addResourcesPerTick, context.resource, resourcesPerInterval, interval)
+  ];
+
+  var finishFns = [
+    partial(addXp, instrument, xpReward)
+  ];
+
+  var tooltip = {
+    "description": "Generates " + resourcesPerInterval + " " + context.resource + " every " + interval + " seconds. Rewards " + xpReward + " " + instrument + " XP on completion. Repeatable.",
+    "cost": {
+      "Time": timeToComplete
+    },
+    "flavor": flavor
+  };
+
+  return {
+    name: context.taskName,
+    tickFns: tickFns,
+    finishFns: finishFns,
+    tooltip: tooltip,
+    timeToComplete: timeToComplete,
+    repeatable: true
+  };
+}
+
+function upgradeStudyTask(context) {
+  // Increases XP gains from Studying DJing by 10%
+  // TODO: Make generic
+  var requiredBeats;
+  var studyType;
+  var description;
+
+  switch(context.level) {
+    case 1:
+      requiredBeats = 50;
+      studyType = "practice";
+      description = "Increases XP Gains from Practicing DJing by 10%";
+      break;
+    case 2:
+      requiredBeats = 500;
+      studyType = "studyOnline";
+      description = "Increases XP Gains from Studying DJing Online by 10%";
+      break;
+    default:
+      return null;
+  }
+
+  var checkFns = [
+    partial(hasEnoughResources, "beats", requiredBeats)
+  ];
+
+  var startFns = [
+    partial(removeResource, "beats", requiredBeats),
+    function() { game.player.studies.laptop[studyType].xpMod += 0.1; }
+  ]
+
+  var tooltip = {
+    "description": description,
+    "cost": {
+      "Beats": requiredBeats
+    },
+    "flavor": "In order to properly learn a thing, you first must learn to learn."
+  };
+
+  return {
+    name: context.taskName,
+    checkFns: checkFns,
+    startFns: startFns,
+    tooltip: tooltip
+  };
+}
+
+
+/*
+  ---- Job Tasks -----
 */
 
 function oddJobsTask(context) {
@@ -398,36 +602,56 @@ function advanceDJCareerTask(context) {
     As a player increases their laptop skill level, they unlock the ability to
     advance their career as a DJ. This function creates a series of tasks,
     depending on the context, which unlock new event triggers for the DJ career.
+
+    Advancing your career typically requires a certain level of Fame (which is
+    not consumed upon completion) and a number of Samples.
   */
+
+  var requiredFame;
+  var requiredSamples;
+  var outputText;
+  var description;
+  var flavor;
   var eventTrigger;
 
   switch (context.level) {
     case 1:
+      requiredFame = 0;
+      requiredSamples = 5;
+      outputText = "You've completed your online portfolio. Soon, your first clients will reach out to you!";
+      description = "Become a Freelance DJ, unlocking opportunities to play at small gatherings.";
+      flavor = "Turns out the hardest part about becoming an artist is getting other people to like your music.";
       eventTrigger = freelanceDJEventTrigger;
       break;
     case 2:
+      requiredFame = 50;
+      requiredSamples = 30;
+      outputText = "Many of the nightclub owners liked the samples you showed them!";
+      description = "Unlocks more lucrative opportunities to DJ at nightclubs. Requires 50 Fame.";
+      flavor = "Nightclubs during the day are... strange.";
       eventTrigger = nightclubDJEventTrigger;
       break;
     default:
-      break;
+      return null;
   };
 
   var checkFns = [
-    partial(hasEnoughResources, "samples", context.requiredSamples)
+    partial(hasEnoughResources, "fame", requiredFame),
+    partial(hasEnoughResources, "samples", requiredSamples)
   ];
 
   var startFns = [
-    partial(removeResource, "samples", context.requiredSamples),
+    partial(removeResource, "samples", requiredSamples),
     partial(addTrigger, eventTrigger),
-    partial(appendToOutputContainer, context.outputText)
+    partial(appendToOutputContainer, outputText)
   ];
 
   var tooltip = {
-    "description": context.description,
+    "description": description,
     "cost": {
-      "Samples": context.requiredSamples
+      "Samples": requiredSamples
     },
-    "flavor": context.flavor
+    "flavor": flavor
   };
 
   return {
@@ -446,189 +670,145 @@ function workAsDJTask(context) {
 
     On completion, reinsert the given level of event trigger to the triggers list.
   */
+  var xpReward;
+  var moneyReward;
+  var fameReward;
+  var timeToComplete;
+  var outputText;
+  var flavor;
   var eventTrigger;
 
   switch (context.level) {
     case 1:
+      xpReward = 50;
+      moneyReward = 50;
+      fameReward = 5;
+      timeToComplete = 180;
+      outputText = "After a few hours work at a " + context.djEvent.toLowerCase() + ", you manage to make $50!";
+      flavor = "Turns out, parties are a lot less fun when you're working.";
       eventTrigger = freelanceDJEventTrigger;
       break;
     case 2:
+      xpReward = 250;
+      moneyReward = 250;
+      fameReward = 30;
+      timeToComplete = 180;
+      outputText = "After a crazy night at a club, you manage to make a solid $250!";
+      flavor = "'This isss myyy sooooooooong!' - That White Girl";
       eventTrigger = nightclubDJEventTrigger;
       break;
     default:
-      break;
+      return null;
   };
 
   var finishFns = [
-    partial(addXp, "laptop", context.xpReward),
-    partial(addResource, "money", context.moneyReward),
-    partial(addResource, "fame", context.fameReward),
-    partial(appendToOutputContainer, context.outputText),
+    partial(addXp, "laptop", xpReward),
+    partial(addResource, "money", moneyReward),
+    partial(addResource, "fame", fameReward),
+    partial(appendToOutputContainer, outputText),
     partial(addTrigger, eventTrigger)
   ];
 
   var tooltip = {
-    "description": "Rewards " + context.fameReward + " Fame, $" + context.moneyReward + " and " + context.xpReward + " Laptop XP.",
+    "description": "Rewards " + fameReward + " Fame, $" + moneyReward + " and " + xpReward + " Laptop XP.",
     "cost": {
-      "Time": context.timeToComplete
+      "Time": timeToComplete
     },
-    "flavor": context.flavor
+    "flavor": flavor
   };
 
   return {
     name: context.taskName,
     finishFns: finishFns,
     tooltip: tooltip,
-    timeToComplete: context.timeToComplete
+    timeToComplete: timeToComplete
   };
 }
 
-/*
-  ---- Study Related Tasks -----
-*/
-
-function practiceDJTask(context) {
+function upgradeEventChanceTask(context) {
   /*
-    This is a generic task for passive beat production. A configurable number of
-    beats is rewarded after every configurable number of ticks.
-    This process repeats for the specified timeToComplete, before rewarding
-    Laptop XP upon completion.
+    Increases the player's chance of recieving a Job opportunity by 20%.
   */
-  var unit = " beat";
 
-  if (context.beatsPerInterval > 1)
-    unit = " beats";
+  switch(context.level) {
+    case 1:
+      context.requiredResource = 5;
+      context.jobType = "freelance";
+      context.description = "Increases your chance of getting a Freelance DJ opportunity by 20%.";
+      context.flavor = "While you're at it, maybe use a picture of yourself that isn't from 8 years ago.";
+      break;
+    case 2:
+      context.requiredResource = 50;
+      context.jobType = "nightclub"; // TODO: Come up with generic jobTypes for all instruments
+      context.description = "Increases your chance of getting a Nightclub DJ opportunity by 20%.";
+      context.flavor = "Because being around sweaty drunk people is something you want to do more often.";
+      break;
+    default:
+      return null;
+  }
 
-  var tickFns = [
-    partial(addResourcesPerTick, "beats", context.beatsPerInterval, context.interval)
+  context.instrument = game.resources[context.resource].instrument;
+
+  var reduceProcTime = function() {
+    game.player.jobs[context.instrument][context.jobType].procMod -= 0.2;
+  }
+
+  var checkFns = [
+    partial(hasEnoughResources, context.resource, context.requiredResource)
   ];
 
-  var finishFns = [
-    partial(addXp, "laptop", context.xpReward)
+  var startFns = [
+    reduceProcTime,
+    partial(removeResource, context.resource, context.requiredResource)
   ];
 
   var tooltip = {
-    "description": "Generates " + context.beatsPerInterval + unit + " every " + context.interval + " seconds. Rewards " + context.xpReward + " Laptop XP on completion. Repeatable.",
-    "cost": {
-      "Time": context.timeToComplete
-    },
+    "description": context.description,
+    "cost": {},
     "flavor": context.flavor
   };
 
+  tooltip.cost[capitalize(context.resource)] = context.requiredResource;
+
   return {
     name: context.taskName,
-    tickFns: tickFns,
-    finishFns: finishFns,
+    checkFns: checkFns,
+    startFns: startFns,
     tooltip: tooltip,
-    timeToComplete: context.timeToComplete,
-    repeatable: context.repeatable
   };
 }
 
 /*
-  ---- Other Upgrades -----
+  Instrument Upgrades
 */
-
-function buyBeatBookTask(context) {
-  /*
-    This task is meant to be the first source of passive beat progress available
-    to the player. Other tasks will add to the amount of passive beat progress
-    they have access to.
-  */
-  var requiredMoney = 10;
-
-  var checkFns = [
-    partial(hasEnoughResources, "money", requiredMoney)
-  ];
-
-  var startFns = [
-    partial(removeResource, "money", requiredMoney),
-    function() {
-      game.player.instruments.laptop.passiveProgress++;
-    }
-  ];
-
-  var tooltip = {
-    "description": "Purchase a notebook to write down ideas as they come to you. Permanently generates passive beat progress.",
-    "cost": {
-      "Money": requiredMoney
-    },
-    "flavor": "Some people like playing games. Others prefer when the game plays itself."
-  };
-
-  return {
-    name: context.taskName,
-    checkFns: checkFns,
-    startFns: startFns,
-    tooltip: tooltip
-  };
-}
-
-function unlockLaptopTempoTask(context) {
-  var requiredBeats = 50;
-
-  var checkFns = [
-    partial(hasEnoughResources, "beats", requiredBeats)
-  ];
-
-  var startFns = [
-    partial(removeResource, "beats", requiredBeats),
-    partial(showUiElement, "tempoSelector", "inline")
-  ];
-
-  var tooltip = {
-    "description": "Unlocks the tempo selector for your laptop.",
-    "cost": {
-      "Beats": requiredBeats
-    },
-    "flavor": "The ability to alter time itself, for the low cost of " + requiredBeats + " beats."
-  };
-
-  return {
-    name: context.taskName,
-    checkFns: checkFns,
-    startFns: startFns,
-    tooltip: tooltip,
-  };
-}
-
-function exploreSubgenreTask(context) {
-  var checkFns = [
-    partial(hasEnoughResources, "beats", context.requiredBeats)
-  ];
-
-  var startFns = [
-    partial(openPopUp, populateGenrePopUp, context.taskName)
-  ];
-
-  var tooltip = {
-    "description": "Unlocks a bonus effect of your choice for your laptop, improving beat production.",
-    "cost": {
-      "Beats": context.requiredBeats
-    },
-    "flavor": "Are you even a real artist if people aren't arguing about what sub-genre your music is in?"
-  };
-
-  return {
-    name: context.taskName,
-    checkFns: checkFns,
-    startFns: startFns,
-    tooltip: tooltip,
-    repeatable: true // This task isn't actually repeatable, it gets removed when the user selects a subgenre
-  };
-}
 
 function upgradeLaptopTask(context) {
   /*
-    This task reduces the amount of clicks required per beat. It can be made
-    more generic, but for now, it will always apply a 25% reduction (rounded up).
+    Generic task for upgrading the laptop instrument. Upgrading the laptop
+    reduces the number of clicks required to make a beat. Reduction amount and
+    cost are dependant on the level of the instrument.
   */
-  var checkFns = [
-    partial(hasEnoughResources, "money", context.requiredMoney)
-  ];
+  var requiredMoney;
+  var clickModifier;
+  var flavor;
+
+  switch (context.level) {
+    case 1:
+      requiredMoney = 100;
+      clickModifier = 0.9;
+      flavor = "Couldn't you have just pirated this?";
+      break;
+    case 2:
+      requiredMoney = 1000;
+      clickModifier = 0.9;
+      flavor = "Your old one kept overheating because your beats are too hot.";
+      break;
+    default:
+      return null;
+  }
 
   var applyLaptopBonus = function() {
-    game.player.instruments.laptop.reqClicksMod *= 0.75;
+    game.player.instruments.laptop.reqClicksMod *= clickModifier;
     game.player.instruments.laptop.level++;
 
     var beatProgress = document.getElementById('laptopBeatProgress');
@@ -636,17 +816,21 @@ function upgradeLaptopTask(context) {
     updateProgress(beatProgress, beatProgress.value, requiredProgress, partial(addResource, "beats"));
   };
 
+  var checkFns = [
+    partial(hasEnoughResources, "money", requiredMoney)
+  ];
+
   var startFns = [
-    partial(removeResource, "money", context.requiredMoney),
+    partial(removeResource, "money", requiredMoney),
     applyLaptopBonus
   ];
 
   var tooltip = {
-    "description": "Reduces the required number of clicks per beat by 25%.",
+    "description": "Reduces the required number of clicks per beat by 10%.",
     "cost": {
-      "Money": context.requiredMoney
+      "Money": requiredMoney
     },
-    "flavor": "Your old one kept overheating because your beats are too hot."
+    "flavor": flavor
   };
 
   return {
@@ -693,4 +877,198 @@ function newInstrumentTask(context) {
     startFns: startFns,
     tooltip: tooltip
   };
+}
+
+/*
+  ---- Mechanic Upgrades -----
+*/
+
+function unlockLaptopTempoTask(context) {
+  var requiredBeats = 30;
+
+  var checkFns = [
+    partial(hasEnoughResources, "beats", requiredBeats)
+  ];
+
+  var startFns = [
+    partial(removeResource, "beats", requiredBeats),
+    partial(showUiElement, "tempoSelector", "inline")
+  ];
+
+  var tooltip = {
+    "description": "Unlocks the tempo selector for your laptop.",
+    "cost": {
+      "Beats": requiredBeats
+    },
+    "flavor": "The ability to alter time itself, for the low cost of " + requiredBeats + " beats."
+  };
+
+  return {
+    name: context.taskName,
+    checkFns: checkFns,
+    startFns: startFns,
+    tooltip: tooltip,
+  };
+}
+
+function exploreSubgenreTask(context) {
+  var requiredBeats;
+
+  switch(context.level) {
+    case 1:
+      requiredBeats = 100;
+      break;
+    case 2:
+      requiredBeats = 500;
+      break;
+    case 3:
+      requiredBeats = 1000;
+      break;
+    case 4:
+      requiredBeats = 5000;
+      break;
+    case 5:
+      requiredBeats = 10000;
+      break;
+    case 6:
+      requiredBeats = 50000;
+      break;
+    case 7:
+      requiredBeats = 100000;
+      break;
+    default:
+      return null;
+  }
+
+  var checkFns = [
+    partial(hasEnoughResources, "beats", requiredBeats)
+  ];
+
+  var startFns = [
+    partial(openPopUp, populateGenrePopUp, context.taskName)
+  ];
+
+  var finishFns = [
+    partial(removeResource, "beats", requiredBeats),
+    partial(removeTask, context.taskName)
+  ];
+
+  var tooltip = {
+    "description": "Unlocks a bonus effect of your choice for your laptop, improving beat production.",
+    "cost": {
+      "Beats": requiredBeats
+    },
+    "flavor": "Are you even a real artist if people aren't arguing about what sub-genre your music is in?"
+  };
+
+  return {
+    name: context.taskName,
+    checkFns: checkFns,
+    startFns: startFns,
+    finishFns: finishFns,
+    tooltip: tooltip,
+    repeatable: true // This task isn't actually repeatable, it gets removed manually in the finishFn
+  };
+}
+
+/*
+  ---- Other Upgrades -----
+*/
+
+function increaseComboTask(context) {
+  // Increases the max combo of the given instrument by 1.
+  var requiredResource;
+
+  switch(context.level) {
+    case 1:
+      requiredResource = 50;
+      break;
+    case 2:
+      requiredResource = 500;
+      break;
+    default:
+      return null;
+  }
+
+  var addBonusMultiplier = function() {
+    game.player.instruments[context.instrument].bonusMaxMultiplier++;
+  }
+
+  var checkFns = [
+    partial(hasEnoughResources, context.resource, requiredResource)
+  ];
+
+  var startFns = [
+    addBonusMultiplier,
+    partial(removeResource, context.resource, requiredResource)
+  ];
+
+  var tooltip = {
+    "description": "Increases the max combo for your " + context.instrument + " by 1.",
+    "cost": {},
+    "flavor": "C-C-C-Combo... gainer?"
+  };
+
+  tooltip.cost[capitalize(context.resource)] = requiredResource;
+
+  return {
+    name: context.taskName,
+    checkFns: checkFns,
+    startFns: startFns,
+    tooltip: tooltip,
+  };
+}
+
+function increaseResourceXpTask(context) {
+  // Increases the amount of XP awarded by a given resource by a flat amount
+  var requiredResource;
+  var bonusXpAmount;
+  var flavor;
+
+  switch(context.resource) {
+    case "beats":
+      requiredResource = 100;
+      bonusXpAmount = 1;
+      flavor = "It's called the 'ah-ha!' moment.";
+      break;
+    case "samples":
+      requiredResource = 1000;
+      bonusXpAmount = 10;
+      flavor = "You finally understand the meaning of life... and more importantly, how to get more XP from samples!";
+      break;
+    default:
+      return null;
+  }
+
+  var addBonusXp = function() {
+    game.player.resources[context.resource].bonusXp += bonusXpAmount;
+  }
+
+  var checkFns = [
+    partial(hasEnoughResources, context.resource, requiredResource)
+  ];
+
+  var startFns = [
+    addBonusXp,
+    partial(removeResource, context.resource, requiredResource)
+  ];
+
+  var tooltip = {
+    "description": "Increases the amount of XP gained when creating " + context.resource + " by " + bonusXpAmount + ".",
+    "cost": {},
+    "flavor": flavor
+  };
+
+  tooltip.cost[capitalize(context.resource)] = requiredResource;
+
+  return {
+    name: context.taskName,
+    checkFns: checkFns,
+    startFns: startFns,
+    tooltip: tooltip,
+  };
+}
+
+function reduceXpRequiredTask(context) {
+  // TODO: Reduces the amount of XP required to level a skill by a percentage
 }

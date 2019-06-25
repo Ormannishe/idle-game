@@ -10,14 +10,31 @@ function Player() {
   this.name = "Michael Jackson";
   this.triggers = [];
   this.tasks = [];
+  this.completedTasks = [];
   this.activeTask = undefined;
   this.resources = {
-    fame: 0,
-    money: 0,
-    beats: 0,
-    samples: 0,
-    notes: 0,
-    measures: 0,
+    fame: {
+      amount: 0
+    },
+    money: {
+      amount: 0
+    },
+    beats: {
+      amount: 0,
+      bonusXp: 0
+    },
+    samples: {
+      amount: 0,
+      bonusXp: 0
+    },
+    notes: {
+      amount: 0,
+      bonusXp: 0
+    },
+    measures: {
+      amount: 0,
+      bonusXp: 0
+    }
   };
   this.songs = [];
   this.albums = [];
@@ -44,16 +61,25 @@ function Player() {
       passiveProgress: 0
     },
   };
-  this.bonuses = {
-    event: {
-      oddJobs: {
-        bonusChance: 0
+  this.studies = {
+    laptop: {
+      practice: {
+        xpMod: 1.0
       },
-      djParty: {
-        bonusChance: 0
+      studyOnline: {
+        xpMod: 1.0
+      }
+    }
+  };
+  this.jobs = {
+    laptop: {
+      freelance: {
+        procMod: 1.0,
+        moneyMod: 1.0
       },
-      djNightclub: {
-        bonusChance: 0
+      nightclub: {
+        procMod: 1.0,
+        moneyMod: 1.0
       }
     }
   };
@@ -62,31 +88,31 @@ function Player() {
       xp: 0,
       level: 1,
       toNextLevel: 100,
-      nextLevelXpRatio: 1.2
+      nextLevelXpRatio: 1.3
     },
     vocal: {
       xp: 0,
       level: 1,
       toNextLevel: 100,
-      nextLevelXpRatio: 1.2
+      nextLevelXpRatio: 1.3
     },
     keyboard: {
       xp: 0,
       level: 1,
       toNextLevel: 100,
-      nextLevelXpRatio: 1.2
+      nextLevelXpRatio: 1.3
     },
     guitar: {
       xp: 0,
       level: 1,
       toNextLevel: 100,
-      nextLevelXpRatio: 1.2
+      nextLevelXpRatio: 1.3
     },
     drum: {
       xp: 0,
       level: 1,
       toNextLevel: 100,
-      nextLevelXpRatio: 1.2
+      nextLevelXpRatio: 1.3
     }
   };
   this.stats = {
@@ -130,7 +156,7 @@ function addResource(resource, amount) {
 
   if (requiredResource !== undefined) {
     var totalCost = game.resources[resource].resourcesPer * amount;
-    var currentAmount = game.player.resources[requiredResource];
+    var currentAmount = game.player.resources[requiredResource].amount;
 
     if (totalCost <= currentAmount)
       removeResource(requiredResource, totalCost);
@@ -138,13 +164,15 @@ function addResource(resource, amount) {
       return;
   }
 
-  game.player.resources[resource] += amount;
+  game.player.resources[resource].amount += amount;
   game.player.stats[resource].lifetime += amount;
 
   var relevantSkill = game.resources[resource].instrument;
 
-  if (relevantSkill !== undefined)
-    addXp(relevantSkill, (game.resources[resource].xpPer * amount));
+  if (relevantSkill !== undefined) {
+    var xpAmount = (game.resources[resource].xpPer + game.player.resources[resource].bonusXp) * amount;
+    addXp(relevantSkill, xpAmount);
+  }
 
   updateView();
 }
@@ -153,6 +181,6 @@ function removeResource(resource, amount) {
   if (amount == undefined)
     amount = 1;
 
-  game.player.resources[resource] -= amount;
+  game.player.resources[resource].amount -= amount;
   updateView();
 }

@@ -24,9 +24,6 @@ function passiveResourceGeneration() {
   var progressAmount = game.player.instruments.laptop.passiveProgress;
   var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
 
-  if (game.player.instruments.laptop.subgenre == "trance")
-    progressAmount *= 2;
-
   updateProgress(progress, (progress.value + progressAmount), requiredProgress, partial(addResource, "beats"));
 }
 
@@ -40,7 +37,7 @@ function updateView(natural) {
 
 function updateResourcesTab() {
   for (var resource in game.resources) {
-    var amount = game.player.resources[resource];
+    var amount = game.player.resources[resource].amount;
 
     if (resource == "money")
       amount = "$" + round(amount, 2);
@@ -51,7 +48,7 @@ function updateResourcesTab() {
 
     if (requiredResource !== undefined) {
       var cost = game.resources[resource].resourcesPer;
-      var numReqResource = game.player.resources[requiredResource];
+      var numReqResource = game.player.resources[requiredResource].amount;
 
       modifyResourceNumber(resource, cost, numReqResource);
       modifyResourceNumber(resource, cost, numReqResource, 1);
@@ -64,11 +61,11 @@ function updateResourcesTab() {
 function updateSongsTab() {
   var totalRevenue = 0;
   var html = "";
-  var songContext = getTask("Make New Song");
+  var songTask = getTask("Make New Song");
   var newSongButton = "";
 
-  if (songContext != undefined) {
-    newSongButton = makeTaskButton(songContext);
+  if (songTask != undefined) {
+    newSongButton = makeTaskButton(songTask);
   }
 
   game.player.songs.forEach(function(song) {
@@ -100,8 +97,10 @@ function updateTasks() {
   var contexts = game.player.tasks;
 
   contexts.forEach(function(context) {
-    if (context.taskName != "Make New Song")
-      html += makeTaskButton(context);
+    var task = getTaskFromContext(context);
+
+    if (task.name != "Make New Song")
+      html += makeTaskButton(task);
   });
 
   document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
@@ -170,8 +169,7 @@ function startInstrument(instrument) {
 function showTooltip(obj, taskName) {
   var offsets = getOffsets(obj);
   var tooltip = document.getElementById('tooltip');
-  var context = getTask(taskName);
-  var task = getTaskDetails(context);
+  var task = getTask(taskName);
   var html = "<div id='tooltipHeader'>" + task.tooltip.description + "</div>";
 
   for (var key in task.tooltip.cost) {
@@ -222,7 +220,6 @@ function hideFameTooltip() {
 }
 
 function toggleItemTab(evt, tab) {
-  // TODO: Add tab content for money generating resources (ie. songs, albums, brand, other media/products)
   var tabContent, activeTabs;
 
   // Hide all tabcontent
@@ -303,12 +300,11 @@ function modifyResourceNumber(resource, cost, numReqResource, amount) {
   }
 }
 
-function makeTaskButton(context) {
+function makeTaskButton(task) {
   var html = "";
   var htmlClass = "class='invalidTask'";
-  var task = getTaskDetails(context);
 
-  if ((task.checkFns == undefined || runCheckFns(task)) && (task.timeToComplete == undefined || game.player.activeTask == undefined))
+  if ((task.checkFns == undefined || checkTask(task)) && (task.timeToComplete == undefined || game.player.activeTask == undefined))
     htmlClass = "class='validTask'";
 
   html += "<button " + htmlClass;

@@ -39,7 +39,7 @@ function makeSong(songName, skills) {
     })
 
     quality = Math.ceil((quality / skills.length) * (1 + (0.1 * skills.length)));
-    popularity = Math.ceil(game.player.resources.fame / 5);
+    popularity = Math.ceil(game.player.resources.fame.amount / 5);
     newSong = new Song(songName, quality, popularity);
     game.player.songs.push(newSong);
   }
@@ -110,7 +110,7 @@ function populateSongPopUp() {
 
   // Populate resource sliders
   game.specialResources.songs.validResources.forEach(function(resource) {
-    var numResource = game.player.resources[resource];
+    var numResource = game.player.resources[resource].amount;
 
     if (numResource > 0) {
       var resourceRow = "<div class='popUpRow'>";
@@ -164,9 +164,10 @@ function validateInput() {
   // Determine how many of each resource is to be used. Determine relevant instruments, make song
   else {
     var instrumentsUsed = [];
+    var firstSongTask = getTask("Make First Song");
 
     game.specialResources.songs.validResources.forEach(function(resource) {
-      if (game.player.resources[resource] > 0) {
+      if (game.player.resources[resource].amount > 0) {
         var amount = document.getElementById(resource + "SliderAmount").innerHTML;
 
         if (amount > 0) {
@@ -176,19 +177,9 @@ function validateInput() {
       }
     });
 
-    if (game.player.songs.length == 0) {
-      var context = {
-        taskId: "newSongTask",
-        taskName: "Make New Song",
-        description: "Creates a new song!",
-        flavor: "Every song is a new opportunity. Unless you're Nickleback. Then it's kind of just the same every time.",
-        repeatable: true
-      };
-
+    if (firstSongTask !== undefined) {
       appendToOutputContainer(songNameInput.value + " will be remembered as the start of a legacy!");
-      showUiElement("songsTab", "inline");
-      removeTask("Make First Song");
-      addTask(context);
+      finishTask(firstSongTask);
     }
 
     makeSong(songNameInput.value, instrumentsUsed);

@@ -20,14 +20,14 @@ function init() {
   if (game == undefined) newGame();
   startInstrument(game.player.instruments.active);
   startTicking();
-  //addCheatTask();
+  addCheatTask();
   updateView();
 }
 
 /* Debug Functionality */
 
 function addCheatTask() {
-  var cheatTask = getTask("CHEAT");
+  var cheatTask = getContext("CHEAT");
 
   if (cheatTask == undefined) {
     var context = {
