@@ -20,6 +20,7 @@ function init() {
   if (game == undefined) newGame();
   startInstrument(game.player.instruments.active);
   startTicking();
+  //addNewGameTask();
   //addCheatTask();
   updateView();
 }
@@ -27,12 +28,25 @@ function init() {
 /* Debug Functionality */
 
 function addCheatTask() {
-  var cheatTask = getTask("CHEAT");
+  var cheatTask = getContext("CHEAT");
 
   if (cheatTask == undefined) {
     var context = {
       taskId: "cheatTask",
       taskName: "CHEAT"
+    };
+
+    addTask(context);
+  }
+}
+
+function addNewGameTask() {
+  var newGameTask = getContext("New Game");
+
+  if (newGameTask == undefined) {
+    var context = {
+      taskId: "newGameTask",
+      taskName: "New Game"
     };
 
     addTask(context);

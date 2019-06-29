@@ -7,6 +7,11 @@ function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
+function capitalize(s) {
+  // Capitalized the first letter in a given string and returns it
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 function partial() {
   /*
     Takes a function, fn, and fewer than the normal arguments to fn, and returns
@@ -41,10 +46,8 @@ function updateProgress(progress, value, max, triggerFn) {
   while (value >= max) {
     value = value - max;
 
-    if (typeof triggerFn === "function")
+    if (triggerFn !== undefined)
       triggerFn();
-    else if (typeof triggerFn === "object")
-      triggerFn.forEach(function(triggerFn) { triggerFn() });
   }
 
   progress.value = value;

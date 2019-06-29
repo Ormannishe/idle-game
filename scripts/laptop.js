@@ -145,6 +145,7 @@ function setLaptopGenre(obj) {
     updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   } else if (activeSubgenre == "trance") {
     game.player.instruments.laptop.bonusMaxMultiplier += 10;
+    game.player.instruments.laptop.passiveProgress--;
   }
 
   // Apply glow and sub-genre specific effects, change the active sub-genre
@@ -178,6 +179,7 @@ function setLaptopGenre(obj) {
     } else if (obj.id == "trance") {
       game.player.instruments.laptop.bonusMaxMultiplier -= 10;
       game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
+      game.player.instruments.laptop.passiveProgress++;
       updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
     }
 
@@ -213,7 +215,7 @@ function getTooltipInfo(subgenre) {
     case "trance":
       return {
         "genre": "Trance",
-        "tooltip": "Reduces the maximum combo by 10 (but not lower than 1). Generates 2x passive beat progress."
+        "tooltip": "Reduces the maximum combo by 10 (but not lower than 1). Generates a small amount of passive beat progress."
       };
       break;
     case "house":
@@ -304,15 +306,14 @@ function populateGenrePopUp(taskName) {
 }
 
 function selectGenre(subgenre, taskName) {
-  var context = getTask(taskName);
+  var task = getTask(taskName);
   var htmlObj = document.getElementById(subgenre);
   var index = game.player.instruments.laptop.unexploredSubgenres.indexOf(subgenre);
 
   showUiElement(subgenre, "inline");
   setLaptopGenre(htmlObj);
   appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
-  removeResource("beats", context.requiredBeats);
-  removeTask(taskName);
+  finishTask(task);
   game.player.instruments.laptop.unexploredSubgenres.splice(index, 1);
   closePopUp();
   updateView();
