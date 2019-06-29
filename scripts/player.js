@@ -63,24 +63,13 @@ function Player() {
   };
   this.studies = {
     laptop: {
-      practice: {
-        xpMod: 1.0
-      },
-      studyOnline: {
-        xpMod: 1.0
-      }
+      xpMod: 1.0
     }
   };
   this.jobs = {
     laptop: {
-      freelance: {
-        procMod: 1.0,
-        moneyMod: 1.0
-      },
-      nightclub: {
-        procMod: 1.0,
-        moneyMod: 1.0
-      }
+      procMod: 1.0,
+      moneyMod: 1.0
     }
   };
   this.skills = {

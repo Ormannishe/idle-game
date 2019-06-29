@@ -297,9 +297,9 @@ function levelEightLaptopTrigger() {
   if (game.player.skills.laptop.level >= 8) {
     var context = {
       taskId: "upgradeEventChanceTask",
-      taskName: "Updated Portfolio",
+      taskName: "Basic Advertising",
       level: 1,
-      resource: "samples"
+      instrument: "laptop"
     };
 
     addTask(context);
@@ -324,9 +324,16 @@ function levelNineLaptopTrigger() {
 }
 
 function levelTenLaptopTrigger() {
-  // TODO: Implement 'Higher Charge'
-  if (game.player.skills.laptop.level >= 11) {
+  // Upgrades Level 1 DJ Job
+  if (game.player.skills.laptop.level >= 10) {
+    var context = {
+      taskId: "upgradeJobChargeTask",
+      taskName: "Update Portfolio",
+      level: 1,
+      instrument: "laptop"
+    };
 
+    addTask(context);
     addTrigger(levelElevenLaptopTrigger);
     return true;
   }
@@ -387,19 +394,17 @@ function levelFourteenLaptopTrigger() {
   // Level 2 DJ Job
   // TODO: Make Fame requirement part of task
   if (game.player.skills.laptop.level >= 14) {
-    if (game.player.resources.fame.amount >= 25) {
-      var context = {
-        taskId: "advanceDJCareerTask",
-        taskName: "Meet With Nightclub Owners",
-        level: 2
-      };
+    var context = {
+      taskId: "advanceDJCareerTask",
+      taskName: "Meet With Nightclub Owners",
+      level: 2
+    };
 
-      appendToOutputContainer("You're starting to become well known as a freelance artist, but your sound is destined for a larger venue.");
-      addTask(context);
-      addTrigger(nightclubDJEventTrigger);
-      addTrigger(levelFifteenLaptopTrigger);
-      return true;
-    }
+    appendToOutputContainer("You're starting to become well known as a freelance artist, but your sound is destined for a larger venue.");
+    addTask(context);
+    addTrigger(nightclubDJEventTrigger);
+    addTrigger(levelFifteenLaptopTrigger);
+    return true;
   }
 }
 
@@ -486,7 +491,7 @@ function oddJobsEventTrigger(natural) {
 
 function freelanceDJEventTrigger(natural) {
   // Average number of ticks required to trigger this event
-  var avgTicks = (100 - game.player.resources.fame.amount) * game.player.jobs.laptop.freelance.procMod;
+  var avgTicks = (100 - game.player.resources.fame.amount) * game.player.jobs.laptop.procMod;
 
   if (avgTicks < 10)
     avgTicks = 10;
@@ -511,7 +516,7 @@ function freelanceDJEventTrigger(natural) {
 
 function nightclubDJEventTrigger(natural) {
   // The expected number of ticks this event takes to trigger
-  var avgTicks = (500 - game.player.resources.fame.amount) * game.player.jobs.laptop.nightclub.procMod;
+  var avgTicks = (500 - game.player.resources.fame.amount) * game.player.jobs.laptop.procMod;
 
   if (avgTicks < 10)
     avgTicks = 10;

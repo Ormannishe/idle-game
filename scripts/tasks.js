@@ -348,6 +348,30 @@ function cheatTask(context) {
   };
 }
 
+function newGameTask(context) {
+  /*
+    Use this wipe your save data
+  */
+  var startFns = [
+    newGame
+  ];
+
+  var tooltip = {
+    "description": "Start a New Game.",
+    "cost": {
+      "No Cost": ""
+    },
+    "flavor": "Rebirth."
+  };
+
+  return {
+    name: context.taskName,
+    startFns: startFns,
+    tooltip: tooltip,
+    repeatable: true
+  };
+}
+
 function unlockResourceTask(context) {
   /*
     This task is used to unlock the Tier Two resources. A Tier Two resource is
@@ -473,20 +497,22 @@ function genericStudyTask(context) {
     case 1:
       interval = 10;
       resourcesPerInterval = 1;
-      xpReward = Math.round(20 * game.player.studies[instrument].practice.xpMod);
+      xpReward = 20
       timeToComplete = 60;
       flavor = "Practice makes perfect, but the skill levels have no cap so...";
       break;
     case 2:
       interval = 5;
       resourcesPerInterval = 1;
-      xpReward = Math.round(60 * game.player.studies[instrument].studyOnline.xpMod);
+      xpReward = 40
       timeToComplete = 120;
       flavor = "If you're procrastinating studying right now, this doesn't count.";
       break;
     default:
       return null;
   }
+
+  xpReward = Math.round(xpReward * game.player.studies[instrument].xpMod);
 
   var tickFns = [
     partial(addResourcesPerTick, context.resource, resourcesPerInterval, interval)
@@ -542,7 +568,7 @@ function upgradeStudyTask(context) {
 
   var startFns = [
     partial(removeResource, "beats", requiredBeats),
-    function() { game.player.studies.laptop[studyType].xpMod += 0.1; }
+    function() { game.player.studies.laptop.xpMod += 0.1; }
   ]
 
   var tooltip = {
@@ -701,6 +727,8 @@ function workAsDJTask(context) {
       return null;
   };
 
+  moneyReward = Math.round(moneyReward * game.player.jobs.laptop.moneyMod);
+
   var finishFns = [
     partial(addXp, "laptop", xpReward),
     partial(addResource, "money", moneyReward),
@@ -732,25 +760,81 @@ function upgradeEventChanceTask(context) {
 
   switch(context.level) {
     case 1:
-      context.requiredResource = 5;
-      context.jobType = "freelance";
-      context.description = "Increases your chance of getting a Freelance DJ opportunity by 20%.";
-      context.flavor = "While you're at it, maybe use a picture of yourself that isn't from 8 years ago.";
+      context.requiredResource = 100;
+      context.flavor = "Come up with something clever."; // TODO
       break;
     case 2:
-      context.requiredResource = 50;
-      context.jobType = "nightclub"; // TODO: Come up with generic jobTypes for all instruments
-      context.description = "Increases your chance of getting a Nightclub DJ opportunity by 20%.";
-      context.flavor = "Because being around sweaty drunk people is something you want to do more often.";
+      context.requiredResource = 1000;
+      context.flavor = "Come up with something clever."; // TODO
       break;
     default:
       return null;
   }
 
-  context.instrument = game.resources[context.resource].instrument;
+  switch(context.instrument) {
+    case "laptop":
+      context.jobType = "DJ";
+      break;
+    default:
+      return null;
+  }
 
   var reduceProcTime = function() {
-    game.player.jobs[context.instrument][context.jobType].procMod -= 0.2;
+    game.player.jobs[context.instrument].procMod -= 0.2;
+  }
+
+  var checkFns = [
+    partial(hasEnoughResources, "money", context.requiredResource)
+  ];
+
+  var startFns = [
+    reduceProcTime,
+    partial(removeResource, "money", context.requiredResource)
+  ];
+
+  var tooltip = {
+    "description": "Increases your chance of getting " + context.jobType + " contracts by 20%.",
+    "cost": {
+      "Money": context.requiredResource
+    },
+    "flavor": context.flavor
+  };
+
+  return {
+    name: context.taskName,
+    checkFns: checkFns,
+    startFns: startFns,
+    tooltip: tooltip,
+  };
+}
+
+function upgradeJobChargeTask(context) {
+  // Increases the amount of money awarded for completing jobs by a percentage
+
+  switch(context.level) {
+    case 1:
+      context.requiredResource = 5;
+      context.flavor = "Come up with something clever."; // TODO
+      break;
+    case 2:
+      context.requiredResource = 50;
+      context.flavor = "Come up with something clever."; // TODO
+      break;
+    default:
+      return null;
+  }
+
+  switch(context.instrument) {
+    case "laptop":
+      context.resource = "samples";
+      context.jobType = "DJ";
+      break;
+    default:
+      return null;
+  }
+
+  var reduceProcTime = function() {
+    game.player.jobs[context.instrument].moneyMod += 0.2;
   }
 
   var checkFns = [
@@ -763,12 +847,12 @@ function upgradeEventChanceTask(context) {
   ];
 
   var tooltip = {
-    "description": context.description,
-    "cost": {},
+    "description": "Increases income from " + context.jobType + " contracts by 20%.",
+    "cost": {
+      "Money": context.requiredResource
+    },
     "flavor": context.flavor
   };
-
-  tooltip.cost[capitalize(context.resource)] = context.requiredResource;
 
   return {
     name: context.taskName,
