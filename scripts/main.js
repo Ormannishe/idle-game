@@ -20,8 +20,8 @@ function init() {
   if (game == undefined) newGame();
   startInstrument(game.player.instruments.active);
   startTicking();
-  addNewGameTask();
-  addCheatTask();
+  //addNewGameTask();
+  //addCheatTask();
   updateView();
 }
 
