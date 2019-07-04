@@ -39,10 +39,19 @@ var keyToKeyMap = {
 };
 
 function startKeyboard() {
+  var progress = document.getElementById('keyboardBeatProgress');
+  var requiredProgress = Math.ceil(game.resources.notes.clicksPer * game.player.instruments.keyboard.reqClicksMod);
+
   document.addEventListener('keydown', keyboardKeyDownEvent);
   document.addEventListener('keyup', keyboardKeyUpEvent);
+  updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
+  updateProgress(progress, game.player.instruments.keyboard.currentProgress, game.resources.notes.clicksPer, partial(addResource, "notes"));
+
+
   if (game.player.instruments.keyboard.currentSong == undefined)
     playKeyboardSong();
+  else
+    document.getElementById(game.player.instruments.keyboard.currentNote + "Key").style.backgroundColor = "grey";
 }
 
 function stopKeyboard() {
@@ -95,8 +104,10 @@ function keyboardKeyDownEvent(event) {
       game.player.instruments.keyboard.multiplier = 1;
     }
 
-    updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, partial(addResource, "notes"));
+    game.player.instruments.keyboard.currentProgress += progressAmount;
+
     updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
+    updateProgress(progress, game.player.instruments.keyboard.currentProgress, game.resources.notes.clicksPer, partial(addResource, "notes"));
   }
 }
 

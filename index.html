@@ -25,14 +25,14 @@
 	<div id='popUpBlocker'></div>
 	<div class='column'>
 		<div id='clickContainer' class='row'>
-			<div id='instrumentContainer'>
-				<button class="activeInstrument" onclick="toggleInstrument(event, 'laptop')">Laptop</button>
-				<button id="vocalTab" class="instrument" onclick="toggleInstrument(event, 'vocal')">Vocal</button>
-				<button id="keyboardTab" class="instrument" onclick="toggleInstrument(event, 'keyboard')">Keyboard</button>
-				<button id="guitarTab" class="instrument" onclick="toggleInstrument(event, 'guitar')">Guitar</button>
-				<button id="drumTab" class="instrument" onclick="toggleInstrument(event, 'drum')">Drum</button>
+			<div id='instrumentTabContainer'>
+				<button id="laptopTab" class="instrumentActive" onclick="toggleTab('laptop', 'instrument')">Laptop</button>
+				<button id="vocalTab" class="instrument" onclick="toggleTab('vocal', 'instrument')">Vocal</button>
+				<button id="keyboardTab" class="instrument" onclick="toggleTab('keyboard', 'instrument')">Keyboard</button>
+				<button id="guitarTab" class="instrument" onclick="toggleTab('guitar', 'instrument')">Guitar</button>
+				<button id="drumTab" class="instrument" onclick="toggleTab('drum', 'instrument')">Drum</button>
 			</div>
-			<div id='laptop' class='instrumentContent'>
+			<div id='laptopContent' class='instrumentContent'>
 				<div id='tempoSelector'>
 					<p>Tempo</p>
 					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('fastest')">
@@ -70,8 +70,8 @@
 					<progress id='theDropProgress' value='0' max='500'></progress>
 				</div>
 			</div>
-			<div id='vocal' class='instrumentContent'>Under Construction!</div>
-			<div id='keyboard' class='instrumentContent'>
+			<div id='vocalContent' class='instrumentContent'>Under Construction!</div>
+			<div id='keyboardContent' class='instrumentContent'>
 				<div id='keyboardContainer'>
 					<div id='whiteKeyContainer'>
 						<button id='C3Key' class='whiteKey'>TAB</button>
@@ -114,12 +114,11 @@
 		</div>
 		<div id='itemsContainer' class='row'>
 			<div id='itemsTabContainer'>
-				<button class="active-tab" onclick="toggleItemTab(event, 'resources')">Resources</button>
-				<button id="songsTab" class="tab" onclick="toggleItemTab(event, 'songs')">Songs</button>
-				<button id="albumsTab" class="tab" onclick="toggleItemTab(event, 'albums')">Albums</button>
+				<button id="resourcesTab" class="resourceActive" onclick="toggleTab('resources', 'resource')">Resources</button>
+				<button id="songsTab" class="resource" onclick="toggleTab('songs', 'resource')">Songs</button>
+				<button id="albumsTab" class="resource" onclick="toggleItemTab('albums', 'resource')">Albums</button>
 			</div>
-
-			<div id="resources" class="tabcontent">
+			<div id="resourcesContent" class="resourceContent">
 				<div id='resourceHeader'>
 					<p>Resource</p>
 					<p>Amount</p>
@@ -180,13 +179,8 @@
 					<p id='measuresAll'>-</p>
 				</div>
 			</div>
-
-			<div id="songs" class="tabcontent">
-			</div>
-
-			<div id="albums" class="tabcontent">
-				<p>None :(</p>
-			</div>
+			<div id="songsContent" class="resourceContent"></div>
+			<div id="albumsContent" class="resourceContent"></div>
 		</div>
 	</div>
 	<div class='column'>

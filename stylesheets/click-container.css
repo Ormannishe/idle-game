@@ -6,7 +6,7 @@
   background-color: #222222;
 }
 
-#instrumentContainer {
+#instrumentTabContainer {
   overflow: hidden;
 }
 
@@ -41,7 +41,7 @@
   ------ CSS For Instrument Tabs ------
 */
 
-.instrument, .activeInstrument {
+#laptopTab, #vocalTab, #keyboardTab, #guitarTab, #drumTab {
   color: white;
   float: left;
   border: none;
@@ -51,7 +51,7 @@
   width: 20%;
 }
 
-.activeInstrument {
+.instrumentActive {
   background-color: var(--my-background-color);
 }
 
@@ -78,7 +78,7 @@
 }
 
 /* Hide non-active tab content by default */
-#vocal, #keyboard {
+#vocalContent, #keyboardContent {
   display: none;
 }
 

@@ -6,6 +6,8 @@
   constants in the future that can be applied regardless of player progress.
 */
 
+var uiData = {};
+
 function Game() {
   this.player = new Player();
   this.resources = {
@@ -61,11 +63,12 @@ function Game() {
 
 function newGame() {
   // Erases save data and creates a new game object
-  if (window.localStorage.getItem('html') !== null)
+  if (window.localStorage.getItem('playerData') !== null)
     eraseSave();
 
   game = new Game();
   initTriggers();
+  startInstrument(game.player.instruments.active);
 }
 
 function saveGame() {
@@ -77,23 +80,47 @@ function saveGame() {
   // Serialize regular player data
   window.localStorage.setItem('playerData', JSON.stringify(game.player));
 
-  // Serialize HTML
-  window.localStorage.setItem('html', JSON.stringify(document.body.innerHTML));
+  // Serialize UI data
+  window.localStorage.setItem('uiData', JSON.stringify(uiData));
+  window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
 }
 
 function loadGame() {
   /*
     Deserializes local storage and restores game state.
+    If no save data is found, starts a new game.
   */
 
   var playerData = JSON.parse(window.localStorage.getItem('playerData'));
-  var html = JSON.parse(window.localStorage.getItem('html'));
+  var uiData = JSON.parse(window.localStorage.getItem('uiData'));
+  var textLog = JSON.parse(window.localStorage.getItem('textLog'));
 
   if (playerData !== null) {
-    // Restore game in a sane state
+    // Restore game state
     game = new Game();
     game.player = playerData;
-    document.body.innerHTML = html;
+
+    // Apply UI Changes
+    var outputContainer = document.getElementById('outputContainer');
+    var activeInstrument = game.player.instruments.active;
+
+    for (var key in uiData) {
+      showUiElement(key, uiData[key]);
+    }
+
+    if (game.player.activeTask !== undefined) {
+      var task = getTaskFromContext(game.player.activeTask);
+      document.getElementById('taskLabel').innerHTML = game.player.activeTask.taskName;
+      document.getElementById('taskProgress').value = game.player.activeTask.timeInProgress;
+      document.getElementById('taskProgress').max = task.timeToComplete;
+    }
+
+    outputContainer.innerHTML = textLog;
+    outputContainer.scrollTop = outputContainer.scrollHeight;
+    toggleTab(activeInstrument, "instrument");
+  }
+  else {
+    newGame();
   }
 }
 

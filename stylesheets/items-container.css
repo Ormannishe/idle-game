@@ -8,7 +8,7 @@
   background-color: #222222;
 }
 
-.tab, .active-tab {
+#resourcesTab, #songsTab, #albumsTab {
   color: white;
   float: left;
   border: none;
@@ -18,19 +18,19 @@
   width: 33.3333333%;
 }
 
-.active-tab {
+.resourceActive {
   background-color: var(--my-background-color);
 }
 
-.tab {
+.resource {
   background-color: #444444
 }
 
-.tab:hover {
+.resource:hover {
   background-color: #555555;
 }
 
-.tabcontent {
+.resourceContent {
   padding-left: 6px;
   display: block;
   height: 93%;
