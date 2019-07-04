@@ -104,10 +104,9 @@ function keyboardKeyDownEvent(event) {
       game.player.instruments.keyboard.multiplier = 1;
     }
 
-    game.player.instruments.keyboard.currentProgress += progressAmount;
-
     updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
-    updateProgress(progress, game.player.instruments.keyboard.currentProgress, game.resources.notes.clicksPer, partial(addResource, "notes"));
+    updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, partial(addResource, "notes"));
+    game.player.instruments.keyboard.currentProgress = progress.value;
   }
 }
 

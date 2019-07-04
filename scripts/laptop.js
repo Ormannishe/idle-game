@@ -120,10 +120,9 @@ function clickBeat() {
     game.player.instruments.laptop.multiplier = 1;
   }
 
-  game.player.instruments.laptop.currentProgress += progressAmount * progressMultiplier;
-
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
-  updateProgress(progress, game.player.instruments.laptop.currentProgress, requiredProgress, partial(addResource, "beats"));
+  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
+  game.player.instruments.laptop.currentProgress = progress.value;
 }
 
 /* Sub-genre functionality */
