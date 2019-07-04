@@ -48,6 +48,7 @@ function Player() {
       multiplier: 1,
       bonusMaxMultiplier: 0,
       passiveProgress: 0,
+      currentProgress: 0,
       subgenre: undefined,
       unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"],
       dropActive: false
@@ -58,7 +59,8 @@ function Player() {
       reqClicksMod: 1.0,
       multiplier: 1,
       bonusMaxMultiplier: 0,
-      passiveProgress: 0
+      passiveProgress: 0,
+      currentProgress: 0
     },
   };
   this.studies = {

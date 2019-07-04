@@ -9,8 +9,12 @@ var markerReverse = false;
 
 function startLaptop() {
   var tempo = game.player.instruments.laptop.currentTempo;
+  var progress = document.getElementById('laptopBeatProgress');
+  var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
+
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
+  updateProgress(progress, game.player.instruments.laptop.currentProgress, requiredProgress, partial(addResource, "beats"));
 
   if (game.player.instruments.laptop.subgenre == "dubstep")
     dropInterval = setInterval(dropTick, 100);
@@ -116,8 +120,10 @@ function clickBeat() {
     game.player.instruments.laptop.multiplier = 1;
   }
 
+  game.player.instruments.laptop.currentProgress += progressAmount * progressMultiplier;
+
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
-  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
+  updateProgress(progress, game.player.instruments.laptop.currentProgress, requiredProgress, partial(addResource, "beats"));
 }
 
 /* Sub-genre functionality */
