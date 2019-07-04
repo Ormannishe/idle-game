@@ -89,7 +89,7 @@ function updateSongsTab() {
     "</div>" +
     html;
 
-  document.getElementById('songs').innerHTML = html;
+  document.getElementById('songsContent').innerHTML = html;
 }
 
 function updateTasks() {
@@ -219,52 +219,34 @@ function hideFameTooltip() {
   hideTooltip();
 }
 
-function toggleItemTab(evt, tab) {
-  var tabContent, activeTabs;
+function toggleTab(tabId, groupId) {
+  /*
+    Set the given tabId as the active tab and show its associated tabContent.
+    Sets all other tabs of the same groupId to non-active, and hides their
+    associated tabContent.
 
-  // Hide all tabcontent
-  tabContent = document.getElementsByClassName("tabcontent");
+    If the groupId is 'instrument', starts the associated instrument and stops
+    all others.
+  */
+  var tab = document.getElementById(tabId + "Tab");
+  var tabContent = document.getElementById(tabId + "Content");
+  var activeTab = document.getElementsByClassName(groupId + "Active")[0];
+  var allTabContent = document.getElementsByClassName(groupId + "Content");
 
-  for (var i = 0; i < tabContent.length; i++) {
-    tabContent[i].style.display = "none";
+  // Hide all tabContent
+  for (var i = 0; i < allTabContent.length; i++) {
+    allTabContent[i].style.display = "none";
   }
 
-  // Set the active tab to non-active
-  activeTabs = document.getElementsByClassName("active-tab")
+  activeTab.className = groupId;
+  tab.className = groupId + "Active";
+  tabContent.style.display = "block";
 
-  for (var i = 0; i < activeTabs.length; i++) {
-    activeTabs[i].className = "tab";
+  if (groupId == "instrument") {
+    stopLaptop();
+    stopKeyboard();
+    startInstrument(tabId);
   }
-
-  // Show the new tab content, and make the new tab 'active'
-  document.getElementById(tab).style.display = "block";
-  evt.currentTarget.className = "active-tab";
-}
-
-function toggleInstrument(evt, instrument) {
-  // Hide all instrumentContent
-  var instrumentContent = document.getElementsByClassName("instrumentContent");
-
-  for (var i = 0; i < instrumentContent.length; i++) {
-    instrumentContent[i].style.display = "none";
-  }
-
-  // Disable all instrument key handlers and animations
-  stopLaptop();
-  stopKeyboard();
-
-  // Set the active instrument to non-active
-  var activeInstrument = document.getElementsByClassName("activeInstrument")
-
-  for (var i = 0; i < activeInstrument.length; i++) {
-    activeInstrument[i].className = "instrument";
-  }
-
-  startInstrument(instrument);
-
-  // Show the new instrument content, and make the new instrument 'active',
-  document.getElementById(instrument).style.display = "block";
-  evt.currentTarget.className = "activeInstrument";
 }
 
 /* Helper Functions */

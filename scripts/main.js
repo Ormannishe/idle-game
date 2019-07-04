@@ -17,8 +17,6 @@ var game;
 
 function init() {
   loadGame();
-  if (game == undefined) newGame();
-  startInstrument(game.player.instruments.active);
   startTicking();
   //addNewGameTask();
   //addCheatTask();

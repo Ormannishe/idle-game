@@ -163,6 +163,7 @@ function startActiveTask(task) {
 
     game.player.activeTask = context;
     label.innerHTML = task.name;
+    game.player.activeTask.timeInProgress = 0;
     progress.value = 0;
     progress.max = task.timeToComplete;
     showUiElement("taskProgressContainer", "inline-block");
@@ -181,6 +182,8 @@ function updateActiveTask() {
     If the task has completed, execute its finishFns and stop the active task.
   */
   if (game.player.activeTask !== undefined) {
+    game.player.activeTask.timeInProgress++;
+
     var task = getTaskFromContext(game.player.activeTask);
     var progress = document.getElementById('taskProgress');
 
@@ -189,9 +192,10 @@ function updateActiveTask() {
         tickFn()
       });
 
-    task.finishFns.push(stopActiveTask);
+    if (game.player.activeTask.timeInProgress >= task.timeToComplete)
+      task.finishFns.push(stopActiveTask);
 
-    updateProgress(progress, (progress.value + 1), task.timeToComplete, partial(finishTask, task));
+    updateProgress(progress, game.player.activeTask.timeInProgress, task.timeToComplete, partial(finishTask, task));
   }
 }
 
@@ -262,14 +266,8 @@ function addResourcesPerTick(resource, numResource, numTicks) {
     TickFn which rewards the player with the given number of the given resource
     after the given number of natural ticks.
   */
-  if (game.player.activeTask.tickCounter >= numTicks) {
+  if (game.player.activeTask.timeInProgress % numTicks == 0) {
     addResource(resource, numResource);
-    game.player.activeTask.tickCounter = 1;
-  } else if (game.player.activeTask.tickCounter !== undefined) {
-    game.player.activeTask.tickCounter++;
-  } else {
-    game.player.activeTask.tickCounter = 1;
-    game.player.activeTask.tickCounter++;
   }
 }
 
@@ -936,11 +934,11 @@ function newInstrumentTask(context) {
   var vocalFlavor = "You could never really tell if you were good at singing or just bad at hearing.";
 
   var checkFns = [
-    partial(hasEnoughResources, "money", context.requiredMoney)
+    partial(hasEnoughResources, "money", requiredMoney)
   ];
 
   var startFns = [
-    partial(removeResource, "money", context.requiredMoney),
+    partial(removeResource, "money", requiredMoney),
     partial(appendToOutputContainer, outputText),
     partial(showUiElement, "keyboardTab", "inline"),
     partial(showUiElement, "keyboardSkill", "inline"),
@@ -950,7 +948,7 @@ function newInstrumentTask(context) {
   var tooltip = {
     "description": "Unlocks the keyboard skill.",
     "cost": {
-      "Money": context.requiredMoney
+      "Money": requiredMoney
     },
     "flavor": "A keyboard is an digital piano. Not to be confused with a computer keyboard, which you'll actually be using to play this keyboard."
   };

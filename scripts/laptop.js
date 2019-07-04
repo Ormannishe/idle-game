@@ -10,6 +10,7 @@ var markerReverse = false;
 function startLaptop() {
   var tempo = game.player.instruments.laptop.currentTempo;
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
+  updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
 
   if (game.player.instruments.laptop.subgenre == "dubstep")
     dropInterval = setInterval(dropTick, 100);

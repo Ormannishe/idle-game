@@ -32,6 +32,7 @@ function partial() {
 
 function showUiElement(elementId, displayType) {
   document.getElementById(elementId).style.display = displayType;
+  uiData[elementId] = displayType;
 }
 
 function updateProgress(progress, value, max, triggerFn) {

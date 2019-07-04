@@ -41,8 +41,12 @@ var keyToKeyMap = {
 function startKeyboard() {
   document.addEventListener('keydown', keyboardKeyDownEvent);
   document.addEventListener('keyup', keyboardKeyUpEvent);
+  updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
+
   if (game.player.instruments.keyboard.currentSong == undefined)
     playKeyboardSong();
+  else
+    document.getElementById(game.player.instruments.keyboard.currentNote + "Key").style.backgroundColor = "grey";
 }
 
 function stopKeyboard() {
