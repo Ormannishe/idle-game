@@ -93,17 +93,58 @@ function updateSongsTab() {
 }
 
 function updateTasks() {
-  var html = "";
   var contexts = game.player.tasks;
 
-  contexts.forEach(function(context) {
-    var task = getTaskFromContext(context);
+  updateTaskContent("upgradeContainer", contexts);
+  updateTaskContent("laptopStudyTasks", contexts, "study", "laptop");
+  updateTaskContent("keyboardStudyTasks", contexts, "study", "keyboard");
+  updateTaskContent("oddJobTasks", contexts, "job", "none");
+  updateTaskContent("laptopJobTasks", contexts, "job", "laptop");
+  updateTaskContent("keyboardJobTasks", contexts, "job", "keyboard");
+}
 
-    if (task.name != "Make New Song")
-      html += makeTaskButton(task);
+function updateTaskContent(contentId, contexts, taskType, instrument) {
+  var html = "";
+  var filteredContexts = contexts.filter(function(context) {
+    if (taskType == undefined && context.taskType == taskType && context.taskName != "Make New Song")
+        return context;
+    else if (context.taskType == taskType && context.instrument == instrument)
+      return context;
   });
 
-  document.getElementById('tasks').innerHTML = "<p>Tasks</p>" + html;
+  filteredContexts.forEach(function(context) {
+    var task = getTaskFromContext(context);
+    var taskButton = makeTaskButton(task);
+
+    html += taskButton;
+  });
+
+  document.getElementById(contentId).innerHTML = html;
+
+  if (taskType == "study")
+    updateStudyStats(instrument);
+  else if (taskType == "job" && instrument != "none")
+    updateJobStats(instrument);
+}
+
+function updateStudyStats(instrument) {
+  document.getElementById(instrument + "StudyXp").innerHTML = "XP Modifier: " + Math.round(game.player.studies[instrument].xpMod * 100) + "%";
+  document.getElementById(instrument + "StudyCost").innerHTML = "Cost Modifier: " + Math.round(game.player.studies[instrument].costMod * 100) + "%";
+}
+
+function updateJobStats(instrument) {
+  var jobType = game.player.jobs[instrument].jobType;
+
+  if (jobType !== undefined) {
+    var jobAttributes = game.jobs[instrument][jobType];
+    var avgFame = jobAttributes.baseFame + (jobAttributes.variableFame / 2);
+    var avgPay = (jobAttributes.basePay + (jobAttributes.variablePay / 2)) * game.player.jobs[instrument].moneyMod;
+    var occurance = getJobChance(instrument, jobType);
+
+    document.getElementById(instrument + "JobFame").innerHTML = "Average Fame: " + Math.round(avgFame);
+    document.getElementById(instrument + "JobWage").innerHTML = "Average Wage: $" + Math.round(avgPay);
+    document.getElementById(instrument + "JobProc").innerHTML = "Average Occurance: " + occurance + " sec";
+  }
 }
 
 function updateSkills() {
@@ -169,6 +210,7 @@ function startInstrument(instrument) {
 function showTooltip(obj, taskName) {
   var offsets = getOffsets(obj);
   var tooltip = document.getElementById('tooltip');
+  var tooltipLeft = offsets.left - (obj.offsetWidth / 3);
   var task = getTask(taskName);
   var html = "<div id='tooltipHeader'>" + task.tooltip.description + "</div>";
 
@@ -183,14 +225,18 @@ function showTooltip(obj, taskName) {
     html += "<div class='tooltipFlavor'>" + task.tooltip.flavor + "</div>";
   }
 
+  // Make sure tooltip doesn't go over the right side of the screen
+  if (tooltipLeft + tooltip.offsetWidth - window.outerWidth > 0)
+    tooltipLeft -= tooltipLeft + tooltip.offsetWidth - window.outerWidth;
+
   tooltip.innerHTML = html;
-  tooltip.style.left = offsets.left - (obj.offsetWidth / 3);
   tooltip.style.top = offsets.top + obj.offsetHeight + 5;
-  tooltip.style.display = "inline";
+  tooltip.style.left = tooltipLeft;
+  tooltip.style.visibility = "visible";
 }
 
 function hideTooltip() {
-  document.getElementById('tooltip').style.display = "none";
+  document.getElementById('tooltip').style.visibility = "hidden";
 }
 
 function fameTooltip() {
@@ -208,7 +254,7 @@ function fameTooltip() {
   tooltip.style.left = offsets.left + 20;
   tooltip.style.top = offsets.top - 70;
   tooltip.style.width = "400px";
-  tooltip.style.display = "inline";
+  tooltip.style.visibility = "visible";
 
   var tooltipHeader = document.getElementById('tooltipHeader');
   tooltipHeader.style.borderBottom = "none";

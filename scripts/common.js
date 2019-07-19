@@ -72,3 +72,23 @@ function updateMultiplier(multiplier, elementId) {
   multDiv.style.fontSize = 15 + colorAndFontShift;
   multDiv.style.color = "rgb(" + r + "," + g + "," + b + ")";
 }
+
+function getJobChance(instrument, jobType) {
+  var jobAttributes = game.jobs[instrument][jobType];
+  var playerAttributes = game.player.jobs[instrument];
+  var occuranceRate = Math.round((jobAttributes.baseOccuranceRate - game.player.resources.fame.amount / 10) * playerAttributes.procMod);
+
+  return Math.max(occuranceRate, 1);
+}
+
+function getValidJobLocation(instrument, jobType, taskPrefix) {
+  if (taskPrefix == undefined)
+    taskPrefix = "";
+
+  var validLocations = game.jobs[instrument][jobType].locations.filter(function(job) {
+    if (getContext(taskPrefix + job) == undefined)
+      return job;
+  });
+
+  return validLocations[Math.floor(Math.random() * validLocations.length)];
+}

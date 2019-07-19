@@ -58,13 +58,13 @@
 					<progress id='laptopBeatProgress' value='0' max='1'></progress>
 				</div>
 				<div id='subgenreContainer'>
-					<button id="trance" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
-					<button id="house" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
-					<button id="drumAndBass" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
-					<button id="hardstyle" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
-					<button id="electro" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
-					<button id="industrial" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
-					<button id="dubstep" class="subgenre" onClick="setLaptopGenre(this)" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="trance" class="subgenre" onClick="setLaptopGenre('trance')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="house" class="subgenre" onClick="setLaptopGenre('house')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="drumAndBass" class="subgenre" onClick="setLaptopGenre('drumAndBass')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="hardstyle" class="subgenre" onClick="setLaptopGenre('hardstyle')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="electro" class="subgenre" onClick="setLaptopGenre('electro')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="industrial" class="subgenre" onClick="setLaptopGenre('industrial')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
+					<button id="dubstep" class="subgenre" onClick="setLaptopGenre('dubstep')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
 				</div>
 				<div id = "dropProgressContainer">
 					<progress id='theDropProgress' value='0' max='500'></progress>
@@ -188,13 +188,50 @@
 			<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
 		</div>
 		<div id='taskContainer' class='row'>
-			<div id='tasks'>
-				<p>Tasks</p>
+			<div id='taskTabContainer'>
+				<button id="upgradeTab" class="taskActive" onclick="toggleTab('upgrade', 'task')">Tasks and Upgrades</button>
+				<button id="studyTab" class="task" onclick="toggleTab('study', 'task')">Studies</button>
+				<button id="jobTab" class="task" onclick="toggleTab('job', 'task')">Jobs</button>
 			</div>
-			<div id='taskProgressContainer'>
-				<p id='taskLabel'>Some Task</p>
-				<button onclick='cancelTask()'>x</button>
-				<progress id='taskProgress' value='0' , max='10'></progress>
+			<div id="upgradeContent" class="taskContent">
+				<div id="upgradeContainer">
+				</div>
+				<div id='taskProgressContainer'>
+					<p id='taskLabel'>Some Task</p>
+					<button onclick='cancelTask()'>x</button>
+					<progress id='taskProgress' value='0' , max='10'></progress>
+				</div>
+			</div>
+			<div id="studyContent" class="taskContent">
+				<div id="laptopStudyContainer" class="studyContainer">
+					<p>Laptop</p>
+					<p id="laptopStudyCost" class="wageRate"></p>
+					<p id="laptopStudyXp" class="xpModifier"></p>
+					<div id="laptopStudyTasks" class="taskHolder"></div>
+				</div>
+				<div id="keyboardStudyContainer" class="studyContainer">
+					<p>Keyboard</p>
+					<p id="keyboardStudyCost" class="wageRate"></p>
+					<p id="keyboardStudyXp" class="xpModifier"></p>
+					<div id="keyboardStudyTasks" class="taskHolder"></div>
+				</div>
+			</div>
+			<div id="jobContent" class="taskContent">
+				<div id="laptopJobContainer" class="studyContainer">
+					<p>DJ Contracts</p>
+					<p id="laptopJobFame" class="fameRate"></p>
+					<p id="laptopJobWage" class="wageRate"></p>
+					<p id="laptopJobProc" class="procRate"></p>
+					<div id="laptopJobTasks" class="taskHolder"></div>
+				</div>
+				<div id="keyboardJobContainer" class="studyContainer">
+					<p>Pianist Contracts</p>
+					<div id="keyboardJobTasks" class="taskHolder"></div>
+				</div>
+				<div id="oddJobContainer" class="studyContainer">
+					<p>Odd Jobs</p>
+					<div id="oddJobTasks" class="taskHolder"></div>
+				</div>
 			</div>
 		</div>
 		<div id='skillsContainer' class='row'>

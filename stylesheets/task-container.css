@@ -1,16 +1,6 @@
-#tasks {
-  width: 100%;
-  height: 80%;
-}
-
-#tasks > button {
-  width: 120px;
-  height: 30px;
-  margin-top: 6px;
-  margin-right: 20px;
-  margin-bottom: 6px;
-  font-size: 12px;
-}
+/*
+  ------ General CSS For Tasks ------
+*/
 
 .validTask {
   border: 1px solid white;
@@ -29,10 +19,15 @@
   background-color: #333333;
 }
 
+/*
+  ------ CSS For Task Progress Container ------
+*/
+
 #taskProgressContainer {
   width: 100%;
   height: 20%;
   display: none;
+  margin-left: 6px;
 }
 
 #taskProgressContainer > p {
@@ -70,4 +65,142 @@
 
 #taskProgressContainer > progress[value]::-webkit-progress-value {
   background-color: #33cc33;
+}
+
+/*
+  ------ CSS For Task Tabs ------
+*/
+
+#taskTabContainer {
+  width: 100%;
+  overflow: hidden;
+  background-color: #222222;
+}
+
+#upgradeTab, #studyTab, #jobTab {
+  color: white;
+  float: left;
+  border: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 12px;
+  width: 33.3333333%;
+}
+
+.taskActive {
+  background-color: var(--my-background-color);
+}
+
+.task {
+  background-color: #444444
+}
+
+.task:hover {
+  background-color: #555555;
+}
+
+.taskContent {
+  padding-left: 6px;
+  display: block;
+  height: 100%;
+}
+
+/* Hide song and album tabs by default */
+#studyTab, #jobTab {
+  display: none;
+}
+
+/* Hide non-active tab content by default */
+#studyContent, #jobContent {
+  display: none;
+  height: calc(100% - 28px); /* Minus the height of the tabs */
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+/*
+  ------ CSS For Task Tab Content ------
+*/
+
+#upgradeContent {
+  padding-top: 6px;
+  margin-right: 10px;
+}
+
+#upgradeContainer {
+  height: 70%;
+}
+
+#upgradeContainer > button {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+#laptopJobTasks, #keyboardJobTasks {
+  width: 60%;
+}
+
+.taskHolder {
+  border-top: 1px;
+  border-bottom: 1px;
+  border-style: none solid;
+  height: 45px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.taskHolder > button {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 12px;
+  white-space: normal;
+}
+
+.studyContainer {
+  padding-top: 6px;
+  margin-right: 6px;
+  width: 100%;
+  display: none;
+}
+
+.studyContainer > p {
+  padding-top: 6px;
+  margin-bottom: 6px;
+}
+
+.fameRate {
+  color: #ff751a;
+  font-size: 12px;
+  margin-right: 6px;
+  display: inline;
+}
+
+.wageRate {
+  color: #00bb00;
+  font-size: 12px;
+  margin-right: 6px;
+  display: inline;
+}
+
+.procRate {
+  color: #F7DC6F;
+  font-size: 12px;
+  margin-right: 6px;
+  display: inline;
+}
+
+.xpModifier {
+  color: #3399ff;
+  font-size: 12px;
+  margin-right: 6px;
+  display: inline;
 }

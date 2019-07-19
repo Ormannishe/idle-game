@@ -596,19 +596,21 @@ function oddJobsTask(context) {
     earn money early on and is replaced with other opportunities as the player
     increases their skill levels.
   */
-  var timeToComplete = 60;
-  var moneyReward = 10;
+  var jobAttributes = game.jobs.oddJobs;
+  var updateContractsFn = function() {
+    game.player.jobs.oddJobs.numContracts--;
+  };
 
   var finishFns = [
-    partial(addResource, "money", moneyReward),
-    partial(appendToOutputContainer, "After an hour of labor, you take home a measly " + moneyReward + " bucks."),
-    partial(addTrigger, oddJobsEventTrigger)
+    partial(addResource, "money", jobAttributes.basePay),
+    partial(appendToOutputContainer, "After an hour of labor, you take home a measly " + jobAttributes.basePay + " bucks."),
+    updateContractsFn
   ];
 
   var tooltip = {
     "description": "Rewards $10.",
     "cost": {
-      "Time": timeToComplete
+      "Time": jobAttributes.timeToComplete
     },
     "flavor": "Even the most famous of legends have humble beginnings."
   };
@@ -616,7 +618,7 @@ function oddJobsTask(context) {
   return {
     name: context.taskName,
     finishFns: finishFns,
-    timeToComplete: timeToComplete,
+    timeToComplete: jobAttributes.timeToComplete,
     tooltip: tooltip
   };
 }
@@ -633,30 +635,36 @@ function advanceDJCareerTask(context) {
 
   var requiredFame;
   var requiredSamples;
-  var outputText;
+  var jobType;
   var description;
   var flavor;
-  var eventTrigger;
+  var outputText;
 
   switch (context.level) {
     case 1:
       requiredFame = 0;
       requiredSamples = 5;
-      outputText = "You've completed your online portfolio. Soon, your first clients will reach out to you!";
+      jobType = "freelance";
       description = "Become a Freelance DJ, unlocking opportunities to play at small gatherings.";
       flavor = "Turns out the hardest part about becoming an artist is getting other people to like your music.";
-      eventTrigger = freelanceDJEventTrigger;
+      outputText = "You've completed your online portfolio. Soon, your first clients will reach out to you!";
       break;
     case 2:
       requiredFame = 50;
       requiredSamples = 30;
-      outputText = "Many of the nightclub owners liked the samples you showed them!";
+      jobType = "nightclub";
       description = "Unlocks more lucrative opportunities to DJ at nightclubs. Requires 50 Fame.";
       flavor = "Nightclubs during the day are... strange.";
-      eventTrigger = nightclubDJEventTrigger;
+      outputText = "Many of the nightclub owners liked the samples you showed them!";
       break;
     default:
       return null;
+  };
+
+  var updateJobTypeFn = function() {
+    game.player.jobs.laptop.jobType = jobType;
+    if (context.level == 1)
+      addTrigger(DJEventTrigger);
   };
 
   var checkFns = [
@@ -665,9 +673,11 @@ function advanceDJCareerTask(context) {
   ];
 
   var startFns = [
+    partial(showUiElement, "jobTab", "inline"),
+    partial(showUiElement, "laptopJobContainer", "block"),
     partial(removeResource, "samples", requiredSamples),
-    partial(addTrigger, eventTrigger),
-    partial(appendToOutputContainer, outputText)
+    partial(appendToOutputContainer, outputText),
+    updateJobTypeFn
   ];
 
   var tooltip = {
@@ -686,59 +696,56 @@ function advanceDJCareerTask(context) {
   };
 }
 
-function workAsDJTask(context) {
+function workJobTask(context) {
   /*
-    This task becomes available when a DJ Event is triggered. There are various
-    levels of DJ work available. Rewards Laptop XP, Money, and Fame and requires
-    timeToComplete depending on the context.
+    This task becomes available when a Job Event is triggered. There are various
+    types of work available for all instruments (ie. Freelance work).
 
-    On completion, reinsert the given level of event trigger to the triggers list.
+    Completion of the task rewards Fame, Money and XP for the given instrument,
+    where amounts are determined by the type of work.
   */
-  var xpReward;
-  var moneyReward;
-  var fameReward;
-  var timeToComplete;
+  var taskAttributes = game.jobs[context.instrument][context.jobType];
+  var playerAttributes = game.player.jobs[context.instrument];
+  var moneyReward = Math.round((taskAttributes.basePay + context.bonusMoney) * playerAttributes.moneyMod);
+  var fameReward = taskAttributes.baseFame + context.bonusFame;
   var outputText;
   var flavor;
-  var eventTrigger;
 
-  switch (context.level) {
-    case 1:
-      xpReward = 50;
-      moneyReward = 50;
-      fameReward = 5;
-      timeToComplete = 180;
-      outputText = "After a few hours work at a " + context.djEvent.toLowerCase() + ", you manage to make $50!";
-      flavor = "Turns out, parties are a lot less fun when you're working.";
-      eventTrigger = freelanceDJEventTrigger;
+  var updateContractsFn = function() {
+    game.player.jobs[context.instrument].numContracts--;
+  };
+
+  switch (context.instrument) {
+    case "laptop":
+      switch (context.jobType) {
+        case "freelance":
+          outputText = "After a few hours work at a " + context.location + ", you manage to make $" + moneyReward + "!";
+          flavor = "Turns out, parties are a lot less fun when you're working.";
+          break;
+        case "nightclub":
+          outputText = "After a crazy night at " + context.location + ", you manage to make a solid $" + moneyReward + "!";
+          flavor = "Thiss isss myyy sooooooooong!";
+          break;
+      };
       break;
-    case 2:
-      xpReward = 250;
-      moneyReward = 250;
-      fameReward = 30;
-      timeToComplete = 180;
-      outputText = "After a crazy night at a club, you manage to make a solid $250!";
-      flavor = "'This isss myyy sooooooooong!' - That White Girl";
-      eventTrigger = nightclubDJEventTrigger;
-      break;
+    case "keyboard":
+      return null; // for now
     default:
       return null;
   };
 
-  moneyReward = Math.round(moneyReward * game.player.jobs.laptop.moneyMod);
-
   var finishFns = [
-    partial(addXp, "laptop", xpReward),
+    partial(addXp, context.instrument, taskAttributes.baseXp),
     partial(addResource, "money", moneyReward),
     partial(addResource, "fame", fameReward),
     partial(appendToOutputContainer, outputText),
-    partial(addTrigger, eventTrigger)
+    updateContractsFn
   ];
 
   var tooltip = {
-    "description": "Rewards " + fameReward + " Fame, $" + moneyReward + " and " + xpReward + " Laptop XP.",
+    "description": "Rewards " + fameReward + " Fame, $" + moneyReward + " and " + taskAttributes.baseXp + " " + context.instrument + " XP.",
     "cost": {
-      "Time": timeToComplete
+      "Time": taskAttributes.timeToComplete
     },
     "flavor": flavor
   };
@@ -747,7 +754,7 @@ function workAsDJTask(context) {
     name: context.taskName,
     finishFns: finishFns,
     tooltip: tooltip,
-    timeToComplete: timeToComplete
+    timeToComplete: taskAttributes.timeToComplete
   };
 }
 

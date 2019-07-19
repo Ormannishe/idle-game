@@ -59,6 +59,53 @@ function Game() {
       maxMultiplier: 10
     }
   };
+  this.jobs = {
+    oddJobs: {
+      baseOccuranceRate: 60,
+      basePay: 10,
+      timeToComplete: 60,
+      locations: [
+        "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
+        "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"
+      ]
+    },
+    laptop: {
+      freelance: {
+        baseOccuranceRate: 250,
+        baseFame: 5,
+        variableFame: 5,
+        basePay: 50,
+        variablePay: 10,
+        baseXp: 50,
+        timeToComplete: 180,
+        locations: [
+          "Birthday Party", "House Party", "Corporate Event", "Wedding",
+          "Frat Party", "Fundraiser"
+        ]
+      },
+      nightclub: {
+        baseOccuranceRate: 500,
+        baseFame: 30,
+        variableFame: 15,
+        basePay: 250,
+        variablePay: 50,
+        baseXp: 250,
+        locations: [
+          "The Revision", "Rampage", "The Roxberry", "Nebula Nightclub",
+          "The Jungle", "Infinity", "Club Liquid", "Pulse", "Green Door"
+        ]
+      }
+    },
+    keyboard: {
+      freelance: {
+        baseFame: 5,
+        variableFame: 5,
+        basePay: 50,
+        variablePay: 10,
+        baseXp: 50
+      }
+    }
+  };
 };
 
 function newGame() {
@@ -98,6 +145,8 @@ function loadGame() {
   if (playerData !== null) {
     // Restore game state
     game = new Game();
+    // TODO: Before overwriting the default player object, merge in keys/values
+    // that are missing from the stored player object
     game.player = playerData;
 
     // Apply UI Changes

@@ -9,12 +9,18 @@ var markerReverse = false;
 
 function startLaptop() {
   var tempo = game.player.instruments.laptop.currentTempo;
+  var subgenre = game.player.instruments.laptop.subgenre;
   var progress = document.getElementById('laptopBeatProgress');
   var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
 
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   updateProgress(progress, game.player.instruments.laptop.currentProgress, requiredProgress, partial(addResource, "beats"));
+
+  if (subgenre !== undefined) {
+    setLaptopGenre(subgenre);
+    setLaptopGenre(subgenre); // Doing this twice clears and then reinitialized the subgenre
+  }
 
   if (game.player.instruments.laptop.subgenre == "dubstep")
     dropInterval = setInterval(dropTick, 100);
@@ -127,8 +133,10 @@ function clickBeat() {
 
 /* Sub-genre functionality */
 
-function setLaptopGenre(obj) {
+// TODO: Make this easier to call from the code
+function setLaptopGenre(subgenreId) {
   var activeSubgenre = game.player.instruments.laptop.subgenre;
+  var subgenreObj = document.getElementById(subgenreId);
   var progressContainer = document.getElementById("laptopBeatProgress");
 
   // Revert sub-genre specific effects
@@ -155,21 +163,21 @@ function setLaptopGenre(obj) {
   }
 
   // Apply glow and sub-genre specific effects, change the active sub-genre
-  if (activeSubgenre == obj.id) {
-    obj.style.boxShadow = "none";
+  if (activeSubgenre == subgenreId) {
+    subgenreObj.style.boxShadow = "none";
     progressContainer.style.boxShadow = "none"
     game.player.instruments.laptop.subgenre = undefined;
   } else {
-    var glowColor = getComputedStyle(obj).borderColor;
+    var glowColor = getComputedStyle(subgenreObj).borderColor;
 
     if (activeSubgenre !== undefined) {
       document.getElementById(activeSubgenre).style.boxShadow = "none";
     }
 
     progressContainer.style.boxShadow = "0px 0px 80px 1px " + glowColor;
-    obj.style.boxShadow = "0px 0px 5px 2px " + glowColor;
+    subgenreObj.style.boxShadow = "0px 0px 5px 2px " + glowColor;
 
-    if (obj.id == "electro") {
+    if (subgenreId == "electro") {
       var greenZone = document.getElementById("greenZone");
       var leftYellowZone = document.getElementById("leftYellowZone");
       var rightYellowZone = document.getElementById("rightYellowZone");
@@ -177,19 +185,19 @@ function setLaptopGenre(obj) {
       greenZone.style.width = "27%";
       leftYellowZone.style.width = "12%";
       rightYellowZone.style.width = "12%";
-    } else if (obj.id == "dubstep") {
+    } else if (subgenreId == "dubstep") {
       document.getElementById("dropProgressContainer").style.visibility = "visible";
       dropInterval = setInterval(dropTick, 100);
-    } else if (obj.id == "drumAndBass") {
+    } else if (subgenreId == "drumAndBass") {
       game.player.instruments.laptop.bonusMaxMultiplier += 20;
-    } else if (obj.id == "trance") {
+    } else if (subgenreId == "trance") {
       game.player.instruments.laptop.bonusMaxMultiplier -= 10;
       game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
       game.player.instruments.laptop.passiveProgress++;
       updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
     }
 
-    game.player.instruments.laptop.subgenre = obj.id;
+    game.player.instruments.laptop.subgenre = subgenreId;
   }
 }
 
@@ -280,7 +288,7 @@ function genreTooltip(obj) {
   tooltip.style.left = offsets.left - (obj.offsetWidth * 10);
   tooltip.style.top = offsets.top + obj.offsetHeight + 5;
   tooltip.style.width = "300px";
-  tooltip.style.display = "inline";
+  tooltip.style.visibility = "visible";
 
   var tooltipHeader = document.getElementById('tooltipHeader');
   tooltipHeader.style.borderBottom = "none";
