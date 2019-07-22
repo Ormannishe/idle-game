@@ -107,7 +107,7 @@ function updateTaskContent(contentId, contexts, taskType, instrument) {
   var html = "";
   var filteredContexts = contexts.filter(function(context) {
     if (taskType == undefined && context.taskType == taskType && context.taskName != "Make New Song")
-        return context;
+      return context;
     else if (context.taskType == taskType && context.instrument == instrument)
       return context;
   });
@@ -123,7 +123,7 @@ function updateTaskContent(contentId, contexts, taskType, instrument) {
 
   if (taskType == "study")
     updateStudyStats(instrument);
-  else if (taskType == "job" && instrument != "none")
+  else if (taskType == "job" && instrument !== "none")
     updateJobStats(instrument);
 }
 
@@ -292,6 +292,15 @@ function toggleTab(tabId, groupId) {
     stopLaptop();
     stopKeyboard();
     startInstrument(tabId);
+  }
+}
+
+function tabNotifyAnimation(tabId, activeTabClass) {
+  if (document.getElementsByClassName(activeTabClass)[0].id !== tabId) {
+    var tab = document.getElementById(tabId);
+    tab.classList.remove("backgroundColorNotify");
+    void tab.offsetWidth; // css magic to allow replay of the error animation
+    tab.classList.add("backgroundColorNotify");
   }
 }
 

@@ -81,7 +81,7 @@ function tenthBeatTrigger() {
 }
 
 function fiftiethBeatTrigger() {
-  // TODO: What does this do now?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 50) {
     addTrigger(hundredthBeatTrigger);
     return true;
@@ -89,8 +89,7 @@ function fiftiethBeatTrigger() {
 }
 
 function hundredthBeatTrigger() {
-  // TODO: What does this do now?
-  // Achievement?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 100) {
     addTrigger(fiveHundredthBeatTrigger);
     return true;
@@ -98,8 +97,7 @@ function hundredthBeatTrigger() {
 }
 
 function fiveHundredthBeatTrigger() {
-  // TODO: What does this do now?
-  // Achievement?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 500) {
     addTrigger(thousandthBeatTrigger);
     return true;
@@ -107,7 +105,7 @@ function fiveHundredthBeatTrigger() {
 }
 
 function thousandthBeatTrigger() {
-  // Achievement?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 1000) {
     appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
     return true;
@@ -220,6 +218,7 @@ function levelTwoLaptopTrigger() {
     appendToOutputContainer("If you want to get better at this, you're going to have to practice.");
     showUiElement("studyTab", "inline");
     showUiElement("laptopStudyContainer", "block");
+    tabNotifyAnimation("studyTab", "taskActive");
     addTask(context);
     addTrigger(levelThreeLaptopTrigger);
     return true;
@@ -371,7 +370,7 @@ function levelElevenLaptopTrigger() {
 
 function levelTwelveLaptopTrigger() {
   // Unlocks Level 2 DJ Study Task
-  // TODO: Make a task which gives you level 2 studying?
+  // TODO: Make a task which gives you level 2 studying? Make level 2 studying cost money?
   if (game.player.skills.laptop.level >= 12) {
     var context = {
       taskId: "genericStudyTask",
@@ -383,6 +382,7 @@ function levelTwelveLaptopTrigger() {
     };
 
     appendToOutputContainer("Furthering your DJ skills will require some research!");
+    tabNotifyAnimation("studyTab", "taskActive");
     addTask(context);
     addTrigger(levelThirteenLaptopTrigger);
     return true;
@@ -407,7 +407,6 @@ function levelThirteenLaptopTrigger() {
 
 function levelFourteenLaptopTrigger() {
   // Level 2 DJ Job
-  // TODO: Make Fame requirement part of task
   if (game.player.skills.laptop.level >= 14) {
     var context = {
       taskId: "advanceDJCareerTask",
@@ -481,21 +480,6 @@ function unlockNightclubTrigger() {
   ---- Event Triggers -----
 */
 
-// TODO: Make these common functions (ie. getJobChance, getValidJobTypes)
-function getJobData(jobAttributes, playerAttributes) {
-  var validJobs = jobAttributes.jobTypes.filter(function(job) {
-    if (getContext("DJ At " + job) == undefined)
-      return job;
-  });
-
-  return {
-    avgTicks: (jobAttributes.baseOccuranceRate - game.player.resources.fame.amount) * playerAttributes.procMod,
-    jobType: validJobs[Math.floor(Math.random() * validJobs)],
-    bonusMoney: Math.round(Math.random() * jobAttributes.variablePay),
-    bonusFame: Math.round(Math.random() * jobAttributes.variableFame),
-  };
-}
-
 function oddJobsEventTrigger(natural) {
   /*
     Event Trigger for Odd Job tasks. Odd Job tasks are Job Tasks which are
@@ -517,7 +501,6 @@ function oddJobsEventTrigger(natural) {
     if (Math.random() < 1 / avgTicks) {
       showUiElement("jobTab", "inline");
       showUiElement("oddJobContainer", "block");
-      // TODO: jobTab animation
 
       var validJobs = game.jobs.oddJobs.locations.filter(function(job) {
         if (getContext(job) == undefined)
@@ -533,6 +516,7 @@ function oddJobsEventTrigger(natural) {
       };
 
       appendToOutputContainer("A neighbor comes by with an opportunity to make a little cash.");
+      tabNotifyAnimation("jobTab", "taskActive");
       game.player.jobs.oddJobs.numContracts++;
       addTask(context);
       addTrigger(oddJobsEventTrigger);
@@ -580,6 +564,7 @@ function DJEventTrigger(natural) {
         };
 
         appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + location.toLowerCase() + "!");
+        tabNotifyAnimation("jobTab", "taskActive");
         game.player.jobs.laptop.numContracts++;
         addTask(context);
         addTrigger(DJEventTrigger);

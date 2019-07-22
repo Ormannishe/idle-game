@@ -133,7 +133,6 @@ function clickBeat() {
 
 /* Sub-genre functionality */
 
-// TODO: Make this easier to call from the code
 function setLaptopGenre(subgenreId) {
   var activeSubgenre = game.player.instruments.laptop.subgenre;
   var subgenreObj = document.getElementById(subgenreId);
@@ -152,7 +151,7 @@ function setLaptopGenre(subgenreId) {
     document.getElementById("dropProgressContainer").style.visibility = "hidden";
     clearInterval(dropInterval);
     game.player.instruments.laptop.dropActive = false;
-    document.getElementById("laptop").style.boxShadow = "none";
+    document.getElementById("laptopContent").style.boxShadow = "none";
   } else if (activeSubgenre == "drumAndBass") {
     game.player.instruments.laptop.bonusMaxMultiplier -= 20;
     game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
@@ -208,14 +207,14 @@ function dropTick() {
 
     if (dropProgress.value <= 0) {
       game.player.instruments.laptop.dropActive = false;
-      document.getElementById("laptop").style.boxShadow = "none";
+      document.getElementById("laptopContent").style.boxShadow = "none";
     }
   } else {
     var dropProgress = document.getElementById("theDropProgress");
     dropProgress.value = dropProgress.value + 1;
 
     if (dropProgress.value >= dropProgress.max) {
-      var laptopContainer = document.getElementById("laptop");
+      var laptopContainer = document.getElementById("laptopContent");
       var glowColor = getComputedStyle(document.getElementById("dubstep")).borderColor;
 
       game.player.instruments.laptop.dropActive = true;
@@ -301,10 +300,14 @@ function hideGenreTooltip() {
 
 function populateGenrePopUp(taskName) {
   var popUp = document.getElementById("popUpContent");
+  var unexploredSubgenres = game.instruments.laptop.subgenres.filter(function(genre) {
+    if (game.player.instruments.laptop.unlockedSubgenres.indexOf(genre) == -1)
+      return genre;
+  });
 
   popUp.innerHTML += "<p class='popUpHeader'>Select A Sub-Genre To Explore</p>";
 
-  game.player.instruments.laptop.unexploredSubgenres.forEach(function(genre) {
+  unexploredSubgenres.forEach(function(genre) {
     var genreRow = "<div class='popUpRow'>";
     var tooltipInfo = getTooltipInfo(genre);
 
@@ -322,13 +325,12 @@ function populateGenrePopUp(taskName) {
 function selectGenre(subgenre, taskName) {
   var task = getTask(taskName);
   var htmlObj = document.getElementById(subgenre);
-  var index = game.player.instruments.laptop.unexploredSubgenres.indexOf(subgenre);
 
   showUiElement(subgenre, "inline");
-  setLaptopGenre(htmlObj);
+  setLaptopGenre(subgenre);
   appendToOutputContainer("Your music is definitely leaning into the " + subgenre + " genre. Further exploring the genre will help you develop as a musician.");
   finishTask(task);
-  game.player.instruments.laptop.unexploredSubgenres.splice(index, 1);
+  game.player.instruments.laptop.unlockedSubgenres.push(subgenre);
   closePopUp();
   updateView();
 }

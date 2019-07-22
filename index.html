@@ -199,39 +199,48 @@
 				<div id='taskProgressContainer'>
 					<p id='taskLabel'>Some Task</p>
 					<button onclick='cancelTask()'>x</button>
-					<progress id='taskProgress' value='0' , max='10'></progress>
+					<progress id='taskProgress' class='taskProgress' value='0' , max='10'></progress>
 				</div>
 			</div>
 			<div id="studyContent" class="taskContent">
-				<div id="laptopStudyContainer" class="studyContainer">
-					<p>Laptop</p>
-					<p id="laptopStudyCost" class="wageRate"></p>
-					<p id="laptopStudyXp" class="xpModifier"></p>
-					<div id="laptopStudyTasks" class="taskHolder"></div>
+				<div id="studyContainer">
+					<div id="laptopStudyContainer" class="studyContainer">
+						<p>Laptop</p>
+						<p id="laptopStudyCost" class="wageRate"></p>
+						<p id="laptopStudyXp" class="xpModifier"></p>
+						<div id="laptopStudyTasks" class="taskHolder"></div>
+					</div>
+					<div id="keyboardStudyContainer" class="studyContainer">
+						<p>Keyboard</p>
+						<p id="keyboardStudyCost" class="wageRate"></p>
+						<p id="keyboardStudyXp" class="xpModifier"></p>
+						<div id="keyboardStudyTasks" class="taskHolder"></div>
+					</div>
 				</div>
-				<div id="keyboardStudyContainer" class="studyContainer">
-					<p>Keyboard</p>
-					<p id="keyboardStudyCost" class="wageRate"></p>
-					<p id="keyboardStudyXp" class="xpModifier"></p>
-					<div id="keyboardStudyTasks" class="taskHolder"></div>
-				</div>
+				<progress id="studyTaskProgress" class='taskProgress' value='5' , max='10'></progress>
 			</div>
 			<div id="jobContent" class="taskContent">
-				<div id="laptopJobContainer" class="studyContainer">
-					<p>DJ Contracts</p>
-					<p id="laptopJobFame" class="fameRate"></p>
-					<p id="laptopJobWage" class="wageRate"></p>
-					<p id="laptopJobProc" class="procRate"></p>
-					<div id="laptopJobTasks" class="taskHolder"></div>
+				<div id="jobContainer">
+					<div id="laptopJobContainer" class="studyContainer">
+						<p>DJ Contracts</p>
+						<p id="laptopJobFame" class="fameRate"></p>
+						<p id="laptopJobWage" class="wageRate"></p>
+						<p id="laptopJobProc" class="procRate"></p>
+						<div id="laptopJobTasks" class="taskHolder"></div>
+					</div>
+					<div id="keyboardJobContainer" class="studyContainer">
+						<p>Pianist Contracts</p>
+						<p id="keyboardJobFame" class="fameRate"></p>
+						<p id="keyboardJobWage" class="wageRate"></p>
+						<p id="keyboardJobProc" class="procRate"></p>
+						<div id="keyboardJobTasks" class="taskHolder"></div>
+					</div>
+					<div id="oddJobContainer" class="studyContainer">
+						<p>Odd Jobs</p>
+						<div id="oddJobTasks" class="taskHolder"></div>
+					</div>
 				</div>
-				<div id="keyboardJobContainer" class="studyContainer">
-					<p>Pianist Contracts</p>
-					<div id="keyboardJobTasks" class="taskHolder"></div>
-				</div>
-				<div id="oddJobContainer" class="studyContainer">
-					<p>Odd Jobs</p>
-					<div id="oddJobTasks" class="taskHolder"></div>
-				</div>
+				<progress id="jobTaskProgress" class='taskProgress' value='5' , max='10'></progress>
 			</div>
 		</div>
 		<div id='skillsContainer' class='row'>

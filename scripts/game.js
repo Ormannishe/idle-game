@@ -53,7 +53,11 @@ function Game() {
         slow: 15,
         fast: 10,
         fastest: 5
-      }
+      },
+      subgenres: [
+        "trance", "house", "drumAndBass", "hardstyle", "electro",
+        "industrial", "dubstep"
+      ]
     },
     keyboard: {
       maxMultiplier: 10
@@ -98,11 +102,14 @@ function Game() {
     },
     keyboard: {
       freelance: {
+        baseOccuranceRate: 250,
         baseFame: 5,
         variableFame: 5,
         basePay: 50,
         variablePay: 10,
-        baseXp: 50
+        baseXp: 50,
+        timeToComplete: 180,
+        locations: []
       }
     }
   };

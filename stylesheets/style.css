@@ -198,6 +198,18 @@ button:focus, input:focus {
   border-radius: 50%;
 }
 
+/* Notification Animation */
+.backgroundColorNotify {
+  animation-name: backgroundColorNotify;
+  animation-duration: 1s;
+}
+
+@keyframes backgroundColorNotify {
+  0% { background-color: #444444;}
+  50% { background-color: orange;}
+  100% { background-color: #444444;}
+}
+
 /* Error Animation */
 .backgroundColorError {
   animation-name: backgroundColorError;

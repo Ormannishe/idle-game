@@ -50,8 +50,7 @@ function Player() {
       passiveProgress: 0,
       currentProgress: 0,
       subgenre: undefined,
-      // TODO: Move this into game object - add unlockedSubgenres to player object
-      unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"],
+      unlockedSubgenres: [],
       dropActive: false
     },
     keyboard: {

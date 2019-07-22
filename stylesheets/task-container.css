@@ -50,20 +50,26 @@
   color: red;
 }
 
-#taskProgressContainer > progress[value] {
-  width: 99%;
+#taskProgress[value] {
   height: 30%;
-  -webkit-appearance: none;
-  appearance: none;
 }
 
-#taskProgressContainer > progress[value]::-webkit-progress-bar {
+.taskProgress[value] {
+  width: 99%;
+  height: 5px;
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+  margin-top: 2px;
+}
+
+.taskProgress[value]::-webkit-progress-bar {
   background-color: #eee;
   border-radius: 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 
-#taskProgressContainer > progress[value]::-webkit-progress-value {
+.taskProgress[value]::-webkit-progress-value {
   background-color: #33cc33;
 }
 
@@ -113,7 +119,10 @@
 /* Hide non-active tab content by default */
 #studyContent, #jobContent {
   display: none;
-  height: calc(100% - 28px); /* Minus the height of the tabs */
+}
+
+#studyContainer, #jobContainer {
+  height: calc(100% - 38px); /* Minus the height of the tabs and progress bar */
   overflow: auto;
   overflow-x: hidden;
 }

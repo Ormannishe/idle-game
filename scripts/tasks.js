@@ -159,14 +159,20 @@ function startActiveTask(task) {
   if (game.player.activeTask == undefined) {
     var context = getContextFromTask(task);
     var label = document.getElementById('taskLabel');
-    var progress = document.getElementById('taskProgress');
+    var progresses = document.getElementsByClassName("taskProgress");
 
     game.player.activeTask = context;
     label.innerHTML = task.name;
     game.player.activeTask.timeInProgress = 0;
-    progress.value = 0;
-    progress.max = task.timeToComplete;
     showUiElement("taskProgressContainer", "inline-block");
+
+    for (var i = 0; i < progresses.length; i++) {
+      var progress = progresses[i];
+
+      progress.value = 0;
+      progress.max = task.timeToComplete;
+      showUiElement(progress.id, "inline-block");
+    }
 
     return true;
   }
@@ -185,7 +191,7 @@ function updateActiveTask() {
     game.player.activeTask.timeInProgress++;
 
     var task = getTaskFromContext(game.player.activeTask);
-    var progress = document.getElementById('taskProgress');
+    var progresses = document.getElementsByClassName("taskProgress");
 
     if (task.tickFns !== undefined)
       task.tickFns.forEach(function(tickFn) {
@@ -195,7 +201,9 @@ function updateActiveTask() {
     if (game.player.activeTask.timeInProgress >= task.timeToComplete)
       task.finishFns.push(stopActiveTask);
 
-    updateProgress(progress, game.player.activeTask.timeInProgress, task.timeToComplete, partial(finishTask, task));
+    updateProgress(progresses[1], game.player.activeTask.timeInProgress, task.timeToComplete); // study tab progress
+    updateProgress(progresses[2], game.player.activeTask.timeInProgress, task.timeToComplete); // job tab progress
+    updateProgress(progresses[0], game.player.activeTask.timeInProgress, task.timeToComplete, partial(finishTask, task));
   }
 }
 
@@ -203,6 +211,8 @@ function stopActiveTask() {
   // Stop the currently active task
   game.player.activeTask = undefined;
   showUiElement("taskProgressContainer", "none");
+  showUiElement("studyTaskProgress", "none");
+  showUiElement("jobTaskProgress", "none");
 }
 
 function cancelTask() {
@@ -643,7 +653,7 @@ function advanceDJCareerTask(context) {
   switch (context.level) {
     case 1:
       requiredFame = 0;
-      requiredSamples = 5;
+      requiredSamples = 3;
       jobType = "freelance";
       description = "Become a Freelance DJ, unlocking opportunities to play at small gatherings.";
       flavor = "Turns out the hardest part about becoming an artist is getting other people to like your music.";
@@ -1160,4 +1170,8 @@ function increaseResourceXpTask(context) {
 
 function reduceXpRequiredTask(context) {
   // TODO: Reduces the amount of XP required to level a skill by a percentage
+}
+
+function moreContractsTask(context) {
+  // TODO: Increases the number of active contracts the player can have for a given instrument
 }
