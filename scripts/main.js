@@ -18,8 +18,8 @@ var game;
 function init() {
   loadGame();
   startTicking();
-  addNewGameTask();
-  addCheatTask();
+  // addNewGameTask();
+  // addCheatTask();
   updateView();
 }
 

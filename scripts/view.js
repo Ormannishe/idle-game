@@ -299,7 +299,7 @@ function tabNotifyAnimation(tabId, activeTabClass) {
   if (document.getElementsByClassName(activeTabClass)[0].id !== tabId) {
     var tab = document.getElementById(tabId);
     tab.classList.remove("backgroundColorNotify");
-    void tab.offsetWidth; // css magic to allow replay of the error animation
+    void tab.offsetWidth; // css magic to allow replay of the animation
     tab.classList.add("backgroundColorNotify");
   }
 }
