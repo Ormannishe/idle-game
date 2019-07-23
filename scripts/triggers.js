@@ -11,6 +11,15 @@ function addTrigger(triggerFn) {
   game.player.triggers.push(triggerFn.name);
 }
 
+function removeTrigger(triggerFn) {
+  // Remove the name of the given triggerFn to the triggers list
+  if (triggerFn !== undefined) {
+    var index = game.player.triggers.indexOf(triggerFn.name);
+    if (index > -1)
+      game.player.triggers.splice(index, 1);
+  }
+}
+
 function initTriggers() {
   // Populate triggers list for the start of the game
   addTrigger(oddJobsEventTrigger);
@@ -72,7 +81,7 @@ function tenthBeatTrigger() {
 }
 
 function fiftiethBeatTrigger() {
-  // TODO: What does this do now?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 50) {
     addTrigger(hundredthBeatTrigger);
     return true;
@@ -80,8 +89,7 @@ function fiftiethBeatTrigger() {
 }
 
 function hundredthBeatTrigger() {
-  // TODO: What does this do now?
-  // Achievement?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 100) {
     addTrigger(fiveHundredthBeatTrigger);
     return true;
@@ -89,8 +97,7 @@ function hundredthBeatTrigger() {
 }
 
 function fiveHundredthBeatTrigger() {
-  // TODO: What does this do now?
-  // Achievement?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 500) {
     addTrigger(thousandthBeatTrigger);
     return true;
@@ -98,7 +105,7 @@ function fiveHundredthBeatTrigger() {
 }
 
 function thousandthBeatTrigger() {
-  // Achievement?
+  // TODO: What does this do now? Achievement?
   if (game.player.stats.beats.lifetime >= 1000) {
     appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
     return true;
@@ -202,11 +209,16 @@ function levelTwoLaptopTrigger() {
     var context = {
       taskId: "genericStudyTask",
       taskName: "Practice Making Beats",
-      resource: "beats",
-      level: 1
+      taskType: "study",
+      instrument: "laptop",
+      level: 1,
+      resource: "beats"
     };
 
     appendToOutputContainer("If you want to get better at this, you're going to have to practice.");
+    showUiElement("studyTab", "inline");
+    showUiElement("laptopStudyContainer", "block");
+    tabNotifyAnimation("studyTab", "taskActive");
     addTask(context);
     addTrigger(levelThreeLaptopTrigger);
     return true;
@@ -358,16 +370,19 @@ function levelElevenLaptopTrigger() {
 
 function levelTwelveLaptopTrigger() {
   // Unlocks Level 2 DJ Study Task
-  // TODO: Make a task which gives you level 2 studying?
+  // TODO: Make a task which gives you level 2 studying? Make level 2 studying cost money?
   if (game.player.skills.laptop.level >= 12) {
     var context = {
       taskId: "genericStudyTask",
       taskName: "Study DJing Online",
-      resource: "beats",
-      level: 2
+      taskType: "study",
+      instrument: "laptop",
+      level: 2,
+      resource: "beats"
     };
 
     appendToOutputContainer("Furthering your DJ skills will require some research!");
+    tabNotifyAnimation("studyTab", "taskActive");
     addTask(context);
     addTrigger(levelThirteenLaptopTrigger);
     return true;
@@ -392,7 +407,6 @@ function levelThirteenLaptopTrigger() {
 
 function levelFourteenLaptopTrigger() {
   // Level 2 DJ Job
-  // TODO: Make Fame requirement part of task
   if (game.player.skills.laptop.level >= 14) {
     var context = {
       taskId: "advanceDJCareerTask",
@@ -467,69 +481,98 @@ function unlockNightclubTrigger() {
 */
 
 function oddJobsEventTrigger(natural) {
-  // The expected number of ticks this event takes to trigger
-  var avgTicks = 60;
+  /*
+    Event Trigger for Odd Job tasks. Odd Job tasks are Job Tasks which are
+    always available to the player (even at the start of the game) and reward a
+    small amount of money.
 
-  if (natural) {
+    This Event Trigger can only be triggered on a Natural Tick and will not
+    trigger if the player already has the maximum number of Contracts available
+    (default 5).
+
+    This Event Trigger will add itself back into the trigger list (ie. events
+    continue to occur even after proccing once).
+  */
+
+  if (natural && game.player.jobs.oddJobs.numContracts < game.player.jobs.oddJobs.maxContracts) {
+    // The expected number of ticks this event takes to trigger
+    var avgTicks = game.jobs.oddJobs.baseOccuranceRate;
+
     if (Math.random() < 1 / avgTicks) {
-      var oddJobs = [
-        "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
-        "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"
-      ];
-      var job = oddJobs[Math.floor(Math.random() * oddJobs.length)];
+      showUiElement("jobTab", "inline");
+      showUiElement("oddJobContainer", "block");
+
+      var validJobs = game.jobs.oddJobs.locations.filter(function(job) {
+        if (getContext(job) == undefined)
+          return job;
+      });
+
+      var job = validJobs[Math.floor(Math.random() * validJobs.length)];
       var context = {
         taskId: "oddJobsTask",
-        taskName: job
+        taskName: job,
+        taskType: "job",
+        instrument: "none"
       };
 
       appendToOutputContainer("A neighbor comes by with an opportunity to make a little cash.");
+      tabNotifyAnimation("jobTab", "taskActive");
+      game.player.jobs.oddJobs.numContracts++;
       addTask(context);
+      addTrigger(oddJobsEventTrigger);
       return true;
     }
   }
 }
 
-function freelanceDJEventTrigger(natural) {
-  // Average number of ticks required to trigger this event
-  var avgTicks = (100 - game.player.resources.fame.amount) * game.player.jobs.laptop.procMod;
+function DJEventTrigger(natural) {
+  /*
+    Event Trigger for DJ Job tasks. There are several types of DJ job tasks that
+    are unlocked as the player raises their laptop level. (ie. Freelance,
+    Nightclub, etc.) This event will only add new DJ Jobs for the player's
+    current DJ job type.
 
-  if (avgTicks < 10)
-    avgTicks = 10;
+    This Event Trigger can only be triggered on a Natural Tick and will not
+    trigger if the player already has the maximum number of Contracts available
+    (default 3).
 
-  if (natural && Math.random() < (1 / avgTicks)) {
-    var eventTypes = [
-      "Birthday Party", "House Party", "Corporate Event", "Wedding", "Frat Party"
-    ];
-    var djEvent = eventTypes[Math.floor(Math.random() * eventTypes.length)];
-    var context = {
-      taskId: "workAsDJTask",
-      taskName: "DJ At " + djEvent,
-      level: 1,
-      djEvent: djEvent
-    };
+    This Event Trigger will add itself back into the trigger list. (ie. events
+    continue to occur even after proccing once).
+  */
 
-    appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + djEvent.toLowerCase() + "!");
-    addTask(context);
-    return true;
-  }
-}
+  if (natural) {
+    // Average number of ticks required to trigger this event
+    var jobType = game.player.jobs.laptop.jobType;
+    var avgTicks = getJobChance("laptop", jobType);
 
-function nightclubDJEventTrigger(natural) {
-  // The expected number of ticks this event takes to trigger
-  var avgTicks = (500 - game.player.resources.fame.amount) * game.player.jobs.laptop.procMod;
+    if (Math.random() < (1 / avgTicks)) {
+      if (game.player.jobs.laptop.numContracts < game.player.jobs.laptop.maxContracts) {
+        var taskPrefix = "DJ At ";
+        var location = getValidJobLocation("laptop", jobType, taskPrefix);
+        var bonusMoney = Math.round(Math.random() * game.jobs.laptop[jobType].variablePay);
+        var bonusFame = Math.round(Math.random() * game.jobs.laptop[jobType].variableFame);
 
-  if (avgTicks < 10)
-    avgTicks = 10;
+        var context = {
+          taskId: "workJobTask",
+          taskName: taskPrefix + location,
+          taskType: "job",
+          instrument: "laptop",
+          jobType: jobType,
+          location: location.toLowerCase(),
+          bonusMoney: bonusMoney,
+          bonusFame: bonusFame
+        };
 
-  if (natural && Math.random() < (1 / avgTicks)) {
-    var context = {
-      taskId: "workAsDJTask",
-      taskName: "DJ At Nightclub",
-      level: 2
-    };
-
-    appendToOutputContainer("An opportunity to DJ at a nightclub has opened up!");
-    addTask(context);
-    return true;
+        appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + location.toLowerCase() + "!");
+        tabNotifyAnimation("jobTab", "taskActive");
+        game.player.jobs.laptop.numContracts++;
+        addTask(context);
+        addTrigger(DJEventTrigger);
+        return true;
+      }
+      else {
+        appendToOutputContainer("You had to turn down a " + jobType + " DJ opportunity because you already have too many open contracts!");
+      }
+    }
   }
 }

@@ -42,7 +42,7 @@
 }
 
 /* Hide non-active tab content by default */
-#songs, #albums {
+#songsContent, #albumsContent {
   display: none;
 }
 
@@ -206,7 +206,9 @@
   margin-bottom: 6px;
 }
 
-/* Song PopUp */
+/*
+  ------ CSS For Songs Pop Up ------
+*/
 
 #songNameInput {
   margin-left: 5px;
@@ -218,19 +220,6 @@
   line-height: 15px;
   text-align: center;
 }
-
-/*
-#songDetails {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 5%;
-  font-size: 12px;
-}
-
-li {
-  margin-top: 10px;
-}
-*/
 
 .resourceLabel {
   width: 15%;

@@ -50,7 +50,7 @@ function Player() {
       passiveProgress: 0,
       currentProgress: 0,
       subgenre: undefined,
-      unexploredSubgenres: ["trance", "house", "drumAndBass", "hardstyle", "electro", "industrial", "dubstep"],
+      unlockedSubgenres: [],
       dropActive: false
     },
     keyboard: {
@@ -61,17 +61,36 @@ function Player() {
       bonusMaxMultiplier: 0,
       passiveProgress: 0,
       currentProgress: 0
-    },
+    }
   };
   this.studies = {
     laptop: {
-      xpMod: 1.0
+      xpMod: 1.0,
+      costMod: 1.0
+    },
+    keyboard: {
+      xpMod: 1.0,
+      costMod: 1.0
     }
   };
   this.jobs = {
+    oddJobs: {
+      maxContracts: 5,
+      numContracts: 0
+    },
     laptop: {
+      jobType: undefined,
       procMod: 1.0,
-      moneyMod: 1.0
+      moneyMod: 1.0,
+      maxContracts: 3,
+      numContracts: 0
+    },
+    keyboard: {
+      jobType: undefined,
+      procMod: 1.0,
+      moneyMod: 1.0,
+      maxContracts: 3,
+      numContracts: 0
     }
   };
   this.skills = {

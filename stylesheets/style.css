@@ -42,11 +42,17 @@ button:focus, input:focus {
   height: 50%;
 }
 
-#outputContainer, #taskContainer, #skillsContainer {
+#outputContainer, #skillsContainer {
   float: right;
   height: 33.33333%;
   padding-left: 6px;
   padding-top: 6px;
+  color: white;
+}
+
+#taskContainer {
+  float: right;
+  height: 33.33333%;
   color: white;
 }
 
@@ -55,7 +61,7 @@ button:focus, input:focus {
 #tooltip {
   position: absolute;
   z-index: 100;
-  display: none;
+  visibility: hidden;
   overflow: hidden;
   background: #111111;
   opacity: 0.95;
@@ -190,6 +196,18 @@ button:focus, input:focus {
   background: #3399ff;
   cursor: pointer;
   border-radius: 50%;
+}
+
+/* Notification Animation */
+.backgroundColorNotify {
+  animation-name: backgroundColorNotify;
+  animation-duration: 1s;
+}
+
+@keyframes backgroundColorNotify {
+  0% { background-color: #444444;}
+  50% { background-color: orange;}
+  100% { background-color: #444444;}
 }
 
 /* Error Animation */
