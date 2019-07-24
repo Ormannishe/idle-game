@@ -1,3 +1,51 @@
+/*
+  ------ CSS For Tabs ------
+*/
+
+#statsTabContainer {
+  width: 100%;
+  overflow: hidden;
+  background-color: #222222;
+}
+
+#skillTab, #statTab, #achievementTab {
+  color: white;
+  float: left;
+  border: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 12px;
+  width: 33.3333333%;
+}
+
+.statActive {
+  background-color: var(--my-background-color);
+}
+
+.stat {
+  background-color: #444444
+}
+
+.stat:hover {
+  background-color: #555555;
+}
+
+/* Hide non-active tab content by default */
+#statContent, #achievementContent {
+  display: none;
+}
+
+.statContent {
+  padding-left: 6px;
+  display: block;
+  height: calc(100% - 28px);
+  overflow: scroll;
+}
+
+/*
+  ------ CSS For Skills ------
+*/
+
 .skill {
   margin-top: 6px;
   margin-right: 15px;
@@ -33,4 +81,46 @@
 /* Hide all skills be default except laptop skill */
 #vocalSkill, #keyboardSkill, #guitarSkill, #drumSkill {
   display: none;
+}
+
+/*
+  ------ CSS For Stats Page ------
+*/
+
+.statContainer {
+  margin-top: 10px;
+}
+
+.statHeading {
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.statRow {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+#newGameContainer {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#newGameButton {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  border: 1px solid white;
+  color: white;
+  background-color: #222222;
+}
+
+#newGameButton:hover {
+  cursor: pointer;
+  background-color: #333333;
 }

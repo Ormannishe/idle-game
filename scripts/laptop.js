@@ -129,6 +129,7 @@ function clickBeat() {
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
   game.player.instruments.laptop.currentProgress = progress.value;
+  game.player.stats.laptop.clicks++;
 }
 
 /* Sub-genre functionality */

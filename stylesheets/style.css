@@ -42,7 +42,7 @@ button:focus, input:focus {
   height: 50%;
 }
 
-#outputContainer, #skillsContainer {
+#outputContainer {
   float: right;
   height: 33.33333%;
   padding-left: 6px;
@@ -50,7 +50,7 @@ button:focus, input:focus {
   color: white;
 }
 
-#taskContainer {
+#taskContainer, #statsContainer {
   float: right;
   height: 33.33333%;
   color: white;

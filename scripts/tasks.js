@@ -138,7 +138,8 @@ function startTask(task) {
 function finishTask(task) {
   /*
     Run all of the finishFns for a given task, before adding it to the
-    player.completedTasks array (if it is not already present).
+    player.completedTasks array (if it is not already present) and incrementing
+    the relevant stats.
   */
 
   if (task.finishFns !== undefined) {
@@ -149,6 +150,13 @@ function finishTask(task) {
 
   if (game.player.completedTasks.indexOf(task.name) == -1)
     game.player.completedTasks.push(task.name);
+
+  if (task.type == "study")
+    game.player.stats[task.instrument].studiesCompleted++;
+  else if (task.type == "job" && task.instrument !== "none")
+    game.player.stats[task.instrument].workCompleted++;
+
+  game.player.stats.general.tasksCompleted++;
 }
 
 function startActiveTask(task) {
@@ -356,30 +364,6 @@ function cheatTask(context) {
   };
 }
 
-function newGameTask(context) {
-  /*
-    Use this wipe your save data
-  */
-  var startFns = [
-    newGame
-  ];
-
-  var tooltip = {
-    "description": "Start a New Game.",
-    "cost": {
-      "No Cost": ""
-    },
-    "flavor": "Rebirth."
-  };
-
-  return {
-    name: context.taskName,
-    startFns: startFns,
-    tooltip: tooltip,
-    repeatable: true
-  };
-}
-
 function unlockResourceTask(context) {
   /*
     This task is used to unlock the Tier Two resources. A Tier Two resource is
@@ -540,6 +524,8 @@ function genericStudyTask(context) {
 
   return {
     name: context.taskName,
+    type: context.taskType,
+    instrument: context.instrument,
     tickFns: tickFns,
     finishFns: finishFns,
     tooltip: tooltip,
@@ -673,8 +659,11 @@ function advanceDJCareerTask(context) {
 
   var updateJobTypeFn = function() {
     game.player.jobs.laptop.jobType = jobType;
-    if (context.level == 1)
+
+    if (context.level == 1) {
       addTrigger(DJEventTrigger);
+      tabNotifyAnimation("jobTab", "taskActive");
+    }
   };
 
   var checkFns = [
@@ -762,6 +751,8 @@ function workJobTask(context) {
 
   return {
     name: context.taskName,
+    type: context.taskType,
+    instrument: context.instrument,
     finishFns: finishFns,
     tooltip: tooltip,
     timeToComplete: taskAttributes.timeToComplete

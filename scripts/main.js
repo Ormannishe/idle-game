@@ -18,8 +18,7 @@ var game;
 function init() {
   loadGame();
   startTicking();
-  // addNewGameTask();
-  // addCheatTask();
+  addCheatTask();
   updateView();
 }
 
@@ -32,19 +31,6 @@ function addCheatTask() {
     var context = {
       taskId: "cheatTask",
       taskName: "CHEAT"
-    };
-
-    addTask(context);
-  }
-}
-
-function addNewGameTask() {
-  var newGameTask = getContext("New Game");
-
-  if (newGameTask == undefined) {
-    var context = {
-      taskId: "newGameTask",
-      taskName: "New Game"
     };
 
     addTask(context);

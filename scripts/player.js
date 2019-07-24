@@ -126,24 +126,25 @@ function Player() {
     }
   };
   this.stats = {
-    timePlayed: 0, // in seconds
-    fame: {
-      lifetime: 0
+    general: {
+      timePlayed: 0, // in seconds
+      fameLifetime: 0,
+      moneyLifetime: 0,
+      tasksCompleted: 0
     },
-    money: {
-      lifetime: 0
+    laptop: {
+      clicks: 0,
+      beatsLifetime: 0,
+      samplesLifetime: 0,
+      studiesCompleted: 0,
+      workCompleted: 0
     },
-    beats: {
-      lifetime: 0
-    },
-    samples: {
-      lifetime: 0
-    },
-    notes: {
-      lifetime: 0
-    },
-    measures: {
-      lifetime: 0
+    keyboard: {
+      keyPresses: 0,
+      notesLifetime: 0,
+      measuresLifetime: 0,
+      studiesCompleted: 0,
+      workCompleted: 0
     }
   };
 };
@@ -159,10 +160,11 @@ function addXp(skill, amount) {
 }
 
 function addResource(resource, amount) {
+  var instrument = game.resources[resource].instrument;
+  var requiredResource = game.resources[resource].requiredResource;
+
   if (amount == undefined)
     amount = 1;
-
-  var requiredResource = game.resources[resource].requiredResource;
 
   if (requiredResource !== undefined) {
     var totalCost = game.resources[resource].resourcesPer * amount;
@@ -175,13 +177,15 @@ function addResource(resource, amount) {
   }
 
   game.player.resources[resource].amount += amount;
-  game.player.stats[resource].lifetime += amount;
 
-  var relevantSkill = game.resources[resource].instrument;
+  if (instrument !== undefined)
+    game.player.stats[instrument][resource + "Lifetime"] += amount;
+  else
+    game.player.stats.general[resource + "Lifetime"] += amount;
 
-  if (relevantSkill !== undefined) {
+  if (instrument !== undefined) {
     var xpAmount = (game.resources[resource].xpPer + game.player.resources[resource].bonusXp) * amount;
-    addXp(relevantSkill, xpAmount);
+    addXp(instrument, xpAmount);
   }
 
   updateView();

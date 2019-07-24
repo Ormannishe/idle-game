@@ -6,6 +6,7 @@
   constants in the future that can be applied regardless of player progress.
 */
 
+var gameVersion = "0.0.1";
 var uiData = {};
 
 function Game() {
@@ -65,7 +66,7 @@ function Game() {
   };
   this.jobs = {
     oddJobs: {
-      baseOccuranceRate: 60,
+      baseOccuranceRate: 100,
       basePay: 10,
       timeToComplete: 60,
       locations: [
@@ -137,6 +138,7 @@ function saveGame() {
   // Serialize UI data
   window.localStorage.setItem('uiData', JSON.stringify(uiData));
   window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
+  window.localStorage.setItem('version', gameVersion);
 }
 
 function loadGame() {
@@ -148,6 +150,7 @@ function loadGame() {
   var playerData = JSON.parse(window.localStorage.getItem('playerData'));
   var uiData = JSON.parse(window.localStorage.getItem('uiData'));
   var textLog = JSON.parse(window.localStorage.getItem('textLog'));
+  var version = JSON.parse(window.localStorage.getItem('version')); // TODO: Check saved version vs. current version
 
   if (playerData !== null) {
     // Restore game state

@@ -11,7 +11,7 @@ function startTicking() {
 }
 
 function naturalTick() {
-  game.player.stats.timePlayed++;
+  game.player.stats.general.timePlayed++;
   passiveResourceGeneration();
   updateActiveTask();
   adjustSongStats();
@@ -32,7 +32,7 @@ function updateView(natural) {
   updateResourcesTab();
   updateSongsTab();
   updateTasks();
-  updateSkills();
+  updateCharacterStats();
 }
 
 function updateResourcesTab() {
@@ -147,6 +147,12 @@ function updateJobStats(instrument) {
   }
 }
 
+function updateCharacterStats() {
+  updateSkills();
+  updateStats();
+  updateAchievements();
+}
+
 function updateSkills() {
   document.getElementById('laptopLevel').innerHTML = game.player.skills.laptop.level;
   document.getElementById('vocalLevel').innerHTML = game.player.skills.vocal.level;
@@ -158,6 +164,40 @@ function updateSkills() {
   updateProgress(document.getElementById('vocalSkillProgress'), game.player.skills.vocal.xp, game.player.skills.vocal.toNextLevel);
   updateProgress(document.getElementById('keyboardSkillProgress'), game.player.skills.keyboard.xp, game.player.skills.keyboard.toNextLevel);
   updateProgress(document.getElementById('guitarSkillProgress'), game.player.skills.guitar.xp, game.player.skills.guitar.toNextLevel);
+}
+
+function updateStats() {
+  var wrapInPTag = function(text, htmlClass) {
+    return "<p class='" + htmlClass + "'>" + text + "</p>";
+  };
+
+  // General Stats
+  var generalStats = document.getElementById("generalStats");
+  generalStats.innerHTML = wrapInPTag("General Stats", "statHeading");
+  generalStats.innerHTML += wrapInPTag("Time Played: " + secondsToDhms(game.player.stats.general.timePlayed), "statRow");
+  generalStats.innerHTML += wrapInPTag("Lifetime Fame: " + game.player.stats.general.fameLifetime, "statRow");
+  generalStats.innerHTML += wrapInPTag("Lifetime Money: " + game.player.stats.general.moneyLifetime, "statRow");
+  generalStats.innerHTML += wrapInPTag("Tasks Completed: " + game.player.stats.general.tasksCompleted, "statRow");
+
+  var laptopStats = document.getElementById("laptopStats");
+  laptopStats.innerHTML = wrapInPTag("Laptop Stats", "statHeading");
+  laptopStats.innerHTML += wrapInPTag("Lifetime Clicks: " + game.player.stats.laptop.clicks, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Lifetime Beats: " + game.player.stats.laptop.beatsLifetime, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Lifetime Samples: " + game.player.stats.laptop.samplesLifetime, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Times Studied: " + game.player.stats.laptop.studiesCompleted, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Times Worked: " + game.player.stats.laptop.workCompleted, "statRow");
+
+  var keyboardStats = document.getElementById("keyboardStats");
+  keyboardStats.innerHTML = wrapInPTag("Keyboard Stats", "statHeading");
+  keyboardStats.innerHTML += wrapInPTag("Lifetime Key Presses: " + game.player.stats.keyboard.keyPresses, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Lifetime Notes: " + game.player.stats.keyboard.notesLifetime, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Lifetime Measures: " + game.player.stats.keyboard.measuresLifetime, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Times Studied: " + game.player.stats.keyboard.studiesCompleted, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Times Worked: " + game.player.stats.keyboard.workCompleted, "statRow");
+}
+
+function updateAchievements() {
+
 }
 
 function appendToOutputContainer(message) {
@@ -191,6 +231,22 @@ function closePopUp() {
   showUiElement("popUpBlocker", "none");
   showUiElement("popUpBox", "none");
   document.getElementById("popUpContent").innerHTML = "";
+}
+
+function newGamePopUp() {
+  var populateFn = function() {
+    var html = "";
+
+    html += "<p class='popUpHeader'>Are you sure you want to start a new game? All progress will be lost.</p>";
+    html += "<div class='popUpRow'>";
+    html += "<button class='popUpButton' onclick='newGame()'>Yes</button>";
+    html += "<button class='popUpButton' onclick='closePopUp()'>No</button>";
+    html += "</div>";
+
+    document.getElementById("popUpContent").innerHTML = html;
+  };
+
+  openPopUp(populateFn);
 }
 
 function startInstrument(instrument) {
