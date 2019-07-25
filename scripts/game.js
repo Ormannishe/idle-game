@@ -66,7 +66,7 @@ function Game() {
   };
   this.jobs = {
     oddJobs: {
-      baseOccuranceRate: 100,
+      baseOccurrenceRate: 100,
       basePay: 10,
       timeToComplete: 60,
       locations: [
@@ -76,7 +76,7 @@ function Game() {
     },
     laptop: {
       freelance: {
-        baseOccuranceRate: 250,
+        baseOccurrenceRate: 250,
         baseFame: 5,
         variableFame: 5,
         basePay: 50,
@@ -89,7 +89,7 @@ function Game() {
         ]
       },
       nightclub: {
-        baseOccuranceRate: 500,
+        baseOccurrenceRate: 500,
         baseFame: 30,
         variableFame: 15,
         basePay: 250,
@@ -103,7 +103,7 @@ function Game() {
     },
     keyboard: {
       freelance: {
-        baseOccuranceRate: 250,
+        baseOccurrenceRate: 250,
         baseFame: 5,
         variableFame: 5,
         basePay: 50,

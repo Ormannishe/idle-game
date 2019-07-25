@@ -496,7 +496,7 @@ function oddJobsEventTrigger(natural) {
 
   if (natural && game.player.jobs.oddJobs.numContracts < game.player.jobs.oddJobs.maxContracts) {
     // The expected number of ticks this event takes to trigger
-    var avgTicks = game.jobs.oddJobs.baseOccuranceRate;
+    var avgTicks = game.jobs.oddJobs.baseOccurrenceRate;
 
     if (Math.random() < 1 / avgTicks) {
       showUiElement("jobTab", "inline");

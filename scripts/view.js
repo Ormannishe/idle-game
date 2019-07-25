@@ -139,11 +139,11 @@ function updateJobStats(instrument) {
     var jobAttributes = game.jobs[instrument][jobType];
     var avgFame = jobAttributes.baseFame + (jobAttributes.variableFame / 2);
     var avgPay = (jobAttributes.basePay + (jobAttributes.variablePay / 2)) * game.player.jobs[instrument].moneyMod;
-    var occurance = getJobChance(instrument, jobType);
+    var occurrence = getJobChance(instrument, jobType);
 
     document.getElementById(instrument + "JobFame").innerHTML = "Average Fame: " + Math.round(avgFame);
     document.getElementById(instrument + "JobWage").innerHTML = "Average Wage: $" + Math.round(avgPay);
-    document.getElementById(instrument + "JobProc").innerHTML = "Average Occurance: " + occurance + " sec";
+    document.getElementById(instrument + "JobProc").innerHTML = "Average Occurrence: " + occurrence + " sec";
   }
 }
 
