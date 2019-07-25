@@ -171,13 +171,13 @@ function updateStats() {
     return "<p class='" + htmlClass + "'>" + text + "</p>";
   };
 
-  // General Stats
   var generalStats = document.getElementById("generalStats");
   generalStats.innerHTML = wrapInPTag("General Stats", "statHeading");
   generalStats.innerHTML += wrapInPTag("Time Played: " + secondsToDhms(game.player.stats.general.timePlayed), "statRow");
   generalStats.innerHTML += wrapInPTag("Lifetime Fame: " + game.player.stats.general.fameLifetime, "statRow");
-  generalStats.innerHTML += wrapInPTag("Lifetime Money: " + game.player.stats.general.moneyLifetime, "statRow");
-  generalStats.innerHTML += wrapInPTag("Tasks Completed: " + game.player.stats.general.tasksCompleted, "statRow");
+  generalStats.innerHTML += wrapInPTag("Lifetime Money: $" + game.player.stats.general.moneyLifetime, "statRow");
+  generalStats.innerHTML += wrapInPTag("Tasks/Upgrades Completed: " + game.player.stats.general.tasksCompleted, "statRow");
+  generalStats.innerHTML += wrapInPTag("Odd Jobs Completed: " + game.player.stats.general.oddJobsCompleted, "statRow");
 
   var laptopStats = document.getElementById("laptopStats");
   laptopStats.innerHTML = wrapInPTag("Laptop Stats", "statHeading");
@@ -185,7 +185,9 @@ function updateStats() {
   laptopStats.innerHTML += wrapInPTag("Lifetime Beats: " + game.player.stats.laptop.beatsLifetime, "statRow");
   laptopStats.innerHTML += wrapInPTag("Lifetime Samples: " + game.player.stats.laptop.samplesLifetime, "statRow");
   laptopStats.innerHTML += wrapInPTag("Times Studied: " + game.player.stats.laptop.studiesCompleted, "statRow");
-  laptopStats.innerHTML += wrapInPTag("Times Worked: " + game.player.stats.laptop.workCompleted, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Contracts Completed: " + game.player.stats.laptop.workCompleted, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Money Made From Contracts: $" + game.player.stats.laptop.workMoney, "statRow");
+  laptopStats.innerHTML += wrapInPTag("Total Experience: " + game.player.stats.laptop.xpGained, "statRow");
 
   var keyboardStats = document.getElementById("keyboardStats");
   keyboardStats.innerHTML = wrapInPTag("Keyboard Stats", "statHeading");
@@ -193,7 +195,9 @@ function updateStats() {
   keyboardStats.innerHTML += wrapInPTag("Lifetime Notes: " + game.player.stats.keyboard.notesLifetime, "statRow");
   keyboardStats.innerHTML += wrapInPTag("Lifetime Measures: " + game.player.stats.keyboard.measuresLifetime, "statRow");
   keyboardStats.innerHTML += wrapInPTag("Times Studied: " + game.player.stats.keyboard.studiesCompleted, "statRow");
-  keyboardStats.innerHTML += wrapInPTag("Times Worked: " + game.player.stats.keyboard.workCompleted, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Contracts Completed: " + game.player.stats.keyboard.workCompleted, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Money Made From Contracts: $" + game.player.stats.keyboard.workMoney, "statRow");
+  keyboardStats.innerHTML += wrapInPTag("Total Experience: " + game.player.stats.keyboard.xpGained, "statRow");
 }
 
 function updateAchievements() {

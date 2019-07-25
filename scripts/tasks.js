@@ -151,12 +151,16 @@ function finishTask(task) {
   if (game.player.completedTasks.indexOf(task.name) == -1)
     game.player.completedTasks.push(task.name);
 
-  if (task.type == "study")
+  if (task.type == "study") {
     game.player.stats[task.instrument].studiesCompleted++;
-  else if (task.type == "job" && task.instrument !== "none")
-    game.player.stats[task.instrument].workCompleted++;
-
-  game.player.stats.general.tasksCompleted++;
+  }
+  else if (task.type == "job") {
+    if (task.instrument !== "none")
+      game.player.stats[task.instrument].workCompleted++;
+  }
+  else {
+    game.player.stats.general.tasksCompleted++;
+  }
 }
 
 function startActiveTask(task) {
@@ -287,6 +291,15 @@ function addResourcesPerTick(resource, numResource, numTicks) {
   if (game.player.activeTask.timeInProgress % numTicks == 0) {
     addResource(resource, numResource);
   }
+}
+
+function addToStats(category, stat, amount) {
+  /*
+    StartFn or FinishFn which updates player stats. Category should be either
+    'general' or an instrument. Stat should be the specific stat to update by
+    the given amount.
+  */
+  game.player.stats[category][stat] += amount;
 }
 
 /* ------ TASKS ------
@@ -600,7 +613,8 @@ function oddJobsTask(context) {
   var finishFns = [
     partial(addResource, "money", jobAttributes.basePay),
     partial(appendToOutputContainer, "After an hour of labor, you take home a measly " + jobAttributes.basePay + " bucks."),
-    updateContractsFn
+    updateContractsFn,
+    partial(addToStats, "general", "oddJobsCompleted", 1)
   ];
 
   var tooltip = {
@@ -613,6 +627,8 @@ function oddJobsTask(context) {
 
   return {
     name: context.taskName,
+    type: context.taskType,
+    instrument: context.instrument,
     finishFns: finishFns,
     timeToComplete: jobAttributes.timeToComplete,
     tooltip: tooltip
@@ -738,7 +754,8 @@ function workJobTask(context) {
     partial(addResource, "money", moneyReward),
     partial(addResource, "fame", fameReward),
     partial(appendToOutputContainer, outputText),
-    updateContractsFn
+    updateContractsFn,
+    partial(addToStats, context.instrument, "workMoney", moneyReward)
   ];
 
   var tooltip = {

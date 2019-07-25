@@ -138,7 +138,7 @@ function saveGame() {
   // Serialize UI data
   window.localStorage.setItem('uiData', JSON.stringify(uiData));
   window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
-  window.localStorage.setItem('version', gameVersion);
+  window.localStorage.setItem('version', JSON.stringify(gameVersion));
 }
 
 function loadGame() {

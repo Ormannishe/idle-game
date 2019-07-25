@@ -130,27 +130,34 @@ function Player() {
       timePlayed: 0, // in seconds
       fameLifetime: 0,
       moneyLifetime: 0,
-      tasksCompleted: 0
+      tasksCompleted: 0,
+      oddJobsCompleted: 0
     },
     laptop: {
       clicks: 0,
       beatsLifetime: 0,
       samplesLifetime: 0,
       studiesCompleted: 0,
-      workCompleted: 0
+      workCompleted: 0,
+      workMoney: 0,
+      xpGained: 0
     },
     keyboard: {
       keyPresses: 0,
       notesLifetime: 0,
       measuresLifetime: 0,
       studiesCompleted: 0,
-      workCompleted: 0
+      workCompleted: 0,
+      workMoney: 0,
+      xpGained: 0
     }
   };
 };
 
 function addXp(skill, amount) {
   game.player.skills[skill].xp += amount;
+  game.player.stats[skill].xpGained += amount;
+
   while (game.player.skills[skill].toNextLevel <= game.player.skills[skill].xp) {
     game.player.skills[skill].xp -= game.player.skills[skill].toNextLevel;
     game.player.skills[skill].level++;
