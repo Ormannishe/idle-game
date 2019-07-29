@@ -416,7 +416,6 @@ function levelFourteenLaptopTrigger() {
 
     appendToOutputContainer("You're starting to become well known as a freelance artist, but your sound is destined for a larger venue.");
     addTask(context);
-    addTrigger(nightclubDJEventTrigger);
     addTrigger(levelFifteenLaptopTrigger);
     return true;
   }
@@ -569,9 +568,6 @@ function DJEventTrigger(natural) {
         addTask(context);
         addTrigger(DJEventTrigger);
         return true;
-      }
-      else {
-        appendToOutputContainer("You had to turn down a " + jobType + " DJ opportunity because you already have too many open contracts!");
       }
     }
   }
