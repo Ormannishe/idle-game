@@ -67,7 +67,7 @@ function Game() {
   this.jobs = {
     oddJobs: {
       baseOccurrenceRate: 100,
-      basePay: 10,
+      basePay: 20,
       timeToComplete: 60,
       locations: [
         "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",

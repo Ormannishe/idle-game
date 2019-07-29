@@ -618,7 +618,7 @@ function oddJobsTask(context) {
   ];
 
   var tooltip = {
-    "description": "Rewards $10.",
+    "description": "Rewards $" + jobAttributes.basePay + ".",
     "cost": {
       "Time": jobAttributes.timeToComplete
     },
