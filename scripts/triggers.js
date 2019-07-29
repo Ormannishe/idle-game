@@ -63,7 +63,7 @@ There are two types of triggers:
 */
 
 function firstBeatTrigger() {
-  if (game.player.stats.beats.lifetime >= 1) {
+  if (game.player.stats.laptop.beatsLifetime >= 1) {
     showUiElement("beats", "block");
     appendToOutputContainer("You've created your first beat. A building block to something greater.");
     addTrigger(tenthBeatTrigger);
@@ -72,7 +72,7 @@ function firstBeatTrigger() {
 }
 
 function tenthBeatTrigger() {
-  if (game.player.stats.beats.lifetime >= 10) {
+  if (game.player.stats.laptop.beatsLifetime >= 10) {
     appendToOutputContainer("You're starting to get the hang of this...");
     addTrigger(firstSampleTrigger);
     addTrigger(fiftiethBeatTrigger);
@@ -82,7 +82,7 @@ function tenthBeatTrigger() {
 
 function fiftiethBeatTrigger() {
   // TODO: What does this do now? Achievement?
-  if (game.player.stats.beats.lifetime >= 50) {
+  if (game.player.stats.laptop.beatsLifetime >= 50) {
     addTrigger(hundredthBeatTrigger);
     return true;
   }
@@ -90,7 +90,7 @@ function fiftiethBeatTrigger() {
 
 function hundredthBeatTrigger() {
   // TODO: What does this do now? Achievement?
-  if (game.player.stats.beats.lifetime >= 100) {
+  if (game.player.stats.laptop.beatsLifetime >= 100) {
     addTrigger(fiveHundredthBeatTrigger);
     return true;
   }
@@ -98,7 +98,7 @@ function hundredthBeatTrigger() {
 
 function fiveHundredthBeatTrigger() {
   // TODO: What does this do now? Achievement?
-  if (game.player.stats.beats.lifetime >= 500) {
+  if (game.player.stats.laptop.beatsLifetime >= 500) {
     addTrigger(thousandthBeatTrigger);
     return true;
   }
@@ -106,7 +106,7 @@ function fiveHundredthBeatTrigger() {
 
 function thousandthBeatTrigger() {
   // TODO: What does this do now? Achievement?
-  if (game.player.stats.beats.lifetime >= 1000) {
+  if (game.player.stats.laptop.beatsLifetime >= 1000) {
     appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
     return true;
   }
@@ -117,7 +117,7 @@ function thousandthBeatTrigger() {
 */
 
 function firstNoteTrigger() {
-  if (game.player.stats.notes.lifetime >= 1) {
+  if (game.player.stats.keyboard.notesLifetime >= 1) {
     appendToOutputContainer("You've played your first note! Practice will lead to beautiful music.");
     showUiElement("notes", "block");
     addTrigger(firstMeasureTrigger);
@@ -126,7 +126,7 @@ function firstNoteTrigger() {
 }
 
 function hundredthNoteTrigger() {
-  if (game.player.stats.notes.lifetime >= 100) {
+  if (game.player.stats.keyboard.notesLifetime >= 100) {
     appendToOutputContainer("One hundred notes later, and you can almost play with both hands!");
     addTrigger(thousandthNoteTrigger);
     return true;
@@ -134,7 +134,7 @@ function hundredthNoteTrigger() {
 }
 
 function thousandthNoteTrigger() {
-  if (game.player.stats.notes.lifetime >= 1000) {
+  if (game.player.stats.keyboard.notesLifetime >= 1000) {
     appendToOutputContainer("As you play your thousandth note, you realize you've gotten quite good at this.");
     return true;
   }
@@ -416,7 +416,6 @@ function levelFourteenLaptopTrigger() {
 
     appendToOutputContainer("You're starting to become well known as a freelance artist, but your sound is destined for a larger venue.");
     addTask(context);
-    addTrigger(nightclubDJEventTrigger);
     addTrigger(levelFifteenLaptopTrigger);
     return true;
   }
@@ -496,7 +495,7 @@ function oddJobsEventTrigger(natural) {
 
   if (natural && game.player.jobs.oddJobs.numContracts < game.player.jobs.oddJobs.maxContracts) {
     // The expected number of ticks this event takes to trigger
-    var avgTicks = game.jobs.oddJobs.baseOccuranceRate;
+    var avgTicks = game.jobs.oddJobs.baseOccurrenceRate;
 
     if (Math.random() < 1 / avgTicks) {
       showUiElement("jobTab", "inline");
@@ -569,9 +568,6 @@ function DJEventTrigger(natural) {
         addTask(context);
         addTrigger(DJEventTrigger);
         return true;
-      }
-      else {
-        appendToOutputContainer("You had to turn down a " + jobType + " DJ opportunity because you already have too many open contracts!");
       }
     }
   }
