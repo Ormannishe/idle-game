@@ -38,7 +38,7 @@ function Player() {
   };
   this.songs = [];
   this.albums = [];
-  this.achievements = [];
+  this.achievements = {};
   this.instruments = {
     active: "laptop",
     laptop: {
@@ -204,4 +204,61 @@ function removeResource(resource, amount) {
 
   game.player.resources[resource].amount -= amount;
   updateView();
+}
+
+function unlockAchievement(achievementId) {
+  /*
+    Add the given achievementId to the player object before initializing the
+    achivement content. Once initialized, hide the lock icon and show the content.
+  */
+  game.player.achievements[achievementId] = 0;
+  initAchievement(achievementId);
+  showUiElement(achievementId + "AchievementLock", "none");
+  showUiElement(achievementId + "ImgContainer", "block");
+  showUiElement(achievementId + "ContentContainer", "block");
+}
+
+function initAchievement(achievementId) {
+  /*
+    Initialize the content for the given achievementId. Content populated
+    (ie. description, flavor, goal amount) depends on the current rank of the
+    achievement.
+
+    If all ranks of the achievement have already been earned, update the
+    description to communicate that to the player.
+  */
+  var achievement = game.achievements[achievementId];
+  var rank = achievement.ranks[game.player.achievements[achievementId]];
+
+  if (rank !== undefined) {
+    var progress = document.getElementById(achievementId + "AchievementProgress");
+
+    progress.max = achievement[rank].amount;
+    document.getElementById(achievementId + "AchievementDescription").innerHTML = achievement[rank].description;
+    document.getElementById(achievementId + "AchievementFlavor").innerHTML = achievement[rank].flavor;
+  }
+  else {
+    var description = document.getElementById(achievementId + "AchievementDescription");
+    description.innerHTML += " (All ranks completed!)";
+  }
+}
+
+function awardAchievement(achievementId) {
+  /*
+    Award the player with the current rank of the given achievementId. Show the
+    star for the appropriate rank (bronze, silver, gold or platinum) and
+    increment the current rank by 1. Reinitialize the achievement to show the
+    content for the new rank.
+  */
+  // TODO: Pop Up for Achievements
+  var achievement = game.achievements[achievementId];
+  var currentRank = achievement.ranks[game.player.achievements[achievementId]];
+
+  if (currentRank !== undefined) {
+    var starId = achievementId + capitalize(currentRank);
+
+    showUiElement(starId, "block");
+    game.player.achievements[achievementId] = game.player.achievements[achievementId] + 1;
+    initAchievement(achievementId);
+  }
 }

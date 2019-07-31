@@ -114,6 +114,77 @@ function Game() {
       }
     }
   };
+  this.achievements = {
+    beats: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 100,
+        description: "Create 100 Beats.",
+        flavor: "Seems achieveable..."
+      },
+      silver: {
+        amount: 1000,
+        description: "Create 1000 Beats.",
+        flavor: "A small amount of beats, in the grand scheme."
+      },
+      gold: {
+        amount: 10000,
+        description: "Create 10000 Beats.",
+        flavor: "Surely this will be enough..."
+      },
+      platinum: {
+        amount: 100000,
+        description: "Create 100000 Beats.",
+        flavor: "Doesn't this seem a little excessive?"
+      }
+    },
+    samples: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 10,
+        description: "Create 10 Samples.",
+        flavor: "Honestly, I've eaten more free samples in a single shopping trip."
+      },
+      silver: {
+        amount: 100,
+        description: "Create 100 Samples.",
+        flavor: "At this point, other people in the store are staring at you."
+      },
+      gold: {
+        amount: 1000,
+        description: "Create 1000 Samples.",
+        flavor: "This is about the point where the clerk asks you to stop."
+      },
+      platinum: {
+        amount: 10000,
+        description: "Create 10000 Samples.",
+        flavor: "You're not allowed in Costco anymore."
+      }
+    },
+    songs: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 1,
+        description: "Create A Song.",
+        flavor: "All musicians remember their first song, unfortunately."
+      },
+      silver: {
+        amount: 10,
+        description: "Create 10 Songs.",
+        flavor: "You might actually be getting good at this."
+      },
+      gold: {
+        amount: 100,
+        description: "Create 100 Songs.",
+        flavor: "At this point, someone must like at least one of your songs..."
+      },
+      platinum: {
+        amount: 1000,
+        description: "Create 1000 Songs.",
+        flavor: "How haven't you run out of ideas yet?"
+      }
+    },
+  };
 };
 
 function newGame() {
@@ -177,6 +248,10 @@ function loadGame() {
     outputContainer.innerHTML = textLog;
     outputContainer.scrollTop = outputContainer.scrollHeight;
     toggleTab(activeInstrument, "instrument");
+
+    for (var key in game.player.achievements) {
+      initAchievement(key);
+    }
   }
   else {
     newGame();

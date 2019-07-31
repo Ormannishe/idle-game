@@ -65,6 +65,7 @@ There are two types of triggers:
 function firstBeatTrigger() {
   if (game.player.stats.laptop.beatsLifetime >= 1) {
     showUiElement("beats", "block");
+    unlockAchievement("beats");
     appendToOutputContainer("You've created your first beat. A building block to something greater.");
     addTrigger(tenthBeatTrigger);
     return true;

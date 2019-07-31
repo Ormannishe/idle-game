@@ -201,7 +201,30 @@ function updateStats() {
 }
 
 function updateAchievements() {
+  updateAchievementProgress("beats", game.player.stats.laptop.beatsLifetime);
+  updateAchievementProgress("samples", game.player.stats.laptop.samplesLifetime);
+}
 
+function updateAchievementProgress(achievementId, value) {
+  /*
+    Update the progress bar of the given achievementId to the given value.
+    No updates will occur if the player hasn't unlocked the given achievement,
+    or if the maximum rank for the achievement has already been earned.
+
+    If the passed in value is greater than the maximum value for the progress
+    bar (ie. the user has met the achievement requirement), award the achievement
+    to the player and initiaize the next rank of the achievement.
+  */
+  var currRank = game.player.achievements[achievementId];
+
+  if (currRank !== undefined && game.achievements[achievementId].ranks[currRank] !== undefined) {
+    var progress = document.getElementById(achievementId + "AchievementProgress");
+
+    progress.value = value;
+
+    if (value >= progress.max)
+      awardAchievement(achievementId);
+  }
 }
 
 function appendToOutputContainer(message) {
