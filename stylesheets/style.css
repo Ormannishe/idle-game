@@ -206,10 +206,10 @@ button:focus, input:focus {
   color: white;
   background-color: var(--my-background-color);
   left: 35%;
-  top: 85%;
   width: 30%;
   height: 13%;
   background-color: #222222;
+  opacity: 0;
 }
 
 #achievementPopUpContent {
@@ -221,8 +221,8 @@ button:focus, input:focus {
 #achievementPopUpImgContainer {
   height: 100%;
   width: 25%;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #achievementPopUpImg {
@@ -246,7 +246,7 @@ button:focus, input:focus {
 #achievementTitle {
   text-align: center;
   font-size: 20px;
-  margin-right: 5px;
+  margin-right: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #aaaaaa;
 }
@@ -255,7 +255,28 @@ button:focus, input:focus {
   text-align: center;
   font-size: 14px;
   margin-top: 10px;
+  margin-right: 10px;
+}
 
+/* Achievement Pop Up Animation */
+.achievementPopUpAnimation {
+  animation-name: achievementPopUpAnimation;
+  animation-duration: 5s;
+}
+
+@keyframes achievementPopUpAnimation {
+  0% { top: 100%;
+       opacity: 1;
+     }
+  10% { top: 85%;
+        opacity: 1;
+      }
+  90% { top: 85%;
+        opacity: 1;
+      }
+  100% { opacity: 0;
+         top: 85%;
+       }
 }
 
 /* Notification Animation */
