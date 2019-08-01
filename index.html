@@ -19,10 +19,22 @@
 <body>
 	<div id='tooltip'></div>
 	<div id='popUpBox'>
-		<button id='closePopUp' onclick="closePopUp()">x</button>
+		<button class='closePopUp' onclick="closePopUp()">x</button>
 		<div id='popUpContent'></div>
 	</div>
 	<div id='popUpBlocker'></div>
+	<div id='achievementPopUp'>
+		<button id="achievementPopUpRank" class="goldRank"></button>
+		<div id='achievementPopUpContent'>
+			<div id="achievementPopUpImgContainer">
+				<div id="achievementPopUpImg"></div>
+			</div>
+			<div id="achievementPopUpContentContainer">
+				<p id="achievementTitle">Achievement Earned!</p>
+				<p id="achievementPopUpDescription">Create 1000 beats.</p>
+			</div>
+		</div>
+	</div>
 	<div class='column'>
 		<div id='clickContainer' class='row'>
 			<div id='instrumentTabContainer'>

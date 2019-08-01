@@ -239,7 +239,8 @@ function initAchievement(achievementId) {
   }
   else {
     var description = document.getElementById(achievementId + "AchievementDescription");
-    description.innerHTML += " (All ranks completed!)";
+    var prevRank = achievement.ranks[game.player.achievements[achievementId] - 1];
+    description.innerHTML += achievement[prevRank].description + " (All ranks completed!)";
   }
 }
 
