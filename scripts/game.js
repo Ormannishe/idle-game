@@ -123,18 +123,18 @@ function Game() {
         flavor: "Seems achieveable..."
       },
       silver: {
-        amount: 1000,
-        description: "Create 1000 Beats.",
+        amount: 500,
+        description: "Create 500 Beats.",
         flavor: "A small amount of beats, in the grand scheme."
       },
       gold: {
-        amount: 10000,
-        description: "Create 10000 Beats.",
+        amount: 1000,
+        description: "Create 1000 Beats.",
         flavor: "Surely this will be enough..."
       },
       platinum: {
-        amount: 100000,
-        description: "Create 100000 Beats.",
+        amount: 5000,
+        description: "Create 5000 Beats.",
         flavor: "Doesn't this seem a little excessive?"
       }
     },

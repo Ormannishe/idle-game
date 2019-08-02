@@ -240,7 +240,7 @@ function initAchievement(achievementId) {
   else {
     var description = document.getElementById(achievementId + "AchievementDescription");
     var prevRank = achievement.ranks[game.player.achievements[achievementId] - 1];
-    description.innerHTML += achievement[prevRank].description + " (All ranks completed!)";
+    description.innerHTML = achievement[prevRank].description + " (All ranks completed!)";
   }
 }
 
@@ -259,6 +259,7 @@ function awardAchievement(achievementId) {
     var starId = achievementId + capitalize(currentRank);
 
     showUiElement(starId, "block");
+    awardAchievementPopUp(achievementId);
     game.player.achievements[achievementId] = game.player.achievements[achievementId] + 1;
     initAchievement(achievementId);
   }

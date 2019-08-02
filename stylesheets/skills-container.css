@@ -172,7 +172,7 @@
   align-items: center;
 }
 
-.bronzeRank, .silverRank, .goldRank, .platRank {
+.bronzeRank, .silverRank, .goldRank, .platinumRank {
   border: none;
   background: transparent;
   background-position: center; /* Center the image */
@@ -197,7 +197,7 @@
   background-image: url("../resources/images/gold_star.png");
 }
 
-.platRank {
+.platinumRank {
   background-image: url("../resources/images/platinum_star.png");
 }
 

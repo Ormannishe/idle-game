@@ -217,13 +217,18 @@ function updateAchievementProgress(achievementId, value) {
   */
   var currRank = game.player.achievements[achievementId];
 
-  if (currRank !== undefined && game.achievements[achievementId].ranks[currRank] !== undefined) {
+  if (currRank !== undefined) {
     var progress = document.getElementById(achievementId + "AchievementProgress");
 
-    progress.value = value;
+    if (game.achievements[achievementId].ranks[currRank] !== undefined) {
+      progress.value = value;
 
-    if (value >= progress.max)
-      awardAchievement(achievementId);
+      if (value >= progress.max)
+        awardAchievement(achievementId);
+    }
+    else {
+      progress.value = progress.max;
+    }
   }
 }
 
@@ -274,6 +279,21 @@ function newGamePopUp() {
   };
 
   openPopUp(populateFn);
+}
+
+function awardAchievementPopUp(achievementId) {
+  var popUp = document.getElementById("achievementPopUp");
+  var achievement = game.achievements[achievementId];
+  var rank = achievement.ranks[game.player.achievements[achievementId]];
+
+  if (rank !== undefined) {
+    // TODO: Change image
+    document.getElementById("achievementPopUpDescription").innerHTML = achievement[rank].description;
+    document.getElementById("achievementPopUpRank").classList.add(rank + "Rank");
+    popUp.classList.remove("achievementPopUpAnimation");
+    void popUp.offsetWidth; // css magic to allow replay of the animation
+    popUp.classList.add("achievementPopUpAnimation");
+  }
 }
 
 function startInstrument(instrument) {
