@@ -9,6 +9,82 @@
 var gameVersion = "0.0.1";
 var uiData = {};
 
+function newGame() {
+  // Erases save data and creates a new game object
+  if (window.localStorage.getItem('playerData') !== null)
+    eraseSave();
+
+  game = new Game();
+  initTriggers();
+  initAchievements();
+  unlockAchievement("fame");
+  unlockAchievement("money");
+  startInstrument(game.player.instruments.active);
+}
+
+function saveGame() {
+  /*
+    Serializes and stores all necessary player data in local storage.
+    Stored data requires deserialization in the loadGame function.
+  */
+
+  // Serialize regular player data
+  window.localStorage.setItem('playerData', JSON.stringify(game.player));
+
+  // Serialize UI data
+  window.localStorage.setItem('uiData', JSON.stringify(uiData));
+  window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
+  window.localStorage.setItem('version', JSON.stringify(gameVersion));
+}
+
+function loadGame() {
+  /*
+    Deserializes local storage and restores game state.
+    If no save data is found, starts a new game.
+  */
+
+  var playerData = JSON.parse(window.localStorage.getItem('playerData'));
+  var uiData = JSON.parse(window.localStorage.getItem('uiData'));
+  var textLog = JSON.parse(window.localStorage.getItem('textLog'));
+  var version = JSON.parse(window.localStorage.getItem('version')); // TODO: Check saved version vs. current version
+
+  if (playerData !== null) {
+    // Restore game state
+    game = new Game();
+    // TODO: Before overwriting the default player object, merge in keys/values
+    // that are missing from the stored player object
+    game.player = playerData;
+    initAchievements();
+
+    // Apply UI Changes
+    var outputContainer = document.getElementById('outputContainer');
+    var activeInstrument = game.player.instruments.active;
+
+    for (var key in uiData) {
+      showUiElement(key, uiData[key]);
+    }
+
+    if (game.player.activeTask !== undefined) {
+      var task = getTaskFromContext(game.player.activeTask);
+      document.getElementById('taskLabel').innerHTML = game.player.activeTask.taskName;
+      document.getElementById('taskProgress').value = game.player.activeTask.timeInProgress;
+      document.getElementById('taskProgress').max = task.timeToComplete;
+    }
+
+    outputContainer.innerHTML = textLog;
+    outputContainer.scrollTop = outputContainer.scrollHeight;
+    toggleTab(activeInstrument, "instrument");
+  }
+  else {
+    newGame();
+  }
+}
+
+function eraseSave() {
+  window.localStorage.clear();
+  location.reload(); // required to reload original HTML
+}
+
 function Game() {
   this.player = new Player();
   this.resources = {
@@ -45,7 +121,6 @@ function Game() {
       xpPer: 500
     }
   };
-  this.activeInstrument = "laptop";
   this.instruments = {
     laptop: {
       maxMultiplier: 10,
@@ -95,6 +170,7 @@ function Game() {
         basePay: 250,
         variablePay: 50,
         baseXp: 250,
+        timeToComplete: 180,
         locations: [
           "The Revision", "Rampage", "The Roxberry", "Nebula Nightclub",
           "The Jungle", "Infinity", "Club Liquid", "Pulse", "Green Door"
@@ -115,50 +191,142 @@ function Game() {
     }
   };
   this.achievements = {
-    beats: {
+    fame: {
       ranks: ["bronze", "silver", "gold", "platinum"],
       bronze: {
         amount: 100,
-        description: "Create 100 Beats.",
-        flavor: "Seems achieveable..."
+        description: "Gain 100 Fame.",
+        flavor: "Look mom, I'm famous!"
       },
       silver: {
-        amount: 500,
-        description: "Create 500 Beats.",
-        flavor: "A small amount of beats, in the grand scheme."
+        amount: 10000,
+        description: "Gain 10,000 Fame.",
+        flavor: "Your grandma still has no idea what you do."
       },
       gold: {
-        amount: 1000,
-        description: "Create 1000 Beats.",
-        flavor: "Surely this will be enough..."
+        amount: 1000000,
+        description: "Gain 1,000,000 Fame.",
+        flavor: "Do you think T-Swift knows who you are?"
       },
       platinum: {
-        amount: 5000,
-        description: "Create 5000 Beats.",
-        flavor: "Doesn't this seem a little excessive?"
+        amount: 100000000,
+        description: "Gain 100,000,000 Fame.",
+        flavor: "Everyone will know your name."
+      }
+    },
+    money: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 1000,
+        description: "Earn $1000.",
+        flavor: "Don't quit your day job."
+      },
+      silver: {
+        amount: 50000,
+        description: "Earn $50,000.",
+        flavor: "And your mom said music wasn't a career."
+      },
+      gold: {
+        amount: 1000000,
+        description: "Earn $1,000,000.",
+        flavor: "Me millionth dollar!"
+      },
+      platinum: {
+        amount: 50000000,
+        description: "Earn $50,000,000.",
+        flavor: "I guess you could say you made it."
+      }
+    },
+    beats: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 1000,
+        description: "Create 1,000 Beats.",
+        flavor: "Those are some lukewarm beats."
+      },
+      silver: {
+        amount: 10000,
+        description: "Create 10,000 Beats.",
+        flavor: "Is it getting hot in here are is it just your beats?"
+      },
+      gold: {
+        amount: 100000,
+        description: "Create 100,000 Beats.",
+        flavor: "The fire departmant has recieved a few calls regarding your beats."
+      },
+      platinum: {
+        amount: 1000000,
+        description: "Create 1,000,000 Beats.",
+        flavor: "Your beats are significantly contributing to global warming."
       }
     },
     samples: {
       ranks: ["bronze", "silver", "gold", "platinum"],
       bronze: {
-        amount: 10,
-        description: "Create 10 Samples.",
-        flavor: "Honestly, I've eaten more free samples in a single shopping trip."
-      },
-      silver: {
         amount: 100,
         description: "Create 100 Samples.",
-        flavor: "At this point, other people in the store are staring at you."
+        flavor: "The only way to be accepted as a true DJ."
+      },
+      silver: {
+        amount: 1000,
+        description: "Create 1,000 Samples.",
+        flavor: "Apparently required to hang out with Daft Punk."
       },
       gold: {
-        amount: 1000,
-        description: "Create 1000 Samples.",
-        flavor: "This is about the point where the clerk asks you to stop."
+        amount: 10000,
+        description: "Create 10,000 Samples.",
+        flavor: "Required to gain access to the secret DJ society."
       },
       platinum: {
+        amount: 100000,
+        description: "Create 100,000 Samples.",
+        flavor: "Legends say this is how you gain passage to DJ Heaven."
+      }
+    },
+    notes: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 1000,
+        description: "Create 1,000 Notes.",
+        flavor: "Mary had a little lamb."
+      },
+      silver: {
         amount: 10000,
-        description: "Create 10000 Samples.",
-        flavor: "You're not allowed in Costco anymore."
+        description: "Create 10,000 Notes.",
+        flavor: "TODO"
+      },
+      gold: {
+        amount: 100000,
+        description: "Create 100,000 Notes.",
+        flavor: "TODO"
+      },
+      platinum: {
+        amount: 1000000,
+        description: "Create 1,000,000 Notes.",
+        flavor: "Your vision is slowly turning black and white."
+      }
+    },
+    measures: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 100,
+        description: "Create 100 Measures.",
+        flavor: "Just listen to the ticking of the metronome."
+      },
+      silver: {
+        amount: 1000,
+        description: "Create 1,000 Measures.",
+        flavor: "No matter where you go, you hear the ticking."
+      },
+      gold: {
+        amount: 10000,
+        description: "Create 10,000 Samples.",
+        flavor: "Your mind is not your own, while the metronome tolls."
+      },
+      platinum: {
+        amount: 100000,
+        description: "Create 100,000 Samples.",
+        flavor: "The notes... play... themselves..."
       }
     },
     songs: {
@@ -169,96 +337,29 @@ function Game() {
         flavor: "All musicians remember their first song, unfortunately."
       },
       silver: {
-        amount: 10,
-        description: "Create 10 Songs.",
+        amount: 5,
+        description: "Create 5 Songs.",
         flavor: "You might actually be getting good at this."
       },
       gold: {
-        amount: 100,
-        description: "Create 100 Songs.",
+        amount: 25,
+        description: "Create 25 Songs.",
         flavor: "At this point, someone must like at least one of your songs..."
       },
       platinum: {
-        amount: 1000,
-        description: "Create 1000 Songs.",
+        amount: 100,
+        description: "Create 100 Songs.",
         flavor: "How haven't you run out of ideas yet?"
       }
     },
+    cheat: {
+      ranks: ["platinum"],
+      platinum: {
+        amount: 1,
+        description: "Cheater.",
+        flavor: "Nobody is impressed."
+      },
+      hidden: true
+    },
   };
 };
-
-function newGame() {
-  // Erases save data and creates a new game object
-  if (window.localStorage.getItem('playerData') !== null)
-    eraseSave();
-
-  game = new Game();
-  initTriggers();
-  startInstrument(game.player.instruments.active);
-}
-
-function saveGame() {
-  /*
-    Serializes and stores all necessary player data in local storage.
-    Stored data requires deserialization in the loadGame function.
-  */
-
-  // Serialize regular player data
-  window.localStorage.setItem('playerData', JSON.stringify(game.player));
-
-  // Serialize UI data
-  window.localStorage.setItem('uiData', JSON.stringify(uiData));
-  window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
-  window.localStorage.setItem('version', JSON.stringify(gameVersion));
-}
-
-function loadGame() {
-  /*
-    Deserializes local storage and restores game state.
-    If no save data is found, starts a new game.
-  */
-
-  var playerData = JSON.parse(window.localStorage.getItem('playerData'));
-  var uiData = JSON.parse(window.localStorage.getItem('uiData'));
-  var textLog = JSON.parse(window.localStorage.getItem('textLog'));
-  var version = JSON.parse(window.localStorage.getItem('version')); // TODO: Check saved version vs. current version
-
-  if (playerData !== null) {
-    // Restore game state
-    game = new Game();
-    // TODO: Before overwriting the default player object, merge in keys/values
-    // that are missing from the stored player object
-    game.player = playerData;
-
-    // Apply UI Changes
-    var outputContainer = document.getElementById('outputContainer');
-    var activeInstrument = game.player.instruments.active;
-
-    for (var key in uiData) {
-      showUiElement(key, uiData[key]);
-    }
-
-    if (game.player.activeTask !== undefined) {
-      var task = getTaskFromContext(game.player.activeTask);
-      document.getElementById('taskLabel').innerHTML = game.player.activeTask.taskName;
-      document.getElementById('taskProgress').value = game.player.activeTask.timeInProgress;
-      document.getElementById('taskProgress').max = task.timeToComplete;
-    }
-
-    outputContainer.innerHTML = textLog;
-    outputContainer.scrollTop = outputContainer.scrollHeight;
-    toggleTab(activeInstrument, "instrument");
-
-    for (var key in game.player.achievements) {
-      initAchievement(key);
-    }
-  }
-  else {
-    newGame();
-  }
-}
-
-function eraseSave() {
-  window.localStorage.clear();
-  location.reload(); // required to reload original HTML
-}

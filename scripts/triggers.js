@@ -25,7 +25,6 @@ function initTriggers() {
   addTrigger(oddJobsEventTrigger);
   addTrigger(firstBeatTrigger);
   addTrigger(levelTwoLaptopTrigger);
-  addTrigger(unlockNightclubTrigger);
 }
 
 function checkTriggers(natural) {
@@ -121,6 +120,7 @@ function firstNoteTrigger() {
   if (game.player.stats.keyboard.notesLifetime >= 1) {
     appendToOutputContainer("You've played your first note! Practice will lead to beautiful music.");
     showUiElement("notes", "block");
+    unlockAchievement("notes");
     addTrigger(firstMeasureTrigger);
     return true;
   }
@@ -468,10 +468,9 @@ function thousandDollarTrigger() {
   ---- Fame Progression -----
 */
 
-function unlockNightclubTrigger() {
-  // Achievement for 100 Fame ?
-  if (game.player.resources.fame.amount >= 100) {
-
+function firstFameTrigger() {
+  // TODO: Why
+  if (game.player.resources.fame.amount >= 1) {
     return true;
   }
 }

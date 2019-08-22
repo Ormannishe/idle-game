@@ -191,7 +191,14 @@
 					<p id='measuresAll'>-</p>
 				</div>
 			</div>
-			<div id="songsContent" class="resourceContent"></div>
+			<div id="songsContent" class="resourceContent">
+				<div id="songsHeader">
+					<p id="totalSongRevenue">Total Song Revenue: $0</p>
+					<button id="newSongButton" onclick="doTask('Make New Song')" onmouseover="showTooltip(this, 'Make New Song')" onmouseout="hideTooltip()">Make New Song</button>
+				</div>
+				<div id="songsList">
+				</div>
+			</div>
 			<div id="albumsContent" class="resourceContent"></div>
 		</div>
 	</div>
@@ -299,63 +306,12 @@
 					<button id="newGameButton" onclick="newGamePopUp()">New Game</button>
 				</div>
 			</div>
-			<div id="achievementContent" class="statContent">
-				<div id="beatsAchievement" class="achievementContainer">
-					<div id="beatsAchievementLock" class="achievementLock"></div>
-					<div id="beatsImgContainer" class="achievementImgContainer">
-						<div class="achievementImg"></div>
-						<div class="achievementRankContainer">
-							<button id="beatsBronze" class="bronzeRank"></button>
-							<button id="beatsSilver" class="silverRank"></button>
-							<button id="beatsGold" class="goldRank"></button>
-							<button id="beatsPlatinum" class="platinumRank"></button>
-						</div>
-					</div>
-					<div id="beatsContentContainer" class="achievementContentContainer">
-						<p id="beatsAchievementDescription" class="achievementDescription"></p>
-						<progress id="beatsAchievementProgress" class='achievementProgress' value='0' , max='10'></progress>
-						<p id="beatsAchievementFlavor" class="achievementFlavor"></p>
-					</div>
-				</div>
-				<div id="samplesAchievement" class="achievementContainer">
-					<div id="samplesAchievementLock" class="achievementLock"></div>
-					<div id="samplesImgContainer" class="achievementImgContainer">
-						<div class="achievementImg"></div>
-						<div class="achievementRankContainer">
-							<button id="samplesBronze" class="bronzeRank"></button>
-							<button id="samplesSilver" class="silverRank"></button>
-							<button id="samplesGold" class="goldRank"></button>
-							<button id="samplesPlatinum" class="platinumRank"></button>
-						</div>
-					</div>
-					<div id="samplesContentContainer" class="achievementContentContainer">
-						<p id="samplesAchievementDescription" class="achievementDescription"></p>
-						<progress id="samplesAchievementProgress" class='achievementProgress' value='0' , max='10'></progress>
-						<p id="samplesAchievementFlavor" class="achievementFlavor"></p>
-					</div>
-				</div>
-				<div id="songsAchievement" class="achievementContainer">
-					<div id="songsAchievementLock" class="achievementLock"></div>
-					<div id="songsImgContainer" class="achievementImgContainer">
-						<div class="achievementImg"></div>
-						<div class="achievementRankContainer">
-							<button id="songsBronze" class="bronzeRank"></button>
-							<button id="songsSilver" class="silverRank"></button>
-							<button id="songsGold" class="goldRank"></button>
-							<button id="songsPlatinum" class="platinumRank"></button>
-						</div>
-					</div>
-					<div id="songsContentContainer" class="achievementContentContainer">
-						<p id="songsAchievementDescription" class="achievementDescription"></p>
-						<progress id="songsAchievementProgress" class='achievementProgress' value='0' , max='10'></progress>
-						<p id="songsAchievementFlavor" class="achievementFlavor"></p>
-					</div>
-				</div>
-			</div>
+			<div id="achievementContent" class="statContent"></div>
 		</div>
 	</div>
 </body>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+<script src='resources/scripts/mustache.js'></script>
 <script src='scripts/main.js'></script>
 <script src='scripts/view.js'></script>
 <script src='scripts/game.js'></script>
@@ -367,4 +323,38 @@
 <script src='scripts/tasks.js'></script>
 <script src='scripts/song.js'></script>
 
+<!-- HTML Templates -->
+<script id="taskButtonTemplate" type="text/template">
+	<button class="{{class}}" onclick="doTask('{{name}}')" onmouseover="showTooltip(this, '{{name}}')" onmouseout="hideTooltip()">{{name}}</button>
+</script>
+<script id="songTemplate" type="text/template">
+	<div class="songRow">
+		<p class="songTitle">{{name}}</p>
+		<div class="songContent">
+			<p>Quality: {{quality}}</p>
+			<p>Popularity: {{popularity}}</p>
+			<p>Revenue: ${{revenue}} per minute</p>
+			<p>Total Earnings: ${{earnings}}</p>
+		</div>
+	</div>
+</script>
+<script id="achievementTemplate" type="text/template">
+	<div id="{{name}}Achievement" class="achievementContainer">
+		<div id="{{name}}AchievementLock" class="achievementLock"></div>
+		<div id="{{name}}ImgContainer" class="achievementImgContainer">
+			<div class="achievementImg"></div>
+			<div class="achievementRankContainer">
+				<button id="{{name}}Bronze" class="bronzeRank"></button>
+				<button id="{{name}}Silver" class="silverRank"></button>
+				<button id="{{name}}Gold" class="goldRank"></button>
+				<button id="{{name}}Platinum" class="platinumRank"></button>
+			</div>
+		</div>
+		<div id="{{name}}ContentContainer" class="achievementContentContainer">
+			<p id="{{name}}AchievementDescription" class="achievementDescription">{{description}}</p>
+			<progress id="{{name}}AchievementProgress" class='achievementProgress' value='0' , max='{{amount}}'></progress>
+			<p id="{{name}}AchievementFlavor" class="achievementFlavor">{{flavor}}</p>
+		</div>
+	</div>
+</script>
 </html>
