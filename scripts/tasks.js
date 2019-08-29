@@ -302,6 +302,17 @@ function addToStats(category, stat, amount) {
   game.player.stats[category][stat] += amount;
 }
 
+function awardHiddenAchievement(achievementId) {
+  /*
+    StartFn or FinishFn which awards the player with a hidden achievement if
+    the player has not unlocked the achievement.
+  */
+  if (game.player.achievements[achievementId] == undefined) {
+    unlockAchievement(achievementId);
+    awardAchievement(achievementId);
+  }
+}
+
 /* ------ TASKS ------
 There are two types of Tasks:
 
@@ -356,9 +367,10 @@ function cheatTask(context) {
     Use this to debug whatever you want
   */
   var startFns = [
-    partial(addResource, "money", 10),
-    partial(addResource, "beats", 10),
+    partial(addResource, "money", 100),
+    partial(addResource, "beats", 100),
     //partial(addResource, "notes", 1000)
+    partial(awardHiddenAchievement, "cheat")
   ];
 
   var tooltip = {
@@ -408,7 +420,8 @@ function unlockResourceTask(context) {
   var startFns = [
     partial(addResource, context.resource),
     partial(appendToOutputContainer, outputText),
-    partial(showUiElement, context.resource, "block")
+    partial(showUiElement, context.resource, "block"),
+    partial(unlockAchievement, context.resource)
   ];
 
   var tooltip = {
@@ -618,7 +631,7 @@ function oddJobsTask(context) {
   ];
 
   var tooltip = {
-    "description": "Rewards $10.",
+    "description": "Rewards $" + jobAttributes.basePay + ".",
     "cost": {
       "Time": jobAttributes.timeToComplete
     },

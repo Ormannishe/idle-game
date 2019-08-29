@@ -38,7 +38,7 @@ function Player() {
   };
   this.songs = [];
   this.albums = [];
-  this.achievements = [];
+  this.achievements = {};
   this.instruments = {
     active: "laptop",
     laptop: {
@@ -131,7 +131,8 @@ function Player() {
       fameLifetime: 0,
       moneyLifetime: 0,
       tasksCompleted: 0,
-      oddJobsCompleted: 0
+      oddJobsCompleted: 0,
+      songsCreated: 0
     },
     laptop: {
       clicks: 0,
@@ -204,4 +205,107 @@ function removeResource(resource, amount) {
 
   game.player.resources[resource].amount -= amount;
   updateView();
+}
+
+/*
+  ---- Achievements -----
+*/
+
+function initAchievements() {
+  /*
+    Initializes all of the achievements in the game object by creating the HTML
+    objects to be appended to the achievementContent container.
+
+    Hidden achievements are not inialized unless they have already been earned,
+    and are to be inialized when they are unlocked.
+  */
+  for (var key in game.achievements) {
+    var achievement = game.achievements[key];
+
+    if (game.player.achievements[key] !== undefined || !achievement.hidden)
+      initAchievement(key);
+  };
+}
+
+function initAchievement(achievementId) {
+  /*
+    Initialize the content for the given achievementId and creates an HTML
+    object based on the achievement Mustache Template. Once created, the object
+    is appended to the achievementContent container.
+  */
+  var rank = game.achievements[achievementId].ranks[0];
+  var data = {
+    name: achievementId,
+    amount: game.achievements[achievementId][rank].amount,
+    description: game.achievements[achievementId][rank].description,
+    flavor: game.achievements[achievementId][rank].flavor
+  };
+
+  $("#achievementContent").append(Mustache.render($("#achievementTemplate").html(), data));
+
+  if (game.player.achievements[achievementId] !== undefined)
+    updateAchievement(achievementId, game.player.achievements[achievementId].level);
+}
+
+function unlockAchievement(achievementId) {
+  /*
+    Add the given achievementId to the player object before hiding the lock icon
+    and showing the achievement content.
+
+    If the achievement is a hidden achievement, it needs to be initialized
+  */
+  if (game.achievements[achievementId].hidden)
+    initAchievement(achievementId);
+
+  game.player.achievements[achievementId] = {level: 0};
+  showUiElement(achievementId + "AchievementLock", "none");
+  showUiElement(achievementId + "ImgContainer", "block");
+  showUiElement(achievementId + "ContentContainer", "block");
+}
+
+function awardAchievement(achievementId) {
+  /*
+    Award the player with the current rank star for the given achievementId and
+    trigger the achievement animation.
+    Increase the player's achievement level and show the content for the next
+    rank (if available).
+  */
+  var achievement = game.achievements[achievementId];
+  var level = game.player.achievements[achievementId].level;
+  var rank = achievement.ranks[level];
+
+  if (rank !== undefined) {
+    var starId = achievementId + capitalize(rank);
+
+    showUiElement(starId, "block");
+    awardAchievementPopUp(achievementId);
+    game.player.achievements[achievementId].level = level + 1;
+    updateAchievement(achievementId, level + 1);
+  }
+}
+
+function updateAchievement(achievementId, level) {
+  /*
+    Update the content for the given achievementId to reflect the rank
+    associated with the given level (ie. description, flavor, goal amount).
+
+    If all ranks of the achievement have already been earned, update the
+    description to communicate that to the player.
+  */
+  var achievement = game.achievements[achievementId];
+  var rank = achievement.ranks[level];
+  var progress = document.getElementById(achievementId + "AchievementProgress");
+
+  if (rank !== undefined) {
+    progress.max = achievement[rank].amount;
+    document.getElementById(achievementId + "AchievementDescription").innerHTML = achievement[rank].description;
+    document.getElementById(achievementId + "AchievementFlavor").innerHTML = achievement[rank].flavor;
+  }
+  else {
+    var description = document.getElementById(achievementId + "AchievementDescription");
+    var prevRank = achievement.ranks[level - 1];
+
+    description.innerHTML = achievement[prevRank].description + " (All ranks completed!)";
+    progress.value = progress.max;
+  }
 }

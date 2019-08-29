@@ -146,7 +146,7 @@
   ------ CSS For Songs Tab ------
 */
 
-#songs {
+#songsContent {
   overflow:scroll;
   overflow-x:hidden;
 }

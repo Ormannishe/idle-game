@@ -124,3 +124,118 @@
   cursor: pointer;
   background-color: #333333;
 }
+
+/*
+  ------ CSS For Achievement Page ------
+*/
+
+.achievementContainer {
+  height: 100px;
+  width: 99%;
+  margin-top: 10px;
+  border: 2px solid white;
+  display: flex;
+  background-color: #222222;
+}
+
+.achievementLock {
+  height: 80%;
+  width: 8%;
+  margin-left: 45%;
+  margin-top: 10px;;
+  background: transparent;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain; /* Resize the background image to be contained within the container */
+  background-image: url("../resources/images/padlock.png");
+}
+
+.achievementImgContainer {
+  height: 100%;
+  width: 15%;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: none;
+}
+
+.achievementImg {
+  height: 50px;
+  width: 100%;
+  background-color: blue;
+  margin-bottom: 5px;
+}
+
+.achievementRankContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bronzeRank, .silverRank, .goldRank, .platinumRank {
+  border: none;
+  background: transparent;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain; /* Resize the background image to be contained within the container */
+  width: 15px;
+  height: 15px;
+  margin-right: 2px;
+  margin-left: 2px;
+  display: none;
+}
+
+.bronzeRank {
+  background-image: url("../resources/images/bronze_star.png");
+}
+
+.silverRank {
+  background-image: url("../resources/images/silver_star.png");
+}
+
+.goldRank {
+  background-image: url("../resources/images/gold_star.png");
+}
+
+.platinumRank {
+  background-image: url("../resources/images/platinum_star.png");
+}
+
+.achievementContentContainer {
+  height: 100%;
+  width: 85%;
+  display: none;
+}
+
+.achievementDescription {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.achievementFlavor {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #aaaaaa;
+  text-align: center;
+  color: #aaaaaa;
+  font-size: 11px;
+  font-style: italic;
+  width: 99%;
+}
+
+.achievementProgress[value] {
+  width: 99%;
+  height: 25%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.achievementProgress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.achievementProgress[value]::-webkit-progress-value {
+  background-color: #33cc33;
+}

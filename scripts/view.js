@@ -60,36 +60,36 @@ function updateResourcesTab() {
 
 function updateSongsTab() {
   var totalRevenue = 0;
-  var html = "";
   var songTask = getTask("Make New Song");
-  var newSongButton = "";
 
   if (songTask != undefined) {
-    newSongButton = makeTaskButton(songTask);
+    if (checkTask(songTask)) {
+      document.getElementById("newSongButton").classList.add("validTask");
+      document.getElementById("newSongButton").classList.remove("invalidTask");
+    }
+    else {
+      document.getElementById("newSongButton").classList.add("invalidTask");
+      document.getElementById("newSongButton").classList.remove("validTask");
+    }
   }
 
-  game.player.songs.forEach(function(song) {
-    var songRow = "<div class='songRow'>" +
-      "<p class='songTitle'>" + song.name + "</p>" +
-      "<div class='songContent'" +
-      "<p>Quality: " + song.quality + "</p>" +
-      "<p>Popularity: " + song.popularity + "</p>" +
-      "<p>Revenue: $" + song.moneyPerSec + " per second</p>" +
-      "<p>Total Earnings: $" + round(song.totalEarnings, 2) + "</p>" +
-      "</div>" +
-      "</div>";
+  document.getElementById("songsList").innerHTML = "";
 
-    totalRevenue += song.moneyPerSec;
-    html += songRow;
+  game.player.songs.forEach(function(song) {
+    var data = {
+      name: song.name,
+      quality: song.quality,
+      popularity: song.popularity,
+      revenue: round(song.moneyPerSec * 60, 2),
+      earnings: round(song.totalEarnings, 2)
+    };
+
+    $("#songsList").append(Mustache.render($("#songTemplate").html(), data));
+
+    totalRevenue += song.totalEarnings;
   });
 
-  html = "<div id='songsHeader'>" +
-    "<p>Total Song Revenue: $" + round(totalRevenue, 2) + " per second</p>" +
-    newSongButton +
-    "</div>" +
-    html;
-
-  document.getElementById('songsContent').innerHTML = html;
+  document.getElementById("totalSongRevenue").innerHTML = "Total Song Revenue: $" + round(totalRevenue, 2);
 }
 
 function updateTasks() {
@@ -175,9 +175,10 @@ function updateStats() {
   generalStats.innerHTML = wrapInPTag("General Stats", "statHeading");
   generalStats.innerHTML += wrapInPTag("Time Played: " + secondsToDhms(game.player.stats.general.timePlayed), "statRow");
   generalStats.innerHTML += wrapInPTag("Lifetime Fame: " + game.player.stats.general.fameLifetime, "statRow");
-  generalStats.innerHTML += wrapInPTag("Lifetime Money: $" + game.player.stats.general.moneyLifetime, "statRow");
+  generalStats.innerHTML += wrapInPTag("Lifetime Money: $" + round(game.player.stats.general.moneyLifetime, 2), "statRow");
   generalStats.innerHTML += wrapInPTag("Tasks/Upgrades Completed: " + game.player.stats.general.tasksCompleted, "statRow");
   generalStats.innerHTML += wrapInPTag("Odd Jobs Completed: " + game.player.stats.general.oddJobsCompleted, "statRow");
+  generalStats.innerHTML += wrapInPTag("Songs Created: " + game.player.stats.general.songsCreated, "statRow");
 
   var laptopStats = document.getElementById("laptopStats");
   laptopStats.innerHTML = wrapInPTag("Laptop Stats", "statHeading");
@@ -201,7 +202,40 @@ function updateStats() {
 }
 
 function updateAchievements() {
+  updateAchievementProgress("fame", game.player.stats.general.fameLifetime);
+  updateAchievementProgress("money", game.player.stats.general.moneyLifetime);
+  updateAchievementProgress("beats", game.player.stats.laptop.beatsLifetime);
+  updateAchievementProgress("samples", game.player.stats.laptop.samplesLifetime);
+  updateAchievementProgress("notes", game.player.stats.keyboard.notesLifetime);
+  updateAchievementProgress("measures", game.player.stats.keyboard.measuresLifetime);
+  updateAchievementProgress("songs", game.player.stats.general.songsCreated);
 
+}
+
+function updateAchievementProgress(achievementId, value) {
+  /*
+    Update the progress bar of the given achievementId to the given value.
+    No updates will occur if the player hasn't unlocked the given achievement,
+    or if the maximum rank for the achievement has already been earned.
+
+    If the passed in value is greater than the maximum value for the progress
+    bar (ie. the user has met the achievement requirement), award the achievement
+    to the player.
+  */
+  if (game.player.achievements[achievementId] !== undefined) {
+    var level = game.player.achievements[achievementId].level;
+    var progress = document.getElementById(achievementId + "AchievementProgress");
+
+    if (game.achievements[achievementId].ranks[level] !== undefined) {
+      progress.value = value;
+
+      if (value >= progress.max)
+        awardAchievement(achievementId);
+    }
+    else {
+      progress.value = progress.max;
+    }
+  }
 }
 
 function appendToOutputContainer(message) {
@@ -251,6 +285,21 @@ function newGamePopUp() {
   };
 
   openPopUp(populateFn);
+}
+
+function awardAchievementPopUp(achievementId) {
+  var popUp = document.getElementById("achievementPopUp");
+  var achievement = game.achievements[achievementId];
+  var rank = achievement.ranks[game.player.achievements[achievementId].level];
+
+  if (rank !== undefined) {
+    // TODO: Change image
+    document.getElementById("achievementPopUpDescription").innerHTML = achievement[rank].description;
+    document.getElementById("achievementPopUpRank").classList.add(rank + "Rank");
+    popUp.classList.remove("achievementPopUpAnimation");
+    void popUp.offsetWidth; // css magic to allow replay of the animation
+    popUp.classList.add("achievementPopUpAnimation");
+  }
 }
 
 function startInstrument(instrument) {
@@ -398,21 +447,13 @@ function modifyResourceNumber(resource, cost, numReqResource, amount) {
 }
 
 function makeTaskButton(task) {
-  var html = "";
-  var htmlClass = "class='invalidTask'";
+  var data = {
+    name: task.name,
+    class: "invalidTask",
+  };
 
   if ((task.checkFns == undefined || checkTask(task)) && (task.timeToComplete == undefined || game.player.activeTask == undefined))
-    htmlClass = "class='validTask'";
+    data.class = "validTask";
 
-  html += "<button " + htmlClass;
-
-  // Add onclick event and tooltip mouseover events
-  html += " onclick='doTask(\"" + task.name + "\")'";
-  html += " onmouseover='showTooltip(this, \"" + task.name + "\")'";
-  html += " onmouseout='hideTooltip()'";
-
-  // Add button label and closing tag
-  html += ">" + task.name + "</button>";
-
-  return html;
+  return Mustache.render($("#taskButtonTemplate").html(), data);
 }

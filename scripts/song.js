@@ -180,9 +180,11 @@ function validateInput() {
     if (firstSongTask !== undefined) {
       appendToOutputContainer(songNameInput.value + " will be remembered as the start of a legacy!");
       finishTask(firstSongTask);
+      unlockAchievement("songs");
     }
 
     makeSong(songNameInput.value, instrumentsUsed);
+    game.player.stats.general.songsCreated++;
     closePopUp();
     updateView();
   }
