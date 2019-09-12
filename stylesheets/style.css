@@ -50,10 +50,26 @@ button:focus, input:focus {
   color: white;
 }
 
-#taskContainer, #statsContainer {
+#taskContainer, #characterContainer {
   float: right;
   height: 33.33333%;
   color: white;
+}
+
+/* Options */
+
+.progressNumbers::after {
+  content: attr(value)"/"attr(max);
+  text-shadow:
+    -1px -1px 0 #000,
+     0   -1px 0 #000,
+     1px -1px 0 #000,
+     1px  0   0 #000,
+     1px  1px 0 #000,
+     0    1px 0 #000,
+    -1px  1px 0 #000,
+    -1px  0   0 #000;
+  position: relative;
 }
 
 /* Tooltip CSS */

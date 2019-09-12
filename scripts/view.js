@@ -164,6 +164,7 @@ function updateSkills() {
   updateProgress(document.getElementById('vocalSkillProgress'), game.player.skills.vocal.xp, game.player.skills.vocal.toNextLevel);
   updateProgress(document.getElementById('keyboardSkillProgress'), game.player.skills.keyboard.xp, game.player.skills.keyboard.toNextLevel);
   updateProgress(document.getElementById('guitarSkillProgress'), game.player.skills.guitar.xp, game.player.skills.guitar.toNextLevel);
+  updateProgress(document.getElementById('drumSkillProgress'), game.player.skills.drum.xp, game.player.skills.drum.toNextLevel);
 }
 
 function updateStats() {
@@ -236,6 +237,10 @@ function updateAchievementProgress(achievementId, value) {
       progress.value = progress.max;
     }
   }
+}
+
+function updatePlayerName() {
+  document.getElementById("stageName").innerHTML = game.player.name;
 }
 
 function appendToOutputContainer(message) {

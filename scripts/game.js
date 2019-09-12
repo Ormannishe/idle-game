@@ -9,6 +9,10 @@
 var gameVersion = "0.0.1";
 var uiData = {};
 
+/*
+  Save/Load Functionality
+*/
+
 function newGame() {
   // Erases save data and creates a new game object
   if (window.localStorage.getItem('playerData') !== null)
@@ -84,6 +88,42 @@ function eraseSave() {
   window.localStorage.clear();
   location.reload(); // required to reload original HTML
 }
+
+/*
+  Game Options
+*/
+
+function toggleProgressNumbers() {
+  var progressList = document.getElementsByTagName("progress");
+  var optionButton = document.getElementById("progressNumberButton");
+
+  if (game.player.options.progressNumbers) {
+    // disable the progress numbers by removing the progressNumbers class
+    for (var i = 0; i < progressList.length; i++) {
+      progressList[i].classList.remove("progressNumbers");
+    }
+
+    game.player.options.progressNumbers = false;
+    optionButton.innerHTML = "OFF";
+    optionButton.classList.remove("optionButtonOn");
+    optionButton.classList.add("optionButtonOff");
+  }
+  else {
+    // enable the progress numbers by adding the progressNumbers class
+    for (var i = 0; i < progressList.length; i++) {
+      progressList[i].classList.add("progressNumbers");
+    }
+
+    game.player.options.progressNumbers = true;
+    optionButton.innerHTML = "ON";
+    optionButton.classList.remove("optionButtonOff");
+    optionButton.classList.add("optionButtonOn");
+  }
+}
+
+/*
+  Game Object
+*/
 
 function Game() {
   this.player = new Player();

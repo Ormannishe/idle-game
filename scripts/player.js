@@ -8,6 +8,14 @@
 
 function Player() {
   this.name = "Michael Jackson";
+  this.health = {
+    current: 10,
+    max: 10
+  };
+  this.energy = {
+    current: 100,
+    max: 100
+  };
   this.triggers = [];
   this.tasks = [];
   this.completedTasks = [];
@@ -153,6 +161,9 @@ function Player() {
       xpGained: 0
     }
   };
+  this.options = {
+    progressNumbers: false
+  }
 };
 
 function addXp(skill, amount) {
@@ -205,6 +216,12 @@ function removeResource(resource, amount) {
 
   game.player.resources[resource].amount -= amount;
   updateView();
+}
+
+function changeStageName() {
+  var name = "James";
+  game.player.name = name;
+  updatePlayerName();
 }
 
 /*

@@ -2,18 +2,13 @@
 
 <head>
 	<title>Idle Game</title>
-	<link rel='stylesheet' , href='stylesheets/style.css'>
-	</link>
-	<link rel='stylesheet' , href='stylesheets/click-container.css'>
-	</link>
-	<link rel='stylesheet' , href='stylesheets/items-container.css'>
-	</link>
-	<link rel='stylesheet' , href='stylesheets/output-container.css'>
-	</link>
-	<link rel='stylesheet' , href='stylesheets/task-container.css'>
-	</link>
-	<link rel='stylesheet' , href='stylesheets/skills-container.css'>
-	</link>
+	<link rel='stylesheet' , href='stylesheets/style.css'></link>
+	<link rel='stylesheet' , href='stylesheets/click-container.css'></link>
+	<link rel='stylesheet' , href='stylesheets/items-container.css'></link>
+	<link rel='stylesheet' , href='stylesheets/output-container.css'></link>
+	<link rel='stylesheet' , href='stylesheets/task-container.css'></link>
+	<link rel='stylesheet' , href='stylesheets/skills-container.css'></link>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
 </head>
 
 <body>
@@ -262,51 +257,115 @@
 				<progress id="jobTaskProgress" class='taskProgress' value='5' , max='10'></progress>
 			</div>
 		</div>
-		<div id='statsContainer' class='row'>
-			<div id='statsTabContainer'>
-				<button id="skillTab" class="statActive" onclick="toggleTab('skill', 'stat')">Skills</button>
-				<button id="statTab" class="stat" onclick="toggleTab('stat', 'stat')">Stats</button>
-				<button id="achievementTab" class="stat" onclick="toggleTab('achievement', 'stat')">Achievements</button>
+		<div id='characterContainer' class='row'>
+			<div id='characterTabContainer'>
+				<button id="characterTab" class="characterActive" onclick="toggleTab('character', 'character')">Character</button>
+				<button id="achievementTab" class="character" onclick="toggleTab('achievement', 'character')">Achievements</button>
+				<button id="optionTab" class="character" onclick="toggleTab('option', 'character')">Stats and Options</button>
 			</div>
-			<div id="skillContent" class="statContent">
-				<div id='laptopSkill' class='skill'>
-					<img src='resources/images/laptop.png'></img>
-					<p id='laptopLevel'>1</p>
-					<progress id='laptopSkillProgress' value='0' max='1'></progress>
+			<div id="characterContent" class="characterContent">
+				<div id="characterStatus">
+					<div id="stageNameContainer">
+						<p id="stageName">Michael Jackson</p>
+						<button id="editStageName" onclick="changeStageName()"></button>
+					</div>
+					<div id="healthContainer" class="statusContainer">
+						<p>Health</p>
+						<progress id='healthProgress' value='9' max='10'></progress>
+					</div>
+					<div id="energyContainer" class="statusContainer">
+						<p>Energy</p>
+						<progress id='energyProgress' value='75' max='100'></progress>
+					</div>
+					<div id="energyAbilityContainer">
+						<button id="energyAbility1" class="energyButton">Task Focus</button>
+						<button id="energyAbility2" class="energyButton">Music Focus</button>
+						<button id="energyAbility3" class="energyButton">Something Else</button>
+					</div>
 				</div>
-				<div id='vocalSkill' class='skill'>
-					<img src='resources/images/microphone.png'></img>
-					<p id='vocalLevel'>1</p>
-					<progress id='vocalSkillProgress' value='0' max='1'></progress>
-				</div>
-				<div id='keyboardSkill' class='skill'>
-					<img src='resources/images/keyboard.png'></img>
-					<p id='keyboardLevel'>1</p>
-					<progress id='keyboardSkillProgress' value='0' max='1'></progress>
-				</div>
-				<div id='guitarSkill' class='skill'>
-					<img src='resources/images/guitar.png'></img>
-					<p id='guitarLevel'>1</p>
-					<progress id='guitarSkillProgress' value='0' max='1'></progress>
-				</div>
-				<div id='drumSkill' class='skill'>
-					<img src='resources/images/drums.png'></img>
-					<p id='drumLevel'>1</p>
-					<progress id='drumSkillProgress' value='0' max='1'></progress>
+				<div id="characterSkills">
+					<p id="skillsHeader">Skills</p>
+					<div id="laptopSkill" class="skill">
+						<div class=skillLabelContainer>
+							<img src='resources/images/laptop.png'></img>
+							<p>Laptop</p>
+						</div>
+						<progress id='laptopSkillProgress' value='0' max='1'></progress>
+						<p id="laptopLevel">1</p>
+					</div>
+					<div id="vocalSkill" class="skill">
+						<div class=skillLabelContainer>
+							<img src='resources/images/microphone.png'></img>
+							<p>Vocals</p>
+						</div>
+						<progress id='vocalSkillProgress' value='0' max='1'></progress>
+						<p id="vocalLevel">1</p>
+					</div>
+					<div id="keyboardSkill" class="skill">
+						<div class=skillLabelContainer>
+							<img src='resources/images/keyboard.png'></img>
+							<p>Keyboard</p>
+						</div>
+						<progress id='keyboardSkillProgress' value='0' max='1'></progress>
+						<p id="keyboardLevel">1</p>
+					</div>
+					<div id="guitarSkill" class="skill">
+						<div class=skillLabelContainer>
+							<img src='resources/images/guitar.png'></img>
+							<p>Guitar</p>
+						</div>
+						<progress id='guitarSkillProgress' value='0' max='1'></progress>
+						<p id="guitarLevel">1</p>
+					</div>
+					<div id="drumSkill" class="skill">
+						<div class=skillLabelContainer>
+							<img src='resources/images/drums.png'></img>
+							<p>Drums</p>
+						</div>
+						<progress id='drumSkillProgress' value='0' max='1'></progress>
+						<p id="drumLevel">1</p>
+					</div>
 				</div>
 			</div>
-			<div id="statContent" class="statContent">
+			<div id="achievementContent" class="characterContent"></div>
+			<div id="optionContent" class="characterContent">
+				<div id="optionsContainer">
+					<div id="gameOptions">
+						<div class="optionContainer">
+							<button id="progressNumberButton" class="optionButtonOff" onclick="toggleProgressNumbers()">OFF</button>
+							<div class=optionsTextContainer>
+								<p>Show numbers on progress bars.</p>
+							</div>
+						</div>
+					</div>
+					<div id="saveOptions">
+						<div class="optionContainer">
+							<button class="optionButtonOn" onclick="">Export Save</button>
+							<div class=optionsTextContainer>
+								<p>Export save to a file. Useful as a backup, or to transfer to another computer.</p>
+							</div>
+						</div>
+						<div class="optionContainer">
+							<button class="optionButtonOn" onclick="">Import Save</button>
+							<div class=optionsTextContainer>
+								<p>Import an exported save file. This will overwrite the existing game save.</p>
+							</div>
+						</div>
+						<div class="optionContainer">
+							<button class="optionButtonOn" onclick="newGamePopUp()">New Game</button>
+							<div class=optionsTextContainer>
+								<p>Start a new game. This will erase the current game save.</p>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div id="generalStats" class="statContainer">
 				</div>
 				<div id="laptopStats" class="statContainer">
 				</div>
 				<div id="keyboardStats" class="statContainer">
 				</div>
-				<div id="newGameContainer">
-					<button id="newGameButton" onclick="newGamePopUp()">New Game</button>
-				</div>
 			</div>
-			<div id="achievementContent" class="statContent"></div>
 		</div>
 	</div>
 </body>
