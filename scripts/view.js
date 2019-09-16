@@ -25,6 +25,7 @@ function passiveResourceGeneration() {
   var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
 
   updateProgress(progress, (progress.value + progressAmount), requiredProgress, partial(addResource, "beats"));
+  game.player.instruments.laptop.currentProgress = progress.value;
 }
 
 function updateView(natural) {
@@ -210,7 +211,6 @@ function updateAchievements() {
   updateAchievementProgress("notes", game.player.stats.keyboard.notesLifetime);
   updateAchievementProgress("measures", game.player.stats.keyboard.measuresLifetime);
   updateAchievementProgress("songs", game.player.stats.general.songsCreated);
-
 }
 
 function updateAchievementProgress(achievementId, value) {
@@ -239,8 +239,14 @@ function updateAchievementProgress(achievementId, value) {
   }
 }
 
-function updatePlayerName() {
-  document.getElementById("stageName").innerHTML = game.player.name;
+function updateCharacterResource(resource) {
+  /*
+    Used to update the player's health or energy bars.
+  */
+  var resourceProgress = document.getElementById(resource + "Progress");
+
+  resourceProgress.value = game.player[resource].current;
+  resourceProgress.max = game.player[resource].max;
 }
 
 function appendToOutputContainer(message) {
@@ -284,6 +290,22 @@ function newGamePopUp() {
     html += "<div class='popUpRow'>";
     html += "<button class='popUpButton' onclick='newGame()'>Yes</button>";
     html += "<button class='popUpButton' onclick='closePopUp()'>No</button>";
+    html += "</div>";
+
+    document.getElementById("popUpContent").innerHTML = html;
+  };
+
+  openPopUp(populateFn);
+}
+
+function changeNamePopUp() {
+  var populateFn = function() {
+    var html = "";
+
+    html += "<p class='popUpHeader'>Choose A Stage Name</p>";
+    html += "<div class='popUpRow'>";
+    html += "<input id='stageNameInput' value='" + game.player.name + "'></input>";
+    html += "<button class='popUpButton' onclick='updateCharacterName()'>OK</button>";
     html += "</div>";
 
     document.getElementById("popUpContent").innerHTML = html;

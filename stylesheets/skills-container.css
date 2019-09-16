@@ -71,8 +71,8 @@
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: contain; /* Resize the background image to be contained within the container */
   background-image: url("../resources/images/edit.png");
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   border: none;
   margin-left: 6px;
   margin-top: 10px;
@@ -173,6 +173,7 @@
   width: 15px;
   float: left;
   margin-top: 6px;
+  margin-left: 6px;
   text-align: right;
 }
 
@@ -188,7 +189,7 @@
 
 .skill > progress::after {
   font-size: 8px;
-  top: -8px;
+  top: -10px;
 }
 
 /* Hide all skills be default except laptop skill */

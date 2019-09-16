@@ -24,6 +24,7 @@ function newGame() {
   unlockAchievement("fame");
   unlockAchievement("money");
   startInstrument(game.player.instruments.active);
+  closePopUp();
 }
 
 function saveGame() {
@@ -77,6 +78,10 @@ function loadGame() {
 
     outputContainer.innerHTML = textLog;
     outputContainer.scrollTop = outputContainer.scrollHeight;
+    toggleProgressNumbers(game.player.options.progressNumbers);
+    updateCharacterName(game.player.name);
+    updateCharacterResource("health");
+    updateCharacterResource("energy");
     toggleTab(activeInstrument, "instrument");
   }
   else {
@@ -93,11 +98,11 @@ function eraseSave() {
   Game Options
 */
 
-function toggleProgressNumbers() {
+function toggleProgressNumbers(setValue) {
   var progressList = document.getElementsByTagName("progress");
   var optionButton = document.getElementById("progressNumberButton");
 
-  if (game.player.options.progressNumbers) {
+  if (setValue == false || (setValue == undefined && game.player.options.progressNumbers)) {
     // disable the progress numbers by removing the progressNumbers class
     for (var i = 0; i < progressList.length; i++) {
       progressList[i].classList.remove("progressNumbers");
@@ -132,7 +137,7 @@ function Game() {
     money: {},
     beats: {
       instrument: "laptop",
-      clicksPer: 30,
+      clicksPer: 150,
       xpPer: 5
     },
     samples: {
@@ -143,7 +148,7 @@ function Game() {
     },
     notes: {
       instrument: "keyboard",
-      clicksPer: 50,
+      clicksPer: 100,
       xpPer: 5
     },
     measures: {
@@ -396,8 +401,8 @@ function Game() {
       ranks: ["platinum"],
       platinum: {
         amount: 1,
-        description: "Cheater.",
-        flavor: "Nobody is impressed."
+        description: "Use the secret cheat task.",
+        flavor: "That was meant for debugging."
       },
       hidden: true
     },

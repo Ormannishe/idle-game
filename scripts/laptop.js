@@ -107,14 +107,14 @@ function clickBeat() {
 
   // Determine how much to advance the progress bar
   if (greenOffsets.left <= markerPoint && markerPoint <= greenOffsets.right) {
-    progressAmount = game.player.instruments.laptop.multiplier;
+    progressAmount = game.player.instruments.laptop.multiplier * 5;
 
     if (game.player.instruments.laptop.multiplier < maxMultiplier)
       game.player.instruments.laptop.multiplier++;
     else
       game.player.instruments.laptop.multiplier = maxMultiplier;
   } else if (leftYellowPoint <= markerPoint && markerPoint <= rightYellowPoint) {
-    progressAmount = Math.ceil(game.player.instruments.laptop.multiplier / 2);
+    progressAmount = Math.ceil(game.player.instruments.laptop.multiplier / 2) * 5;
 
     if (game.player.instruments.laptop.multiplier > 1)
       game.player.instruments.laptop.multiplier--;
@@ -122,7 +122,7 @@ function clickBeat() {
     if (game.player.instruments.laptop.subgenre == "industrial")
       progressMultiplier *= 5;
 
-    progressAmount = 0.2;
+    progressAmount = 1;
     game.player.instruments.laptop.multiplier = 1;
   }
 
@@ -159,7 +159,7 @@ function setLaptopGenre(subgenreId) {
     updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   } else if (activeSubgenre == "trance") {
     game.player.instruments.laptop.bonusMaxMultiplier += 10;
-    game.player.instruments.laptop.passiveProgress--;
+    game.player.instruments.laptop.passiveProgress -= 5;
   }
 
   // Apply glow and sub-genre specific effects, change the active sub-genre
@@ -193,7 +193,7 @@ function setLaptopGenre(subgenreId) {
     } else if (subgenreId == "trance") {
       game.player.instruments.laptop.bonusMaxMultiplier -= 10;
       game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
-      game.player.instruments.laptop.passiveProgress++;
+      game.player.instruments.laptop.passiveProgress += 5;
       updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
     }
 
