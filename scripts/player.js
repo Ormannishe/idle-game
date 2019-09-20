@@ -16,6 +16,7 @@ function Player() {
     current: 100,
     max: 100
   };
+  this.level = 1;
   this.triggers = [];
   this.tasks = [];
   this.completedTasks = [];
@@ -236,6 +237,7 @@ function addXp(skill, amount) {
   while (game.player.skills[skill].toNextLevel <= game.player.skills[skill].xp) {
     game.player.skills[skill].xp -= game.player.skills[skill].toNextLevel;
     game.player.skills[skill].level++;
+    game.player.level++;
     game.player.skills[skill].toNextLevel = Math.round(game.player.skills[skill].toNextLevel * game.player.skills[skill].nextLevelXpRatio);
     appendToOutputContainer("Your " + skill + " skill has reached level " + game.player.skills[skill].level + "!");
   }

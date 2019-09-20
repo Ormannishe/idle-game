@@ -15,7 +15,7 @@ var uiData = {};
 
 function newGame() {
   // Erases save data and creates a new game object
-  if (window.localStorage.getItem('playerData') !== null)
+  if (window.localStorage.getItem('saveData') !== null)
     eraseSave();
 
   game = new Game();
@@ -27,46 +27,53 @@ function newGame() {
   closePopUp();
 }
 
+function getSaveData() {
+  /*
+    Returns an object containing all of the data necessary to restore game state.
+  */
+  var saveData = {
+    playerData: game.player,
+    uiData: uiData,
+    textLog: document.getElementById('outputContainer').innerHTML,
+    version: gameVersion
+  }
+
+  return saveData;
+}
+
 function saveGame() {
   /*
     Serializes and stores all necessary player data in local storage.
     Stored data requires deserialization in the loadGame function.
   */
 
-  // Serialize regular player data
-  window.localStorage.setItem('playerData', JSON.stringify(game.player));
-
-  // Serialize UI data
-  window.localStorage.setItem('uiData', JSON.stringify(uiData));
-  window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
-  window.localStorage.setItem('version', JSON.stringify(gameVersion));
+  window.localStorage.setItem('saveData', JSON.stringify(getSaveData()));
 }
 
-function loadGame() {
+function loadGame(saveData) {
   /*
     Deserializes local storage and restores game state.
     If no save data is found, starts a new game.
   */
 
-  var playerData = JSON.parse(window.localStorage.getItem('playerData'));
-  var uiData = JSON.parse(window.localStorage.getItem('uiData'));
-  var textLog = JSON.parse(window.localStorage.getItem('textLog'));
-  var version = JSON.parse(window.localStorage.getItem('version')); // TODO: Check saved version vs. current version
+  // TODO: Check version in save data
+  if (saveData == undefined)
+    saveData = JSON.parse(window.localStorage.getItem('saveData'));
 
-  if (playerData !== null) {
+  if (saveData !== null) {
     // Restore game state
     game = new Game();
     // TODO: Before overwriting the default player object, merge in keys/values
     // that are missing from the stored player object
-    game.player = playerData;
+    game.player = saveData.playerData;
     initAchievements();
 
     // Apply UI Changes
     var outputContainer = document.getElementById('outputContainer');
     var activeInstrument = game.player.instruments.active;
 
-    for (var key in uiData) {
-      showUiElement(key, uiData[key]);
+    for (var key in saveData.uiData) {
+      showUiElement(key, saveData.uiData[key]);
     }
 
     if (game.player.activeTask !== undefined) {
@@ -76,13 +83,14 @@ function loadGame() {
       document.getElementById('taskProgress').max = task.timeToComplete;
     }
 
-    outputContainer.innerHTML = textLog;
+    outputContainer.innerHTML = saveData.textLog;
     outputContainer.scrollTop = outputContainer.scrollHeight;
     toggleProgressNumbers(game.player.options.progressNumbers);
     updateCharacterName(game.player.name);
     updateCharacterResource("health");
     updateCharacterResource("energy");
     toggleTab(activeInstrument, "instrument");
+    closePopUp();
   }
   else {
     newGame();
@@ -92,6 +100,22 @@ function loadGame() {
 function eraseSave() {
   window.localStorage.clear();
   location.reload(); // required to reload original HTML
+}
+
+function exportSave() {
+  var saveLink = document.createElement('a');
+  var saveData = JSON.stringify(getSaveData());
+
+  saveLink.href = "data:application/octet-stream,"+encodeURIComponent(window.btoa(saveData));
+  saveLink.download = 'idleGameSave.txt';
+  saveLink.click();
+  saveLink.parentNode.removeChild(saveLink);
+}
+
+function importSave() {
+  var saveData = document.getElementById("loadGameInput").value;
+
+  loadGame(JSON.parse(window.atob(saveData)));
 }
 
 /*

@@ -155,6 +155,7 @@ function updateCharacterStats() {
 }
 
 function updateSkills() {
+  document.getElementById('playerLevel').innerHTML = "( Level " + game.player.level + " )";
   document.getElementById('laptopLevel').innerHTML = game.player.skills.laptop.level;
   document.getElementById('vocalLevel').innerHTML = game.player.skills.vocal.level;
   document.getElementById('keyboardLevel').innerHTML = game.player.skills.keyboard.level;
@@ -298,6 +299,24 @@ function newGamePopUp() {
   openPopUp(populateFn);
 }
 
+function loadGamePopUp() {
+  var populateFn = function() {
+    var html = "";
+
+    html += "<p class='popUpHeader'>Please enter save string.</p>";
+    html += "<div class='popUpRow'>";
+    html += "<input id='loadGameInput' value=''></input>";
+    html += "</div>";
+    html += "<div class='popUpRow'>";
+    html += "<button class='popUpButton' onclick='importSave()'>Load</button>";
+    html += "</div>";
+
+    document.getElementById("popUpContent").innerHTML = html;
+  };
+
+  openPopUp(populateFn);
+}
+
 function changeNamePopUp() {
   var populateFn = function() {
     var html = "";
@@ -305,6 +324,8 @@ function changeNamePopUp() {
     html += "<p class='popUpHeader'>Choose A Stage Name</p>";
     html += "<div class='popUpRow'>";
     html += "<input id='stageNameInput' value='" + game.player.name + "'></input>";
+    html += "</div>";
+    html += "<div class='popUpRow'>";
     html += "<button class='popUpButton' onclick='updateCharacterName()'>OK</button>";
     html += "</div>";
 

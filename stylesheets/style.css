@@ -214,6 +214,14 @@ button:focus, input:focus {
   border-radius: 50%;
 }
 
+#stageNameInput {
+  width: 50%;
+}
+
+#loadGameInput {
+  width: 80%;
+}
+
 #achievementPopUp {
   display: block;
   position: fixed;

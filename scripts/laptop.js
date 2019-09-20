@@ -159,7 +159,7 @@ function setLaptopGenre(subgenreId) {
     updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   } else if (activeSubgenre == "trance") {
     game.player.instruments.laptop.bonusMaxMultiplier += 10;
-    game.player.instruments.laptop.passiveProgress -= 5;
+    game.player.instruments.laptop.passiveProgress--;
   }
 
   // Apply glow and sub-genre specific effects, change the active sub-genre
@@ -193,7 +193,7 @@ function setLaptopGenre(subgenreId) {
     } else if (subgenreId == "trance") {
       game.player.instruments.laptop.bonusMaxMultiplier -= 10;
       game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
-      game.player.instruments.laptop.passiveProgress += 5;
+      game.player.instruments.laptop.passiveProgress++;
       updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
     }
 

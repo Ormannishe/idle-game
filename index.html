@@ -267,15 +267,16 @@
 				<div id="characterStatus">
 					<div id="stageNameContainer">
 						<p id="stageName">Michael Jackson</p>
-						<button id="editStageName" onclick="changeStageName()"></button>
+						<button id="editStageName" onclick="changeNamePopUp()"></button>
 					</div>
+					<p id="playerLevel"></p>
 					<div id="healthContainer" class="statusContainer">
 						<p>Health</p>
-						<progress id='healthProgress' value='9' max='10'></progress>
+						<progress id='healthProgress' value='10' max='10'></progress>
 					</div>
 					<div id="energyContainer" class="statusContainer">
 						<p>Energy</p>
-						<progress id='energyProgress' value='75' max='100'></progress>
+						<progress id='energyProgress' value='100' max='100'></progress>
 					</div>
 					<div id="energyAbilityContainer">
 						<button id="energyAbility1" class="energyButton">Task Focus</button>
@@ -340,13 +341,13 @@
 					</div>
 					<div id="saveOptions">
 						<div class="optionContainer">
-							<button class="optionButtonOn" onclick="">Export Save</button>
+							<button class="optionButtonOn" onclick="exportSave()">Export Save</button>
 							<div class=optionsTextContainer>
 								<p>Export save to a file. Useful as a backup, or to transfer to another computer.</p>
 							</div>
 						</div>
 						<div class="optionContainer">
-							<button class="optionButtonOn" onclick="">Import Save</button>
+							<button class="optionButtonOn" onclick="loadGamePopUp()">Import Save</button>
 							<div class=optionsTextContainer>
 								<p>Import an exported save file. This will overwrite the existing game save.</p>
 							</div>
