@@ -91,7 +91,7 @@ function keyboardKeyDownEvent(event) {
     audio.play()
 
     if (notePlayed == game.player.instruments.keyboard.currentNote) {
-      progressAmount = game.player.instruments.keyboard.multiplier;
+      progressAmount = game.player.instruments.keyboard.multiplier * 2;
 
       if (game.player.instruments.keyboard.multiplier < maxMultiplier)
         game.player.instruments.keyboard.multiplier++;
@@ -100,7 +100,7 @@ function keyboardKeyDownEvent(event) {
 
       playKeyboardSong();
     } else {
-      progressAmount = 0.5;
+      progressAmount = 1;
       game.player.instruments.keyboard.multiplier = 1;
     }
 

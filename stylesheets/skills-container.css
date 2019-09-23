@@ -2,13 +2,13 @@
   ------ CSS For Tabs ------
 */
 
-#statsTabContainer {
+#characterTabContainer {
   width: 100%;
   overflow: hidden;
   background-color: #222222;
 }
 
-#skillTab, #statTab, #achievementTab {
+#characterTab, #optionTab, #achievementTab {
   color: white;
   float: left;
   border: none;
@@ -18,24 +18,24 @@
   width: 33.3333333%;
 }
 
-.statActive {
+.characterActive {
   background-color: var(--my-background-color);
 }
 
-.stat {
+.character {
   background-color: #444444
 }
 
-.stat:hover {
+.character:hover {
   background-color: #555555;
 }
 
 /* Hide non-active tab content by default */
-#statContent, #achievementContent {
+#optionContent, #achievementContent {
   display: none;
 }
 
-.statContent {
+.characterContent {
   padding-left: 6px;
   display: block;
   height: calc(100% - 28px);
@@ -43,29 +43,144 @@
 }
 
 /*
-  ------ CSS For Skills ------
+  ------ CSS For Chararacter Page ------
 */
 
-.skill {
-  margin-top: 6px;
-  margin-right: 15px;
-  width: 100px;
+#characterStatus {
+  border-bottom: 2px solid #222222;
+  padding-bottom: 10px;
+  width: 99%;
+}
+
+#stageNameContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#stageName, #skillsHeader {
+  margin-top: 15px;
+  font-size: 20px;
   text-align: center;
+}
+
+#playerLevel {
+  font-size: 10px;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+#editStageName {
+  background: transparent;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: contain; /* Resize the background image to be contained within the container */
+  background-image: url("../resources/images/edit.png");
+  width: 10px;
+  height: 10px;
+  border: none;
+  margin-left: 6px;
+  margin-top: 10px;
+}
+
+#editStageName:hover {
+  cursor: pointer;
+}
+
+.statusContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.statusContainer > progress[value] {
+  width: 60%;
+  height: 15px;
+  -webkit-appearance: none;
+  appearance: none;
+  margin-left: 20px;
+  text-align: center;
+}
+
+.statusContainer > progress[value]::-webkit-progress-bar {
+  background-color: #222;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.statusContainer > progress::after {
+  top: -13px;
+}
+
+#healthProgress[value]::-webkit-progress-value {
+  background-color: #E74C3C;
+}
+
+#energyProgress[value]::-webkit-progress-value {
+  background-color: #F7DC6F;
+}
+
+#energyAbilityContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#energyAbility1 {
+  margin-left: 12%;
+}
+
+.energyButton {
+  display: none;
+}
+
+#characterSkills {
+  width: 99%;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.skill {
+  width: 49%;
+  text-align: center;
+  display: inline-block;
+  margin-top: 10px;
   float: left;
 }
 
-.skill > img {
-  width: 50px;
-  height: 50px;
+.skillLabelContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  float: left;
+}
+
+.skillLabelContainer > img {
+  width: 25px;
+  height: 25px;
   object-fit: contain;
-  margin-bottom: 5px;
+  display: inline;
+  margin-right: 6px;
 }
 
 .skill > progress[value] {
-  width: 100%;
-  height: 10px;
+  width: inherit;
+  float: left;
+  margin-top: 6px;
   -webkit-appearance: none;
   appearance: none;
+}
+
+.skill > p {
+  width: 15px;
+  float: left;
+  margin-top: 6px;
+  margin-left: 6px;
+  text-align: right;
 }
 
 .skill > progress[value]::-webkit-progress-bar {
@@ -78,51 +193,14 @@
   background-color: #33cc33;
 }
 
+.skill > progress::after {
+  font-size: 8px;
+  top: -10px;
+}
+
 /* Hide all skills be default except laptop skill */
 #vocalSkill, #keyboardSkill, #guitarSkill, #drumSkill {
   display: none;
-}
-
-/*
-  ------ CSS For Stats Page ------
-*/
-
-.statContainer {
-  margin-top: 10px;
-}
-
-.statHeading {
-  margin-bottom: 6px;
-  font-size: 18px;
-}
-
-.statRow {
-  margin-top: 3px;
-  font-size: 12px;
-}
-
-#newGameContainer {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-#newGameButton {
-  width: 120px;
-  height: 30px;
-  margin-top: 6px;
-  margin-right: 10px;
-  margin-left: 10px;
-  margin-bottom: 6px;
-  font-size: 12px;
-  border: 1px solid white;
-  color: white;
-  background-color: #222222;
-}
-
-#newGameButton:hover {
-  cursor: pointer;
-  background-color: #333333;
 }
 
 /*
@@ -228,6 +306,7 @@
   height: 25%;
   -webkit-appearance: none;
   appearance: none;
+  text-align: center;
 }
 
 .achievementProgress[value]::-webkit-progress-bar {
@@ -238,4 +317,90 @@
 
 .achievementProgress[value]::-webkit-progress-value {
   background-color: #33cc33;
+}
+
+.achievementProgress::after {
+  top: -17px;
+}
+
+/*
+  ------ CSS For Options Page ------
+*/
+
+#saveOptions {
+  border-top: 2px solid #222222;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  width: 99%;
+}
+
+.energyButton, .optionButtonOn, .saveOptionButton {
+  width: 15%;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  border: 1px solid white;
+  color: white;
+  background-color: #222222;
+}
+
+.energyButton:hover, .optionButtonOn:hover, .saveOptionButton:hover {
+  cursor: pointer;
+  background-color: #333333;
+}
+
+.optionButtonOff {
+  width: 15%;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  border: 1px solid #cccccc;
+  color: #cccccc;
+  background-color: #333333;
+}
+
+.optionButtonOff:hover {
+  cursor: pointer;
+  background-color: #222222;
+}
+
+.optionContainer {
+  display: flex;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.optionsTextContainer {
+  display: flex;
+  align-items: center;
+  width: 85%;
+}
+
+.optionsTextContainer > p {
+  font-size: 12px;
+  text-align: left;
+}
+
+.statContainer {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #222222;
+}
+
+.statHeading {
+  margin-bottom: 10px;
+  font-size: 18px;
+  text-align: left;
+}
+
+.statRow {
+  margin-top: 3px;
+  font-size: 12px;
 }

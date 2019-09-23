@@ -25,6 +25,7 @@
   height: 80%;
   -webkit-appearance: none;
   appearance: none;
+  text-align: center;
 }
 
 .beatProgress > progress[value]::-webkit-progress-bar {
@@ -35,6 +36,11 @@
 
 .beatProgress > progress[value]::-webkit-progress-value {
   background-color: #33cc33;
+}
+
+.beatProgress > progress::after {
+  position: relative;
+  top: -17px;
 }
 
 /*
@@ -261,6 +267,7 @@
 #dropProgressContainer > progress[value] {
   -webkit-appearance: none;
   appearance: none;
+  text-align: center;
 }
 
 #dropProgressContainer > progress[value]::-webkit-progress-bar {
@@ -271,6 +278,11 @@
 
 #dropProgressContainer > progress[value]::-webkit-progress-value {
   background-color: #8E44AD;
+}
+
+#dropProgressContainer > progress::after {
+  top: -11px;
+  font-size: 10px;
 }
 
 /* Sub-genre Pop-Up */

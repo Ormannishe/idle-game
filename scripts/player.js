@@ -8,6 +8,15 @@
 
 function Player() {
   this.name = "Michael Jackson";
+  this.health = {
+    current: 10,
+    max: 10
+  };
+  this.energy = {
+    current: 100,
+    max: 100
+  };
+  this.level = 1;
   this.triggers = [];
   this.tasks = [];
   this.completedTasks = [];
@@ -153,18 +162,32 @@ function Player() {
       xpGained: 0
     }
   };
+  this.options = {
+    progressNumbers: false
+  }
 };
 
-function addXp(skill, amount) {
-  game.player.skills[skill].xp += amount;
-  game.player.stats[skill].xpGained += amount;
-
-  while (game.player.skills[skill].toNextLevel <= game.player.skills[skill].xp) {
-    game.player.skills[skill].xp -= game.player.skills[skill].toNextLevel;
-    game.player.skills[skill].level++;
-    game.player.skills[skill].toNextLevel = Math.round(game.player.skills[skill].toNextLevel * game.player.skills[skill].nextLevelXpRatio);
-    appendToOutputContainer("Your " + skill + " skill has reached level " + game.player.skills[skill].level + "!");
+function updateCharacterName(name) {
+  if (name == undefined) {
+    name = document.getElementById("stageNameInput").value;
+    closePopUp();
   }
+
+  if (name !== undefined && name !== "") {
+    game.player.name = name;
+    document.getElementById("stageName").innerHTML = game.player.name;
+  }
+}
+
+function removeCharacterResource(resource, amount) {
+  /*
+    Character resources are resources that belong specifically to the character.
+    ie. Health and Energy
+  */
+  var resourceProgress = document.getElementById(resource + "Progress");
+
+  game.player[resource].current -= amount;
+  updateCharacterResource(resource);
 }
 
 function addResource(resource, amount) {
@@ -205,6 +228,19 @@ function removeResource(resource, amount) {
 
   game.player.resources[resource].amount -= amount;
   updateView();
+}
+
+function addXp(skill, amount) {
+  game.player.skills[skill].xp += amount;
+  game.player.stats[skill].xpGained += amount;
+
+  while (game.player.skills[skill].toNextLevel <= game.player.skills[skill].xp) {
+    game.player.skills[skill].xp -= game.player.skills[skill].toNextLevel;
+    game.player.skills[skill].level++;
+    game.player.level++;
+    game.player.skills[skill].toNextLevel = Math.round(game.player.skills[skill].toNextLevel * game.player.skills[skill].nextLevelXpRatio);
+    appendToOutputContainer("Your " + skill + " skill has reached level " + game.player.skills[skill].level + "!");
+  }
 }
 
 /*

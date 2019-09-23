@@ -61,6 +61,7 @@
   appearance: none;
   display: none;
   margin-top: 2px;
+  text-align: center;
 }
 
 .taskProgress[value]::-webkit-progress-bar {
@@ -71,6 +72,16 @@
 
 .taskProgress[value]::-webkit-progress-value {
   background-color: #33cc33;
+}
+
+.taskProgress::after { /* Do not show progress numbers on the study/job tab progress bars */
+  visibility: hidden;
+}
+
+#taskProgress::after {
+  top: -11px;
+  font-size: 10px;
+  visibility: visible;
 }
 
 /*

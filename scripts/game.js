@@ -9,9 +9,13 @@
 var gameVersion = "0.0.1";
 var uiData = {};
 
+/*
+  Save/Load Functionality
+*/
+
 function newGame() {
   // Erases save data and creates a new game object
-  if (window.localStorage.getItem('playerData') !== null)
+  if (window.localStorage.getItem('saveData') !== null)
     eraseSave();
 
   game = new Game();
@@ -20,6 +24,21 @@ function newGame() {
   unlockAchievement("fame");
   unlockAchievement("money");
   startInstrument(game.player.instruments.active);
+  closePopUp();
+}
+
+function getSaveData() {
+  /*
+    Returns an object containing all of the data necessary to restore game state.
+  */
+  var saveData = {
+    playerData: game.player,
+    uiData: uiData,
+    textLog: document.getElementById('outputContainer').innerHTML,
+    version: gameVersion
+  }
+
+  return saveData;
 }
 
 function saveGame() {
@@ -28,40 +47,33 @@ function saveGame() {
     Stored data requires deserialization in the loadGame function.
   */
 
-  // Serialize regular player data
-  window.localStorage.setItem('playerData', JSON.stringify(game.player));
-
-  // Serialize UI data
-  window.localStorage.setItem('uiData', JSON.stringify(uiData));
-  window.localStorage.setItem('textLog', JSON.stringify(document.getElementById('outputContainer').innerHTML));
-  window.localStorage.setItem('version', JSON.stringify(gameVersion));
+  window.localStorage.setItem('saveData', JSON.stringify(getSaveData()));
 }
 
-function loadGame() {
+function loadGame(saveData) {
   /*
     Deserializes local storage and restores game state.
     If no save data is found, starts a new game.
   */
 
-  var playerData = JSON.parse(window.localStorage.getItem('playerData'));
-  var uiData = JSON.parse(window.localStorage.getItem('uiData'));
-  var textLog = JSON.parse(window.localStorage.getItem('textLog'));
-  var version = JSON.parse(window.localStorage.getItem('version')); // TODO: Check saved version vs. current version
+  // TODO: Check version in save data
+  if (saveData == undefined)
+    saveData = JSON.parse(window.localStorage.getItem('saveData'));
 
-  if (playerData !== null) {
+  if (saveData !== null) {
     // Restore game state
     game = new Game();
     // TODO: Before overwriting the default player object, merge in keys/values
     // that are missing from the stored player object
-    game.player = playerData;
+    game.player = saveData.playerData;
     initAchievements();
 
     // Apply UI Changes
     var outputContainer = document.getElementById('outputContainer');
     var activeInstrument = game.player.instruments.active;
 
-    for (var key in uiData) {
-      showUiElement(key, uiData[key]);
+    for (var key in saveData.uiData) {
+      showUiElement(key, saveData.uiData[key]);
     }
 
     if (game.player.activeTask !== undefined) {
@@ -71,9 +83,14 @@ function loadGame() {
       document.getElementById('taskProgress').max = task.timeToComplete;
     }
 
-    outputContainer.innerHTML = textLog;
+    outputContainer.innerHTML = saveData.textLog;
     outputContainer.scrollTop = outputContainer.scrollHeight;
+    toggleProgressNumbers(game.player.options.progressNumbers);
+    updateCharacterName(game.player.name);
+    updateCharacterResource("health");
+    updateCharacterResource("energy");
     toggleTab(activeInstrument, "instrument");
+    closePopUp();
   }
   else {
     newGame();
@@ -85,6 +102,58 @@ function eraseSave() {
   location.reload(); // required to reload original HTML
 }
 
+function exportSave() {
+  var saveLink = document.createElement('a');
+  var saveData = JSON.stringify(getSaveData());
+
+  saveLink.href = "data:application/octet-stream,"+encodeURIComponent(window.btoa(saveData));
+  saveLink.download = 'idleGameSave.txt';
+  saveLink.click();
+  saveLink.parentNode.removeChild(saveLink);
+}
+
+function importSave() {
+  var saveData = document.getElementById("loadGameInput").value;
+
+  loadGame(JSON.parse(window.atob(saveData)));
+}
+
+/*
+  Game Options
+*/
+
+function toggleProgressNumbers(setValue) {
+  var progressList = document.getElementsByTagName("progress");
+  var optionButton = document.getElementById("progressNumberButton");
+
+  if (setValue == false || (setValue == undefined && game.player.options.progressNumbers)) {
+    // disable the progress numbers by removing the progressNumbers class
+    for (var i = 0; i < progressList.length; i++) {
+      progressList[i].classList.remove("progressNumbers");
+    }
+
+    game.player.options.progressNumbers = false;
+    optionButton.innerHTML = "OFF";
+    optionButton.classList.remove("optionButtonOn");
+    optionButton.classList.add("optionButtonOff");
+  }
+  else {
+    // enable the progress numbers by adding the progressNumbers class
+    for (var i = 0; i < progressList.length; i++) {
+      progressList[i].classList.add("progressNumbers");
+    }
+
+    game.player.options.progressNumbers = true;
+    optionButton.innerHTML = "ON";
+    optionButton.classList.remove("optionButtonOff");
+    optionButton.classList.add("optionButtonOn");
+  }
+}
+
+/*
+  Game Object
+*/
+
 function Game() {
   this.player = new Player();
   this.resources = {
@@ -92,7 +161,7 @@ function Game() {
     money: {},
     beats: {
       instrument: "laptop",
-      clicksPer: 30,
+      clicksPer: 150,
       xpPer: 5
     },
     samples: {
@@ -103,7 +172,7 @@ function Game() {
     },
     notes: {
       instrument: "keyboard",
-      clicksPer: 50,
+      clicksPer: 100,
       xpPer: 5
     },
     measures: {
@@ -356,8 +425,8 @@ function Game() {
       ranks: ["platinum"],
       platinum: {
         amount: 1,
-        description: "Cheater.",
-        flavor: "Nobody is impressed."
+        description: "Use the secret cheat task.",
+        flavor: "That was meant for debugging."
       },
       hidden: true
     },
