@@ -40,11 +40,14 @@ function updateProgress(progress, value, max, triggerFn) {
     Sets the value and max of the given progress bar to the given value/max.
     If value is larger than max, value = value - max. If trigger function(s) are
     defined, execute them. This process is repeated until the value is less than
-    the max.
+    the max. Returns the number iterations required for value to be less than max.
   */
+  var numTriggers = 0;
+
   progress.max = max;
 
   while (value >= max) {
+    numTriggers++;
     value = value - max;
 
     if (triggerFn !== undefined)
@@ -52,6 +55,7 @@ function updateProgress(progress, value, max, triggerFn) {
   }
 
   progress.value = value;
+  return numTriggers;
 }
 
 function updateMultiplier(multiplier, elementId) {

@@ -43,6 +43,17 @@
   top: -17px;
 }
 
+#laptopBeatProgress, #keyboardBeatProgress {
+  margin-left: 5%;
+}
+
+.instrumentResourceNumber {
+  position: relative;
+  opacity: 0;
+  width: 5%;
+  text-align: right;
+}
+
 /*
   ------ CSS For Instrument Tabs ------
 */

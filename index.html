@@ -41,10 +41,10 @@
 			<div id='laptopContent' class='instrumentContent'>
 				<div id='tempoSelector'>
 					<p>Tempo</p>
-					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('fastest')">
-					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('fast')">
-					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('slow')" checked="checked">
-					<input type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('slowest')">
+					<input id="fastestTempo" type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('fastest')">
+					<input id="fastTempo" type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('fast')">
+					<input id="slowTempo" type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('slow')" checked="checked">
+					<input id="slowestTempo" type="radio" class="tempoSelector" name="tempo" onClick="adjustTempo('slowest')">
 				</div>
 				<div id='beatContainer'>
 					<div id='marker'></div>
@@ -62,6 +62,7 @@
 				</div>
 				<div id='laptopProgressContainer' class='beatProgress'>
 					<progress id='laptopBeatProgress' value='0' max='1'></progress>
+					<p id="laptopResourceNumber" class="instrumentResourceNumber"></p>
 				</div>
 				<div id='subgenreContainer'>
 					<button id="trance" class="subgenre" onClick="setLaptopGenre('trance')" onmouseover='genreTooltip(this)' onmouseout='hideGenreTooltip()'>
@@ -115,6 +116,7 @@
 				<div id='keyboardMultiplier' class='multiplier'>x1</div>
 				<div id='keyboardProgressContainer' class='beatProgress'>
 					<progress id='keyboardBeatProgress' value='0' max='1'></progress>
+					<p id="keyboardResourceNumber" class="instrumentResourceNumber"></p>
 				</div>
 			</div>
 		</div>

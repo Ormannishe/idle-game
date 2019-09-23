@@ -13,13 +13,14 @@ function startLaptop() {
   var progress = document.getElementById('laptopBeatProgress');
   var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
 
+  document.getElementById(tempo + "Tempo").checked = true;
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
   updateProgress(progress, game.player.instruments.laptop.currentProgress, requiredProgress, partial(addResource, "beats"));
 
   if (subgenre !== undefined) {
+    clearLaptopGenre();
     setLaptopGenre(subgenre);
-    setLaptopGenre(subgenre); // Doing this twice clears and then reinitialized the subgenre
   }
 
   if (game.player.instruments.laptop.subgenre == "dubstep")
@@ -27,6 +28,12 @@ function startLaptop() {
 }
 
 function stopLaptop() {
+  /*
+    Disables animations and event handlers for the laptop
+  */
+  var htmlObj = document.getElementById("laptopResourceNumber");
+
+  htmlObj.classList.remove("createdResourceAnimation");
   clearInterval(beatInterval);
   clearInterval(dropInterval);
 }
@@ -76,6 +83,7 @@ function clickBeat() {
   	Red = 0.2 (and resets the multiplier)
   */
 
+  var numBeats;
   var progressAmount = 0;
   var requiredProgress = Math.ceil(game.resources.beats.clicksPer * game.player.instruments.laptop.reqClicksMod);
   var progressMultiplier = 1;
@@ -127,17 +135,21 @@ function clickBeat() {
   }
 
   updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
-  updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
+  numBeats = updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
   game.player.instruments.laptop.currentProgress = progress.value;
   game.player.stats.laptop.clicks++;
+
+  if (numBeats > 0)
+    resourceCreatedAnimation(numBeats, "laptop");
 }
 
 /* Sub-genre functionality */
 
-function setLaptopGenre(subgenreId) {
+function clearLaptopGenre() {
+  /*
+    Revert all sub-genre specific effects
+  */
   var activeSubgenre = game.player.instruments.laptop.subgenre;
-  var subgenreObj = document.getElementById(subgenreId);
-  var progressContainer = document.getElementById("laptopBeatProgress");
 
   // Revert sub-genre specific effects
   if (activeSubgenre == "electro") {
@@ -162,18 +174,28 @@ function setLaptopGenre(subgenreId) {
     game.player.instruments.laptop.passiveProgress--;
   }
 
-  // Apply glow and sub-genre specific effects, change the active sub-genre
-  if (activeSubgenre == subgenreId) {
+  if (activeSubgenre !== undefined) {
+    var subgenreObj = document.getElementById(activeSubgenre);
+    var progressContainer = document.getElementById("laptopBeatProgress");
+
     subgenreObj.style.boxShadow = "none";
     progressContainer.style.boxShadow = "none"
     game.player.instruments.laptop.subgenre = undefined;
-  } else {
+  }
+}
+
+function setLaptopGenre(subgenreId) {
+  var activeSubgenre = game.player.instruments.laptop.subgenre;
+
+  // Disable the currently active subgenre
+  clearLaptopGenre();
+
+  if (subgenreId !== activeSubgenre) {
+    var subgenreObj = document.getElementById(subgenreId);
+    var progressContainer = document.getElementById("laptopBeatProgress");
     var glowColor = getComputedStyle(subgenreObj).borderColor;
 
-    if (activeSubgenre !== undefined) {
-      document.getElementById(activeSubgenre).style.boxShadow = "none";
-    }
-
+    // Apply glow and sub-genre specific effects, change the active sub-genre
     progressContainer.style.boxShadow = "0px 0px 80px 1px " + glowColor;
     subgenreObj.style.boxShadow = "0px 0px 5px 2px " + glowColor;
 

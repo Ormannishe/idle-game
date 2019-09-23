@@ -461,6 +461,15 @@ function tabNotifyAnimation(tabId, activeTabClass) {
   }
 }
 
+function resourceCreatedAnimation(numResource, instrument) {
+  var htmlObj = document.getElementById(instrument + "ResourceNumber");
+
+  htmlObj.innerHTML = "+" + numResource;
+  htmlObj.classList.remove("createdResourceAnimation");
+  void htmlObj.offsetWidth; // css magic to allow replay of the animation
+  htmlObj.classList.add("createdResourceAnimation");
+}
+
 /* Helper Functions */
 
 function getOffsets(e) {
