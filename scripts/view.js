@@ -463,8 +463,10 @@ function tabNotifyAnimation(tabId, activeTabClass) {
 
 function resourceCreatedAnimation(numResource, instrument) {
   var htmlObj = document.getElementById(instrument + "ResourceNumber");
+  var colorMap = getColorFromRange(numResource, 1, 10);
 
   htmlObj.innerHTML = "+" + numResource;
+  htmlObj.style.color = "rgb(" + colorMap.red + "," + colorMap.green + "," + colorMap.blue + ")";
   htmlObj.classList.remove("createdResourceAnimation");
   void htmlObj.offsetWidth; // css magic to allow replay of the animation
   htmlObj.classList.add("createdResourceAnimation");

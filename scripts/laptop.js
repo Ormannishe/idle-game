@@ -8,6 +8,9 @@ var dropInterval;
 var markerReverse = false;
 
 function startLaptop() {
+  /*
+    Restore the state of the laptop instrument
+  */
   var tempo = game.player.instruments.laptop.currentTempo;
   var subgenre = game.player.instruments.laptop.subgenre;
   var progress = document.getElementById('laptopBeatProgress');
@@ -15,25 +18,22 @@ function startLaptop() {
 
   document.getElementById(tempo + "Tempo").checked = true;
   beatInterval = setInterval(animateBeat, game.instruments.laptop.tempoSpeeds[tempo]);
-  updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
+  updateMultiplier(game.player.instruments.laptop.multiplier, "laptop");
   updateProgress(progress, game.player.instruments.laptop.currentProgress, requiredProgress, partial(addResource, "beats"));
 
   if (subgenre !== undefined) {
     clearLaptopGenre();
     setLaptopGenre(subgenre);
   }
-
-  if (game.player.instruments.laptop.subgenre == "dubstep")
-    dropInterval = setInterval(dropTick, 100);
 }
 
 function stopLaptop() {
   /*
     Disables animations and event handlers for the laptop
   */
-  var htmlObj = document.getElementById("laptopResourceNumber");
+  var resourceNumber = document.getElementById("laptopResourceNumber");
 
-  htmlObj.classList.remove("createdResourceAnimation");
+  resourceNumber.classList.remove("createdResourceAnimation");
   clearInterval(beatInterval);
   clearInterval(dropInterval);
 }
@@ -134,7 +134,7 @@ function clickBeat() {
     game.player.instruments.laptop.multiplier = 1;
   }
 
-  updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
+  updateMultiplier(game.player.instruments.laptop.multiplier, "laptop");
   numBeats = updateProgress(progress, (progress.value + (progressAmount * progressMultiplier)), requiredProgress, partial(addResource, "beats"));
   game.player.instruments.laptop.currentProgress = progress.value;
   game.player.stats.laptop.clicks++;
@@ -168,7 +168,7 @@ function clearLaptopGenre() {
   } else if (activeSubgenre == "drumAndBass") {
     game.player.instruments.laptop.bonusMaxMultiplier -= 20;
     game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
-    updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
+    updateMultiplier(game.player.instruments.laptop.multiplier, "laptop");
   } else if (activeSubgenre == "trance") {
     game.player.instruments.laptop.bonusMaxMultiplier += 10;
     game.player.instruments.laptop.passiveProgress--;
@@ -195,10 +195,11 @@ function setLaptopGenre(subgenreId) {
     var progressContainer = document.getElementById("laptopBeatProgress");
     var glowColor = getComputedStyle(subgenreObj).borderColor;
 
-    // Apply glow and sub-genre specific effects, change the active sub-genre
+    // Apply glow
     progressContainer.style.boxShadow = "0px 0px 80px 1px " + glowColor;
     subgenreObj.style.boxShadow = "0px 0px 5px 2px " + glowColor;
 
+    // Apply sub-genre specific effects
     if (subgenreId == "electro") {
       var greenZone = document.getElementById("greenZone");
       var leftYellowZone = document.getElementById("leftYellowZone");
@@ -216,9 +217,10 @@ function setLaptopGenre(subgenreId) {
       game.player.instruments.laptop.bonusMaxMultiplier -= 10;
       game.player.instruments.laptop.multiplier = Math.min(game.player.instruments.laptop.multiplier, game.instruments.laptop.maxMultiplier + game.player.instruments.laptop.bonusMaxMultiplier);
       game.player.instruments.laptop.passiveProgress++;
-      updateMultiplier(game.player.instruments.laptop.multiplier, "laptopMultiplier");
+      updateMultiplier(game.player.instruments.laptop.multiplier, "laptop");
     }
 
+    // Update active sub-genre
     game.player.instruments.laptop.subgenre = subgenreId;
   }
 }

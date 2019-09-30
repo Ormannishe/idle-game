@@ -44,7 +44,7 @@ function startKeyboard() {
 
   document.addEventListener('keydown', keyboardKeyDownEvent);
   document.addEventListener('keyup', keyboardKeyUpEvent);
-  updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
+  updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboard");
   updateProgress(progress, game.player.instruments.keyboard.currentProgress, game.resources.notes.clicksPer, partial(addResource, "notes"));
 
 
@@ -111,7 +111,7 @@ function keyboardKeyDownEvent(event) {
       game.player.instruments.keyboard.multiplier = 1;
     }
 
-    updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
+    updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboard");
     numNotes = updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, partial(addResource, "notes"));
     game.player.instruments.keyboard.currentProgress = progress.value;
     game.player.stats.keyboard.keyPresses++;
