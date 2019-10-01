@@ -127,23 +127,23 @@ function getColorFromRange(value, min, max) {
 
   if (percentage <= 0.2) { // gradually add green
     red = 255;
-    green = (extraColor * percentage * 8) + minColor;
+    green = (extraColor * percentage * 5) + minColor;
   }
   else if (percentage > 0.2 && percentage <= 0.4) { // gradually remove red
-    red = (extraColor * (1 - (percentage - 0.2) * 8)) + minColor;
+    red = (extraColor * (1 - (percentage - 0.2) * 5)) + minColor;
     green = 255;
   }
   else if (percentage > 0.4 && percentage <= 0.6) { // gradually add blue
     green = 255;
-    blue = (extraColor * (percentage - 0.4) * 8) + minColor;
+    blue = (extraColor * (percentage - 0.4) * 5) + minColor;
   }
   else if (percentage > 0.6 && percentage <= 0.8) { // gradually remove green
-    green = (extraColor * (1 - (percentage - 0.6) * 8)) + minColor;
+    green = (extraColor * (1 - (percentage - 0.6) * 5)) + minColor;
     blue = 255;
   }
   else if (percentage > 0.8 && percentage <= 1) { // gradually add red
     blue = 255;
-    red = (extraColor * (percentage - 0.5) * 8) + minColor;
+    red = (extraColor * (percentage - 0.5) * 5) + minColor;
   }
   else if (percentage > 1) {
     blue = 255;
