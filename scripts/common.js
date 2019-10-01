@@ -40,11 +40,14 @@ function updateProgress(progress, value, max, triggerFn) {
     Sets the value and max of the given progress bar to the given value/max.
     If value is larger than max, value = value - max. If trigger function(s) are
     defined, execute them. This process is repeated until the value is less than
-    the max.
+    the max. Returns the number iterations required for value to be less than max.
   */
+  var numTriggers = 0;
+
   progress.max = max;
 
   while (value >= max) {
+    numTriggers++;
     value = value - max;
 
     if (triggerFn !== undefined)
@@ -52,25 +55,20 @@ function updateProgress(progress, value, max, triggerFn) {
   }
 
   progress.value = value;
+  return numTriggers;
 }
 
-function updateMultiplier(multiplier, elementId) {
-  /*
-    Update the multiplier of the given elementId, applying style effects
-    scaling with the value of the multiplier
-  */
-  if (multiplier < 1)
-    multiplier = 1;
+function updateMultiplier(value, instrument) {
+  if (value < 1)
+    value = 1;
 
-  var colorAndFontShift = Math.min(10, multiplier);
-  var multDiv = document.getElementById(elementId);
-  var r = 250 - (colorAndFontShift - 1) * 30;
-  var g = 250 - Math.abs(colorAndFontShift - 5) * 30;
-  var b = (colorAndFontShift - 5) * 50;
+  var maxValue = game.instruments[instrument].maxMultiplier + game.player.instruments[instrument].bonusMaxMultiplier;
+  var colorMap = getColorFromRange(value, 1, maxValue);
+  var multiplierObj = document.getElementById(instrument + "Multiplier");
 
-  multDiv.innerHTML = "x" + multiplier;
-  multDiv.style.fontSize = 15 + colorAndFontShift;
-  multDiv.style.color = "rgb(" + r + "," + g + "," + b + ")";
+  multiplierObj.innerHTML = "x" + value;
+  multiplierObj.style.fontSize = Math.round(15 + (15 * value / maxValue));
+  multiplierObj.style.color = "rgb(" + colorMap.red + "," + colorMap.green + "," + colorMap.blue + ")";
 }
 
 function getJobChance(instrument, jobType) {
@@ -104,4 +102,57 @@ function secondsToDhms(seconds) {
   var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
   var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
   return dDisplay + hDisplay + mDisplay + sDisplay;
+}
+
+function getColorFromRange(value, min, max) {
+  /*
+    Given a color range (min to max), map the given value to a color on the color
+    wheel (where min = red, max = purple)
+
+    There are 5 phases in the transition:
+    1. Starting with red maxed out, gradually add green (Red to Yellow)
+    2. Starting with red and green maxed out, gradually remove red (Yellow to Green)
+    3. Starting with green maxed out, gradually add blue (Green to Teal)
+    4. Starting with green and blue maxed out, gradually remove green (Teal to Blue)
+    5. Starting with blue maxed out, gradually add red (Blue to Purple)
+
+    Therefore, every 20% of the range is a color breakpoint
+  */
+  var minColor = 102; // 102 default makes colors more pastel
+  var extraColor = 255 - minColor; // amount of additional color we can add
+  var red = minColor;
+  var green = minColor;
+  var blue = minColor;
+  var percentage = ((value - min) / max);
+
+  if (percentage <= 0.2) { // gradually add green
+    red = 255;
+    green = (extraColor * percentage * 5) + minColor;
+  }
+  else if (percentage > 0.2 && percentage <= 0.4) { // gradually remove red
+    red = (extraColor * (1 - (percentage - 0.2) * 5)) + minColor;
+    green = 255;
+  }
+  else if (percentage > 0.4 && percentage <= 0.6) { // gradually add blue
+    green = 255;
+    blue = (extraColor * (percentage - 0.4) * 5) + minColor;
+  }
+  else if (percentage > 0.6 && percentage <= 0.8) { // gradually remove green
+    green = (extraColor * (1 - (percentage - 0.6) * 5)) + minColor;
+    blue = 255;
+  }
+  else if (percentage > 0.8 && percentage <= 1) { // gradually add red
+    blue = 255;
+    red = (extraColor * (percentage - 0.5) * 5) + minColor;
+  }
+  else if (percentage > 1) {
+    blue = 255;
+    red = 255;
+  }
+
+  return {
+    red: red,
+    green: green,
+    blue: blue
+  };
 }

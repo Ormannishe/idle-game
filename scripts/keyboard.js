@@ -44,7 +44,7 @@ function startKeyboard() {
 
   document.addEventListener('keydown', keyboardKeyDownEvent);
   document.addEventListener('keyup', keyboardKeyUpEvent);
-  updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
+  updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboard");
   updateProgress(progress, game.player.instruments.keyboard.currentProgress, game.resources.notes.clicksPer, partial(addResource, "notes"));
 
 
@@ -55,6 +55,12 @@ function startKeyboard() {
 }
 
 function stopKeyboard() {
+  /*
+    Disables animations and event handlers for the keyboard
+  */
+  var htmlObj = document.getElementById("keyboardResourceNumber");
+
+  htmlObj.classList.remove("createdResourceAnimation");
   document.removeEventListener('keydown', keyboardKeyDownEvent);
   document.removeEventListener('keyup', keyboardKeyUpEvent);
 }
@@ -72,6 +78,7 @@ function keyboardKeyDownEvent(event) {
   var notePlayed = keyToKeyMap[event.code];
 
   if (notePlayed !== undefined && event.repeat == false) {
+    var numNotes;
     var maxMultiplier = game.instruments.keyboard.maxMultiplier + game.player.instruments.keyboard.bonusMaxMultiplier
     var progressAmount = 0;
     var requiredProgress = Math.ceil(game.resources.notes.clicksPer * game.player.instruments.keyboard.reqClicksMod);
@@ -104,10 +111,13 @@ function keyboardKeyDownEvent(event) {
       game.player.instruments.keyboard.multiplier = 1;
     }
 
-    updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboardMultiplier");
-    updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, partial(addResource, "notes"));
+    updateMultiplier(game.player.instruments.keyboard.multiplier, "keyboard");
+    numNotes = updateProgress(progress, (progress.value + progressAmount), game.resources.notes.clicksPer, partial(addResource, "notes"));
     game.player.instruments.keyboard.currentProgress = progress.value;
     game.player.stats.keyboard.keyPresses++;
+
+    if (numNotes > 0)
+      resourceCreatedAnimation(numNotes, "keyboard");
   }
 }
 
