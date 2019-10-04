@@ -170,6 +170,17 @@ function Game() {
       requiredResource: "beats",
       xpPer: 50
     },
+    lyrics: {
+      instrument: "vocal",
+      clicksPer: 1000,
+      xpPer: 5
+    },
+    stanzas: {
+      instrument: "vocal",
+      resourcesPer: 25,
+      requiredResource: "lyrics",
+      xpPer: 50
+    },
     notes: {
       instrument: "keyboard",
       clicksPer: 100,
@@ -203,6 +214,14 @@ function Game() {
         "trance", "house", "drumAndBass", "hardstyle", "electro",
         "industrial", "dubstep"
       ]
+    },
+    vocal: {
+      maxMultiplier: 10,
+      minAmplitude: 10,
+      maxAmplitude: 50,
+      minFrequency: 10,
+      maxFrequency: 50,
+      framesToSolve: 1500
     },
     keyboard: {
       maxMultiplier: 10
@@ -350,6 +369,52 @@ function Game() {
         amount: 100000,
         description: "Create 100,000 Samples.",
         flavor: "Legends say this is how you gain passage to DJ Heaven."
+      }
+    },
+    lyrics: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 1000,
+        description: "Create 1,000 Lyrics.",
+        flavor: "TODO"
+      },
+      silver: {
+        amount: 10000,
+        description: "Create 10,000 Lyrics.",
+        flavor: "TODO"
+      },
+      gold: {
+        amount: 100000,
+        description: "Create 100,000 Lyrics.",
+        flavor: "TODO"
+      },
+      platinum: {
+        amount: 1000000,
+        description: "Create 1,000,000 Lyrics.",
+        flavor: "'I would define, in brief, the poetry of words as the rhythmical creation of Beauty' - Edgar Allan Poe"
+      }
+    },
+    stanzas: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 100,
+        description: "Create 100 Stanzas.",
+        flavor: "TODO"
+      },
+      silver: {
+        amount: 1000,
+        description: "Create 1,000 Stanzas.",
+        flavor: "TODO"
+      },
+      gold: {
+        amount: 10000,
+        description: "Create 10,000 Stanzas.",
+        flavor: "TODO"
+      },
+      platinum: {
+        amount: 100000,
+        description: "Create 100,000 Stanzas.",
+        flavor: "TODO"
       }
     },
     notes: {

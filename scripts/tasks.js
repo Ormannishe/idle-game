@@ -405,6 +405,10 @@ function unlockResourceTask(context) {
       outputText = "You've created your first musical sample! Your eyes glow with pride as you take one more step toward your destiny.";
       flavor = "Free samples are always great. These samples are okay too.";
       break;
+    case "stanzas":
+      outputText = "You've created your first stanza!";
+      flavor = "Stanza - the female version of the name Stan.";
+      break;
     case "measures":
       outputText = "You've created your first measure!";
       flavor = "Measure twice, cut once.";

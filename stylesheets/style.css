@@ -230,6 +230,7 @@ button:focus, input:focus {
   color: white;
   background-color: var(--my-background-color);
   left: 35%;
+  top: 100%;
   width: 30%;
   height: 13%;
   background-color: #222222;

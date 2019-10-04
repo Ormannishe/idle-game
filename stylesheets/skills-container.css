@@ -200,7 +200,7 @@
 
 /* Hide all skills be default except laptop skill */
 #vocalSkill, #keyboardSkill, #guitarSkill, #drumSkill {
-  display: none;
+  /*display: none;*/
 }
 
 /*

@@ -193,6 +193,16 @@ function updateStats() {
   laptopStats.innerHTML += wrapInPTag("Money Made From Contracts: $" + game.player.stats.laptop.workMoney, "statRow");
   laptopStats.innerHTML += wrapInPTag("Total Experience: " + game.player.stats.laptop.xpGained, "statRow");
 
+  var vocalStats = document.getElementById("vocalStats");
+  vocalStats.innerHTML = wrapInPTag("Vocals Stats", "statHeading");
+  vocalStats.innerHTML += wrapInPTag("Lifetime Solves: " + game.player.stats.vocal.problemsSolved, "statRow");
+  vocalStats.innerHTML += wrapInPTag("Lifetime Lyrics: " + game.player.stats.vocal.lyricsLifetime, "statRow");
+  vocalStats.innerHTML += wrapInPTag("Lifetime Stanzas: " + game.player.stats.vocal.stanzasLifetime, "statRow");
+  vocalStats.innerHTML += wrapInPTag("Times Studied: " + game.player.stats.vocal.studiesCompleted, "statRow");
+  vocalStats.innerHTML += wrapInPTag("Contracts Completed: " + game.player.stats.vocal.workCompleted, "statRow");
+  vocalStats.innerHTML += wrapInPTag("Money Made From Contracts: $" + game.player.stats.vocal.workMoney, "statRow");
+  vocalStats.innerHTML += wrapInPTag("Total Experience: " + game.player.stats.vocal.xpGained, "statRow");
+
   var keyboardStats = document.getElementById("keyboardStats");
   keyboardStats.innerHTML = wrapInPTag("Keyboard Stats", "statHeading");
   keyboardStats.innerHTML += wrapInPTag("Lifetime Key Presses: " + game.player.stats.keyboard.keyPresses, "statRow");
@@ -209,6 +219,8 @@ function updateAchievements() {
   updateAchievementProgress("money", game.player.stats.general.moneyLifetime);
   updateAchievementProgress("beats", game.player.stats.laptop.beatsLifetime);
   updateAchievementProgress("samples", game.player.stats.laptop.samplesLifetime);
+  updateAchievementProgress("lyrics", game.player.stats.vocal.lyricsLifetime);
+  updateAchievementProgress("stanzas", game.player.stats.vocal.stanzasLifetime);
   updateAchievementProgress("notes", game.player.stats.keyboard.notesLifetime);
   updateAchievementProgress("measures", game.player.stats.keyboard.measuresLifetime);
   updateAchievementProgress("songs", game.player.stats.general.songsCreated);
@@ -352,14 +364,17 @@ function awardAchievementPopUp(achievementId) {
 
 function startInstrument(instrument) {
   // Enables event listeners and animations for respective instrument
+  game.player.instruments.active = instrument;
+
   switch (instrument) {
     case "laptop":
       startLaptop();
-      game.player.instruments.active = "laptop";
+      break;
+    case "vocal":
+      startVocals();
       break;
     case "keyboard":
       startKeyboard();
-      game.player.instruments.active = "keyboard";
       break;
   }
 }
@@ -448,6 +463,7 @@ function toggleTab(tabId, groupId) {
   if (groupId == "instrument") {
     stopLaptop();
     stopKeyboard();
+    stopVocals();
     startInstrument(tabId);
   }
 }

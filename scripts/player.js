@@ -36,6 +36,14 @@ function Player() {
       amount: 0,
       bonusXp: 0
     },
+    lyrics: {
+      amount: 0,
+      bonusXp: 0
+    },
+    stanzas: {
+      amount: 0,
+      bonusXp: 0
+    },
     notes: {
       amount: 0,
       bonusXp: 0
@@ -61,6 +69,18 @@ function Player() {
       subgenre: undefined,
       unlockedSubgenres: [],
       dropActive: false
+    },
+    vocal: {
+      problemAmplitude: 20,
+      solutionAmplitude: 30,
+      problemFrequency: 20,
+      solutionFrequency: 30,
+      problemFrames: 0,
+      reqClicksMod: 1.0,
+      multiplier: 1,
+      bonusMaxMultiplier: 0,
+      passiveProgress: 0,
+      currentProgress: 0
     },
     keyboard: {
       currentNote: undefined,
@@ -147,6 +167,15 @@ function Player() {
       clicks: 0,
       beatsLifetime: 0,
       samplesLifetime: 0,
+      studiesCompleted: 0,
+      workCompleted: 0,
+      workMoney: 0,
+      xpGained: 0
+    },
+    vocal: {
+      problemsSolved: 0,
+      lyricsLifetime: 0,
+      stanzasLifetime: 0,
       studiesCompleted: 0,
       workCompleted: 0,
       workMoney: 0,

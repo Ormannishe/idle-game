@@ -132,6 +132,16 @@
   display: none;
 }
 
+#lyrics {
+  color: #C39BD3;
+  display: none;
+}
+
+#stanzas {
+  color: #8E44AD;
+  display: none;
+}
+
 #notes {
   color: #ffff66;
   display: none;
