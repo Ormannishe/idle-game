@@ -57,7 +57,7 @@ function Player() {
   this.albums = [];
   this.achievements = {};
   this.instruments = {
-    active: "laptop",
+    active: undefined,
     laptop: {
       level: 1,
       currentTempo: "slow",

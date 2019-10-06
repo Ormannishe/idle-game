@@ -7,6 +7,12 @@ var beatInterval;
 var dropInterval;
 var markerReverse = false;
 
+function initLaptopTriggers() {
+  // Populate triggers list with initial triggers for the laptop
+  addTrigger(firstBeatTrigger);
+  addTrigger(levelTwoLaptopTrigger);
+}
+
 function startLaptop() {
   /*
     Restore the state of the laptop instrument

@@ -13,7 +13,7 @@
 <body>
 	<div id='tooltip'></div>
 	<div id='popUpBox'>
-		<button class='closePopUp' onclick="closePopUp()">x</button>
+		<button id='popUpClose' class='closePopUp' onclick="closePopUp()">x</button>
 		<div id='popUpContent'></div>
 	</div>
 	<div id='popUpBlocker'></div>
@@ -32,7 +32,7 @@
 	<div class='column'>
 		<div id='clickContainer' class='row'>
 			<div id='instrumentTabContainer'>
-				<button id="laptopTab" class="instrumentActive" onclick="toggleTab('laptop', 'instrument')">Laptop</button>
+				<button id="laptopTab" class="instrument" onclick="toggleTab('laptop', 'instrument')">Laptop</button>
 				<button id="vocalTab" class="instrument" onclick="toggleTab('vocal', 'instrument')">Vocals</button>
 				<button id="keyboardTab" class="instrument" onclick="toggleTab('keyboard', 'instrument')">Keyboard</button>
 				<button id="guitarTab" class="instrument" onclick="toggleTab('guitar', 'instrument')">Guitar</button>
@@ -157,7 +157,7 @@
 				</div>
 				<div id='fame' class='resourceRow'>
 					<div id='fameDiv'>
-						<button id='fameTooltip' onmouseover='fameTooltip()' onmouseout='hideFameTooltip()'>?</button>
+						<button id='fameTooltip' onmouseover='fameTooltip()' onmouseout='hideTooltip()'>?</button>
 						<p>Fame</p>
 					</div>
 					<p id='fameAmount'>0</p>
@@ -235,9 +235,7 @@
 		</div>
 	</div>
 	<div class='column'>
-		<div id='outputContainer' class='row'>
-			<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
-		</div>
+		<div id='outputContainer' class='row'></div>
 		<div id='taskContainer' class='row'>
 			<div id='taskTabContainer'>
 				<button id="upgradeTab" class="taskActive" onclick="toggleTab('upgrade', 'task')">Tasks and Upgrades</button>

@@ -78,7 +78,8 @@
 }
 
 .instrument {
-  background-color: #444444
+  background-color: #444444;
+  display: none;
 }
 
 .instrument:hover {
@@ -92,18 +93,8 @@
   border: 1px solid var(--my-background-color);
   height: 93%;
   color: white;
-}
-
-/* Hide non-active tabs by default */
-#vocalTab, #keyboardTab, #guitarTab, #drumTab {
-  /* display: none; */
-}
-
-/* Hide non-active tab content by default */
-#vocalContent, #keyboardContent {
   display: none;
 }
-
 
 /*
   ------ CSS For Laptop Tab ------

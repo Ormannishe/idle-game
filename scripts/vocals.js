@@ -2,6 +2,11 @@ var solutionRequestId;
 var problemRequestId;
 var step = 0; // controls animation speed
 
+function initVocalTriggers() {
+  // Populate triggers list with initial triggers for the laptop
+  addTrigger(firstLyricTrigger);
+}
+
 function startVocals() {
   var progress = document.getElementById('vocalBeatProgress');
   var requiredProgress = Math.ceil(game.resources.lyrics.clicksPer * game.player.instruments.vocal.reqClicksMod);

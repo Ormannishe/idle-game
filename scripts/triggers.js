@@ -20,14 +20,6 @@ function removeTrigger(triggerFn) {
   }
 }
 
-function initTriggers() {
-  // Populate triggers list for the start of the game
-  addTrigger(oddJobsEventTrigger);
-  addTrigger(firstBeatTrigger);
-  addTrigger(firstLyricTrigger);
-  addTrigger(levelTwoLaptopTrigger);
-}
-
 function checkTriggers(natural) {
   /*
     Execute each triggerFn in the triggers list.

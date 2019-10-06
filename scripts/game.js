@@ -19,12 +19,39 @@ function newGame() {
     eraseSave();
 
   game = new Game();
-  initTriggers();
+  addTrigger(oddJobsEventTrigger);
   initAchievements();
   unlockAchievement("fame");
   unlockAchievement("money");
-  startInstrument(game.player.instruments.active);
+  firstInstrumentPopUp();
+}
+
+function selectInstrument(instrument) {
+  showUiElement(instrument + "Tab", "inline"),
+  showUiElement(instrument + "Skill", "inline"),
+  toggleTab(instrument, "instrument");
+
+  switch (instrument) {
+    case "laptop":
+      initLaptopTriggers();
+      appendToOutputContainer("While browsing the web, you come across an online tool for editing music! Curiosity pulls you toward your destiny.");
+      break;
+    case "vocal":
+      initVocalTriggers();
+      appendToOutputContainer("You lay in your bed with nothing but a pad of paper, a pen, and a tune stuck in your head. You begin to write.");
+      break;
+    case "keyboard":
+      initKeyboardTriggers();
+      appendToOutputContainer("You discover a dusty keyboard in your basement. You feel drawn to the glossy white and black keys.");
+      break;
+    default:
+      break;
+  }
+
+  document.getElementById("popUpClose").style.display = "block";
   closePopUp();
+  hideTooltip();
+  startTicking();
 }
 
 function getSaveData() {
@@ -91,6 +118,7 @@ function loadGame(saveData) {
     updateCharacterResource("energy");
     toggleTab(activeInstrument, "instrument");
     closePopUp();
+    startTicking();
   }
   else {
     newGame();
