@@ -13,7 +13,7 @@
 <body>
 	<div id='tooltip'></div>
 	<div id='popUpBox'>
-		<button class='closePopUp' onclick="closePopUp()">x</button>
+		<button id='popUpClose' class='closePopUp' onclick="closePopUp()">x</button>
 		<div id='popUpContent'></div>
 	</div>
 	<div id='popUpBlocker'></div>
@@ -32,11 +32,11 @@
 	<div class='column'>
 		<div id='clickContainer' class='row'>
 			<div id='instrumentTabContainer'>
-				<button id="laptopTab" class="instrumentActive" onclick="toggleTab('laptop', 'instrument')">Laptop</button>
-				<button id="vocalTab" class="instrument" onclick="toggleTab('vocal', 'instrument')">Vocal</button>
+				<button id="laptopTab" class="instrument" onclick="toggleTab('laptop', 'instrument')">Laptop</button>
+				<button id="vocalTab" class="instrument" onclick="toggleTab('vocal', 'instrument')">Vocals</button>
 				<button id="keyboardTab" class="instrument" onclick="toggleTab('keyboard', 'instrument')">Keyboard</button>
 				<button id="guitarTab" class="instrument" onclick="toggleTab('guitar', 'instrument')">Guitar</button>
-				<button id="drumTab" class="instrument" onclick="toggleTab('drum', 'instrument')">Drum</button>
+				<button id="drumTab" class="instrument" onclick="toggleTab('drum', 'instrument')">Drums</button>
 			</div>
 			<div id='laptopContent' class='instrumentContent'>
 				<div id='tempoSelector'>
@@ -55,7 +55,7 @@
 						<div id='rightYellowZone' class='yellowZone'></div>
 						<div class='redZone'></div>
 					</div>
-					<div id='laptopMultiplier'>x1</div>
+					<div id='laptopMultiplier' class='multiplier'>x1</div>
 				</div>
 				<div id='beatButtonContainer'>
 					<button id='makeBeat' type='button' onclick='clickBeat()'>Make Beat</button>
@@ -77,7 +77,27 @@
 					<progress id='theDropProgress' value='0' max='500'></progress>
 				</div>
 			</div>
-			<div id='vocalContent' class='instrumentContent'>Under Construction!</div>
+			<div id='vocalContent' class='instrumentContent'>
+				<div id="vocalContainer">
+					<canvas id="solutionCanvas"></canvas>
+					<canvas id="problemCanvas"></canvas>
+				</div>
+				<div id="waveAdjusterContainer">
+					<div id="amplitudeAdjuster">
+						<button id="upAmplitude" class="vocalAdjuster" onclick="adjustAmplitude(1)"></button>
+						<button id="downAmplitude" class="vocalAdjuster" onclick="adjustAmplitude(-1)"></button>
+					</div>
+					<div id="frequencyAdjuster">
+						<button id="leftFrequency" class="vocalAdjuster" onclick="adjustFrequency(1)"></button>
+						<button id="rightFrequency" class="vocalAdjuster" onclick="adjustFrequency(-1)"></button>
+					</div>
+				</div>
+				<div id='vocalMultiplier' class='multiplier'>x1</div>
+				<div id='vocalProgressContainer' class='beatProgress'>
+					<progress id='vocalBeatProgress' value='0' max='1'></progress>
+					<p id="vocalResourceNumber" class="instrumentResourceNumber"></p>
+				</div>
+			</div>
 			<div id='keyboardContent' class='instrumentContent'>
 				<div id='keyboardContainer'>
 					<div id='whiteKeyContainer'>
@@ -137,7 +157,7 @@
 				</div>
 				<div id='fame' class='resourceRow'>
 					<div id='fameDiv'>
-						<button id='fameTooltip' onmouseover='fameTooltip()' onmouseout='hideFameTooltip()'>?</button>
+						<button id='fameTooltip' onmouseover='fameTooltip()' onmouseout='hideTooltip()'>?</button>
 						<p>Fame</p>
 					</div>
 					<p id='fameAmount'>0</p>
@@ -170,6 +190,22 @@
 					<p id='samples100'>-</p>
 					<p id='samplesAll'>-</p>
 				</div>
+				<div id='lyrics' class='resourceRow'>
+					<p>Lyrics</p>
+					<p id='lyricsAmount'>0</p>
+					<p>-</p>
+					<p>-</p>
+					<p>-</p>
+					<p>-</p>
+				</div>
+				<div id='stanzas' class='resourceRow'>
+					<p>Stanzas</p>
+					<p id='stanzasAmount'>0</p>
+					<p id='stanzas1'>-</p>
+					<p id='stanzas10'>-</p>
+					<p id='stanzas100'>-</p>
+					<p id='stanzasAll'>-</p>
+				</div>
 				<div id='notes' class='resourceRow'>
 					<p>Notes</p>
 					<p id='notesAmount'>0</p>
@@ -199,9 +235,7 @@
 		</div>
 	</div>
 	<div class='column'>
-		<div id='outputContainer' class='row'>
-			<p>You sit at your desk with nothing but ideas and an old laptop. This is where it all begins.</p>
-		</div>
+		<div id='outputContainer' class='row'></div>
 		<div id='taskContainer' class='row'>
 			<div id='taskTabContainer'>
 				<button id="upgradeTab" class="taskActive" onclick="toggleTab('upgrade', 'task')">Tasks and Upgrades</button>
@@ -365,6 +399,8 @@
 				</div>
 				<div id="laptopStats" class="statContainer">
 				</div>
+				<div id="vocalStats" class="statContainer">
+				</div>
 				<div id="keyboardStats" class="statContainer">
 				</div>
 			</div>
@@ -379,6 +415,7 @@
 <script src='scripts/player.js'></script>
 <script src='scripts/common.js'></script>
 <script src='scripts/laptop.js'></script>
+<script src='scripts/vocals.js'></script>
 <script src='scripts/keyboard.js'></script>
 <script src='scripts/triggers.js'></script>
 <script src='scripts/tasks.js'></script>

@@ -167,6 +167,13 @@ button:focus, input:focus {
   margin-top: 15px;
 }
 
+.popUpText {
+  text-align: left;
+  margin-bottom: 15px;
+  font-size: 12px;
+  width: 80%;
+}
+
 .popUpRow {
   overflow: hidden;
   display: flex;
@@ -185,6 +192,19 @@ button:focus, input:focus {
   border: 1px solid white;
   color: white;
   background-color: #222222;
+}
+
+.disabledPopUpButton {
+  width: 120px;
+  height: 30px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  border: 1px solid #cccccc;
+  color: #cccccc;
+  background-color: #333333;
 }
 
 .popUpButton:hover {
@@ -230,6 +250,7 @@ button:focus, input:focus {
   color: white;
   background-color: var(--my-background-color);
   left: 35%;
+  top: 100%;
   width: 30%;
   height: 13%;
   background-color: #222222;

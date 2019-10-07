@@ -38,6 +38,11 @@ var keyToKeyMap = {
   "Backspace": "Bb4"
 };
 
+function initKeyboardTriggers() {
+  // Populate triggers list with initial triggers for the laptop
+  addTrigger(firstNoteTrigger);
+}
+
 function startKeyboard() {
   var progress = document.getElementById('keyboardBeatProgress');
   var requiredProgress = Math.ceil(game.resources.notes.clicksPer * game.player.instruments.keyboard.reqClicksMod);

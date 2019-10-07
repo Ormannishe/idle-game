@@ -19,12 +19,39 @@ function newGame() {
     eraseSave();
 
   game = new Game();
-  initTriggers();
+  addTrigger(oddJobsEventTrigger);
   initAchievements();
   unlockAchievement("fame");
   unlockAchievement("money");
-  startInstrument(game.player.instruments.active);
+  firstInstrumentPopUp();
+}
+
+function selectInstrument(instrument) {
+  showUiElement(instrument + "Tab", "inline"),
+  showUiElement(instrument + "Skill", "inline"),
+  toggleTab(instrument, "instrument");
+
+  switch (instrument) {
+    case "laptop":
+      initLaptopTriggers();
+      appendToOutputContainer("While browsing the web, you come across an online tool for editing music! Curiosity pulls you toward your destiny.");
+      break;
+    case "vocal":
+      initVocalTriggers();
+      appendToOutputContainer("You lay in your bed with nothing but a pad of paper, a pen, and a tune stuck in your head. You begin to write.");
+      break;
+    case "keyboard":
+      initKeyboardTriggers();
+      appendToOutputContainer("You discover a dusty keyboard in your basement. You feel drawn to the glossy white and black keys.");
+      break;
+    default:
+      break;
+  }
+
+  document.getElementById("popUpClose").style.display = "block";
   closePopUp();
+  hideTooltip();
+  startTicking();
 }
 
 function getSaveData() {
@@ -91,6 +118,7 @@ function loadGame(saveData) {
     updateCharacterResource("energy");
     toggleTab(activeInstrument, "instrument");
     closePopUp();
+    startTicking();
   }
   else {
     newGame();
@@ -170,6 +198,17 @@ function Game() {
       requiredResource: "beats",
       xpPer: 50
     },
+    lyrics: {
+      instrument: "vocal",
+      clicksPer: 1000,
+      xpPer: 5
+    },
+    stanzas: {
+      instrument: "vocal",
+      resourcesPer: 25,
+      requiredResource: "lyrics",
+      xpPer: 50
+    },
     notes: {
       instrument: "keyboard",
       clicksPer: 100,
@@ -203,6 +242,14 @@ function Game() {
         "trance", "house", "drumAndBass", "hardstyle", "electro",
         "industrial", "dubstep"
       ]
+    },
+    vocal: {
+      maxMultiplier: 10,
+      minAmplitude: 10,
+      maxAmplitude: 50,
+      minFrequency: 10,
+      maxFrequency: 50,
+      framesToSolve: 1500
     },
     keyboard: {
       maxMultiplier: 10
@@ -350,6 +397,52 @@ function Game() {
         amount: 100000,
         description: "Create 100,000 Samples.",
         flavor: "Legends say this is how you gain passage to DJ Heaven."
+      }
+    },
+    lyrics: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 1000,
+        description: "Create 1,000 Lyrics.",
+        flavor: "TODO"
+      },
+      silver: {
+        amount: 10000,
+        description: "Create 10,000 Lyrics.",
+        flavor: "TODO"
+      },
+      gold: {
+        amount: 100000,
+        description: "Create 100,000 Lyrics.",
+        flavor: "TODO"
+      },
+      platinum: {
+        amount: 1000000,
+        description: "Create 1,000,000 Lyrics.",
+        flavor: "'I would define, in brief, the poetry of words as the rhythmical creation of Beauty' - Edgar Allan Poe"
+      }
+    },
+    stanzas: {
+      ranks: ["bronze", "silver", "gold", "platinum"],
+      bronze: {
+        amount: 100,
+        description: "Create 100 Stanzas.",
+        flavor: "TODO"
+      },
+      silver: {
+        amount: 1000,
+        description: "Create 1,000 Stanzas.",
+        flavor: "TODO"
+      },
+      gold: {
+        amount: 10000,
+        description: "Create 10,000 Stanzas.",
+        flavor: "TODO"
+      },
+      platinum: {
+        amount: 100000,
+        description: "Create 100,000 Stanzas.",
+        flavor: "TODO"
       }
     },
     notes: {

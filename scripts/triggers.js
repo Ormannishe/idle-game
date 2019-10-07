@@ -20,13 +20,6 @@ function removeTrigger(triggerFn) {
   }
 }
 
-function initTriggers() {
-  // Populate triggers list for the start of the game
-  addTrigger(oddJobsEventTrigger);
-  addTrigger(firstBeatTrigger);
-  addTrigger(levelTwoLaptopTrigger);
-}
-
 function checkTriggers(natural) {
   /*
     Execute each triggerFn in the triggers list.
@@ -65,7 +58,7 @@ function firstBeatTrigger() {
   if (game.player.stats.laptop.beatsLifetime >= 1) {
     showUiElement("beats", "block");
     unlockAchievement("beats");
-    appendToOutputContainer("You've created your first beat. A building block to something greater.");
+    appendToOutputContainer("You've created your first beat! A building block to something greater.");
     addTrigger(tenthBeatTrigger);
     return true;
   }
@@ -108,6 +101,28 @@ function thousandthBeatTrigger() {
   // TODO: What does this do now? Achievement?
   if (game.player.stats.laptop.beatsLifetime >= 1000) {
     appendToOutputContainer("A thousand beats, made by your hand. Hard to beleive how far you've come.");
+    return true;
+  }
+}
+
+/*
+  ---- Lyric Progression -----
+*/
+
+function firstLyricTrigger() {
+  if (game.player.stats.vocal.lyricsLifetime >= 1) {
+    showUiElement("lyrics", "block");
+    unlockAchievement("lyrics");
+    appendToOutputContainer("You've created your first lyric! Simple words to covey thoughts and ideas.");
+    addTrigger(tenthLyricTrigger);
+    return true;
+  }
+}
+
+function tenthLyricTrigger() {
+  if (game.player.stats.vocal.lyricsLifetime >= 10) {
+    appendToOutputContainer("As you continue writing lyrics, the story behind your words begins to form.");
+    addTrigger(firstStanzaTrigger);
     return true;
   }
 }
@@ -156,6 +171,20 @@ function firstSampleTrigger() {
     appendToOutputContainer("After creating a number of solid beats, you're ready to combine them into a short sample.");
     addTask(context);
     addTrigger(firstSongTrigger);
+    return true;
+  }
+}
+
+function firstStanzaTrigger() {
+  if (game.player.resources.lyrics.amount >= game.resources.stanzas.resourcesPer) {
+    var context = {
+      taskId: "unlockResourceTask",
+      taskName: "Create First Stanza",
+      resource: "stanzas"
+    }
+
+    appendToOutputContainer("After writing several lyrics, you're ready to combine them into a stanza.");
+    addTask(context);
     return true;
   }
 }

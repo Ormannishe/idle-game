@@ -149,6 +149,7 @@
   display: inline-block;
   margin-top: 10px;
   float: left;
+  display: none;
 }
 
 .skillLabelContainer {
@@ -196,11 +197,6 @@
 .skill > progress::after {
   font-size: 8px;
   top: -10px;
-}
-
-/* Hide all skills be default except laptop skill */
-#vocalSkill, #keyboardSkill, #guitarSkill, #drumSkill {
-  display: none;
 }
 
 /*
