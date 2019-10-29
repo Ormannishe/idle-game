@@ -112,11 +112,11 @@ function loadGame(saveData) {
 
     outputContainer.innerHTML = saveData.textLog;
     outputContainer.scrollTop = outputContainer.scrollHeight;
-    toggleProgressNumbers(game.player.options.progressNumbers);
     updateCharacterName(game.player.name);
     updateCharacterResource("health");
     updateCharacterResource("energy");
     toggleTab(activeInstrument, "instrument");
+    applyAllOptions();
     closePopUp();
     startTicking();
   }
@@ -150,11 +150,21 @@ function importSave() {
   Game Options
 */
 
+function applyAllOptions() {
+  var options = game.player.options;
+
+  toggleCompactAchievements(options.compactAchievements, true);
+  toggleProgressNumbers(options.progressNumbers);
+}
+
 function toggleProgressNumbers(setValue) {
   var progressList = document.getElementsByTagName("progress");
   var optionButton = document.getElementById("progressNumberButton");
 
-  if (setValue == false || (setValue == undefined && game.player.options.progressNumbers)) {
+  if (setValue == undefined)
+    setValue = !game.player.options.progressNumbers;
+
+  if (setValue == false) {
     // disable the progress numbers by removing the progressNumbers class
     for (var i = 0; i < progressList.length; i++) {
       progressList[i].classList.remove("progressNumbers");
@@ -175,6 +185,31 @@ function toggleProgressNumbers(setValue) {
     optionButton.innerHTML = "ON";
     optionButton.classList.remove("optionButtonOff");
     optionButton.classList.add("optionButtonOn");
+  }
+}
+
+function toggleCompactAchievements(setValue, onLoad) {
+  var optionButton = document.getElementById("compactAchievementButton");
+
+  if (setValue == undefined)
+    setValue = !game.player.options.compactAchievements;
+
+  if (setValue == false) {
+    game.player.options.compactAchievements = false;
+    optionButton.innerHTML = "OFF";
+    optionButton.classList.remove("optionButtonOn");
+    optionButton.classList.add("optionButtonOff");
+  }
+  else {
+    game.player.options.compactAchievements = true;
+    optionButton.innerHTML = "ON";
+    optionButton.classList.remove("optionButtonOff");
+    optionButton.classList.add("optionButtonOn");
+  }
+
+  if (onLoad !== true) {
+    saveGame();
+    location.reload(); // reloads the page
   }
 }
 
@@ -256,17 +291,31 @@ function Game() {
     }
   };
   this.jobs = {
-    oddJobs: {
-      baseOccurrenceRate: 100,
-      basePay: 20,
-      timeToComplete: 60,
-      locations: [
-        "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
-        "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"
-      ]
+    noInstrument: {
+      oddJobs: {
+        level: 0,
+        baseOccurrenceRate: 100,
+        baseFame: 0,
+        variableFame: 0,
+        basePay: 20,
+        variablePay: 0,
+        baseXp: 0,
+        timeToComplete: 60,
+        timeToExpiration: 300,
+        completionText: "After an hour of labor, you take home a measly %moneyAmount% bucks.",
+        locations: [
+          "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
+          "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"
+        ],
+        flavors: {
+          "Shovel Snow": "Boy do the seasons change quickly around here.",
+          default: "Even the most famous of legends have humble beginnings."
+        }
+      },
     },
     laptop: {
       freelance: {
+        level: 1,
         baseOccurrenceRate: 250,
         baseFame: 5,
         variableFame: 5,
@@ -274,12 +323,20 @@ function Game() {
         variablePay: 10,
         baseXp: 50,
         timeToComplete: 180,
+        timeToExpiration: 600,
+        completionText: "After a few hours work at a %location%, you manage to make $%moneyAmount%!",
         locations: [
           "Birthday Party", "House Party", "Corporate Event", "Wedding",
           "Frat Party", "Fundraiser"
-        ]
+        ],
+        flavors: {
+          "Birthday Party": "At least you might get cake.",
+          "Frat Party": "Things tend to get a little crazier than usual at these parties...",
+          default: "Turns out, parties are a lot less fun when you're working."
+        }
       },
       nightclub: {
+        level: 2,
         baseOccurrenceRate: 500,
         baseFame: 30,
         variableFame: 15,
@@ -287,14 +344,22 @@ function Game() {
         variablePay: 50,
         baseXp: 250,
         timeToComplete: 180,
+        timeToExpiration: 900,
+        completionText: "After a crazy night at %location%, you manage to make a solid $%moneyAmount%!",
         locations: [
           "The Revision", "Rampage", "The Roxberry", "Nebula Nightclub",
           "The Jungle", "Infinity", "Club Liquid", "Pulse", "Green Door"
-        ]
+        ],
+        flavors: {
+          "Rampage": "This club is known for being particularly rowdy.",
+          "Nebula Nightclub": "Rumor has it this club is a front for a lot of illegal activity.",
+          default: "'Thiss is my ssooooong!!'"
+        }
       }
     },
-    keyboard: {
+    vocal: {
       freelance: {
+        level: 1,
         baseOccurrenceRate: 250,
         baseFame: 5,
         variableFame: 5,
@@ -302,7 +367,30 @@ function Game() {
         variablePay: 10,
         baseXp: 50,
         timeToComplete: 180,
-        locations: []
+        timeToExpiration: 600,
+        completionText: "TODO",
+        locations: [],
+        flavors: {
+          default: "TODO"
+        }
+      }
+    },
+    keyboard: {
+      freelance: {
+        level: 1,
+        baseOccurrenceRate: 250,
+        baseFame: 5,
+        variableFame: 5,
+        basePay: 50,
+        variablePay: 10,
+        baseXp: 50,
+        timeToComplete: 180,
+        timeToExpiration: 600,
+        completionText: "TODO",
+        locations: [],
+        flavors: {
+          default: "TODO"
+        }
       }
     }
   };

@@ -212,6 +212,27 @@ button:focus, input:focus {
   background-color: #333333;
 }
 
+.popUpCheckbox {
+  margin-bottom: 5px;
+}
+
+.popUpCheckbox[type=checkbox] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    background-color: #eee;
+    margin-right: 5px;
+}
+
+.popUpCheckbox[type=checkbox]:checked:after {
+    position: relative;
+    left: 3px;
+    color: #333333;
+    content: "\2713"; /* check mark */
+}
+
 .popUpSlider {
   -webkit-appearance: none;  /* Override default CSS styles */
   appearance: none;

@@ -33,6 +33,7 @@ function updateView(natural) {
   updateResourcesTab();
   updateSongsTab();
   updateTasks();
+  updateJobs();
   updateCharacterStats();
 }
 
@@ -99,9 +100,6 @@ function updateTasks() {
   updateTaskContent("upgradeContainer", contexts);
   updateTaskContent("laptopStudyTasks", contexts, "study", "laptop");
   updateTaskContent("keyboardStudyTasks", contexts, "study", "keyboard");
-  updateTaskContent("oddJobTasks", contexts, "job", "none");
-  updateTaskContent("laptopJobTasks", contexts, "job", "laptop");
-  updateTaskContent("keyboardJobTasks", contexts, "job", "keyboard");
 }
 
 function updateTaskContent(contentId, contexts, taskType, instrument) {
@@ -124,8 +122,6 @@ function updateTaskContent(contentId, contexts, taskType, instrument) {
 
   if (taskType == "study")
     updateStudyStats(instrument);
-  else if (taskType == "job" && instrument !== "none")
-    updateJobStats(instrument);
 }
 
 function updateStudyStats(instrument) {
@@ -133,18 +129,73 @@ function updateStudyStats(instrument) {
   document.getElementById(instrument + "StudyCost").innerHTML = "Cost Modifier: " + Math.round(game.player.studies[instrument].costMod * 100) + "%";
 }
 
-function updateJobStats(instrument) {
-  var jobType = game.player.jobs[instrument].jobType;
+function updateJobs() {
+  var template = "#jobTemplate";
+  var contractDisplay = document.getElementById("numContractsDisplay");
+  var jobContainer = document.getElementById("jobsContainer");
+  var activeTask = game.player.activeTask;
 
-  if (jobType !== undefined) {
-    var jobAttributes = game.jobs[instrument][jobType];
-    var avgFame = jobAttributes.baseFame + (jobAttributes.variableFame / 2);
-    var avgPay = (jobAttributes.basePay + (jobAttributes.variablePay / 2)) * game.player.jobs[instrument].moneyMod;
-    var occurrence = getJobChance(instrument, jobType);
+  // Remove existing contract divs
+  while (jobContainer.firstChild) {
+    jobContainer.removeChild(jobContainer.firstChild);
+  };
 
-    document.getElementById(instrument + "JobFame").innerHTML = "Average Fame: " + Math.round(avgFame);
-    document.getElementById(instrument + "JobWage").innerHTML = "Average Wage: $" + Math.round(avgPay);
-    document.getElementById(instrument + "JobProc").innerHTML = "Average Occurrence: " + occurrence + " sec";
+  // Update the display for the number of active contracts
+  contractDisplay.innerHTML = "Available Contracts: " + game.player.jobs.numContracts + "/" + game.player.jobs.maxContracts;
+
+  // Stylize the display for the number of active contracts
+  if (game.player.jobs.numContracts == game.player.jobs.maxContracts)
+    contractDisplay.style.color = "red";
+  else
+    contractDisplay.style.color = "white";
+
+  // If no contracts are available, display a message in the jobsContainer
+  if (game.player.jobs.numContracts == 0 ||
+      game.player.jobs.numContracts == 1 && activeTask !== undefined && activeTask.taskType == "job") {
+    document.getElementById("noJobsLabel").style.display = "block";
+  }
+  else {
+    document.getElementById("noJobsLabel").style.display = "none";
+  }
+
+  // Recreate the contract divs with updated content and remove expired job tasks
+  for (var i = 0; i < game.player.tasks.length; i++) {
+    var context = game.player.tasks[i];
+
+    if (context.taskType == "job") {
+      if (context.timeToExpiration > 0) {
+        var task = getTaskFromContext(context);
+        var data = {
+          name: task.name,
+          fame: task.jobFame,
+          instrument: (task.instrument == "noInstrument" ? "none" : task.instrument),
+          wage: task.jobWage,
+          experience: task.jobExperience,
+          timeToComplete: secondsToMinuteSeconds(task.timeToComplete),
+          flavor: task.jobFlavor,
+          offerTime: secondsToMinuteSeconds(task.timeToExpiration)
+        };
+
+        $("#jobsContainer").append(Mustache.render($(template).html(), data));
+
+        if (task.jobLevel >= 1)
+          document.getElementById(task.name + "LevelOne").style.display = "block";
+
+        if (task.jobLevel >= 2)
+          document.getElementById(task.name + "LevelTwo").style.display = "block";
+
+        if (task.jobLevel >= 3)
+          document.getElementById(task.name + "LevelThree").style.display = "block";
+
+        if (task.timeToExpiration < 60)
+          document.getElementById(task.name + "JobOfferTime").style.color = "red";
+
+        game.player.tasks[i].timeToExpiration--;
+      }
+      else {
+        removeContract(context.taskName);
+      }
+    }
   }
 }
 
@@ -180,7 +231,6 @@ function updateStats() {
   generalStats.innerHTML += wrapInPTag("Lifetime Fame: " + game.player.stats.general.fameLifetime, "statRow");
   generalStats.innerHTML += wrapInPTag("Lifetime Money: $" + round(game.player.stats.general.moneyLifetime, 2), "statRow");
   generalStats.innerHTML += wrapInPTag("Tasks/Upgrades Completed: " + game.player.stats.general.tasksCompleted, "statRow");
-  generalStats.innerHTML += wrapInPTag("Odd Jobs Completed: " + game.player.stats.general.oddJobsCompleted, "statRow");
   generalStats.innerHTML += wrapInPTag("Songs Created: " + game.player.stats.general.songsCreated, "statRow");
 
   var laptopStats = document.getElementById("laptopStats");
@@ -375,6 +425,62 @@ function loadGamePopUp() {
 
     document.getElementById("popUpContent").innerHTML = html;
   };
+
+  openPopUp(populateFn);
+}
+
+function manageJobsPopUp() {
+  var populateFn = function() {
+    var html = "";
+    var playerJobs = game.player.jobs;
+
+    html += "<p class='popUpHeader'>Manage Jobs</p>";
+    html += "<div class='popUpRow'>";
+    html += "<p class='popUpText'>Uncheck boxes below for any contract types you wish to auto-decline.</p>"
+    html += "</div>";
+
+    for (var instrument in game.jobs) {
+      if (playerJobs[instrument] !== undefined &&
+          playerJobs[instrument].unlockedJobTypes.length > 0) {
+        html += "<div class='popUpRow'>";
+        html += "<p class='popUpText'>" + capitalize(instrument) + "</p>"
+        html += "</div>";
+        html += "<div class='popUpRow'>";
+
+        for (var job in game.jobs[instrument]) {
+          if (playerJobs[instrument] !== undefined &&
+              playerJobs[instrument].unlockedJobTypes.indexOf(job) > -1) {
+            var htmlChecked = '';
+            var onclick = '';
+
+            if (playerJobs[instrument].filteredJobTypes.indexOf(job) > -1) {
+              onclick = "filterCharacterJob(\"" + instrument + "\", \"" + job + "\")";
+            }
+            else {
+              onclick = "unfilterCharacterJob(\"" + instrument + "\", \"" + job + "\")";
+            }
+
+            html += "<input id='" + instrument + job + "Checkbox'" +
+                    "class='popUpCheckbox'" +
+                    "type='checkbox'" +
+                    "checked='" + htmlChecked + "'" +
+                    "onClick='" + onclick + "'" +
+                    "></input>";
+
+            html += "<p>" + job + "</p>"
+          }
+        }
+
+        html += "</div>";
+      }
+    }
+
+    html += "<div class='popUpRow'>";
+    html += "<button class='popUpButton' onclick='closePopUp()'>Done</button>";
+    html += "</div>";
+
+    document.getElementById("popUpContent").innerHTML = html;
+  }
 
   openPopUp(populateFn);
 }

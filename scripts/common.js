@@ -76,7 +76,7 @@ function getJobChance(instrument, jobType) {
   var playerAttributes = game.player.jobs[instrument];
   var occurrenceRate = Math.round((jobAttributes.baseOccurrenceRate - game.player.resources.fame.amount / 10) * playerAttributes.procMod);
 
-  return Math.max(occurrenceRate, 1);
+  return 1 / Math.max(occurrenceRate, 1);
 }
 
 function getValidJobLocation(instrument, jobType, taskPrefix) {
@@ -89,6 +89,16 @@ function getValidJobLocation(instrument, jobType, taskPrefix) {
   });
 
   return validLocations[Math.floor(Math.random() * validLocations.length)];
+}
+
+function secondsToMinuteSeconds(seconds) {
+  var m = Math.floor(seconds / 60);
+  var s = Math.floor(seconds % 60);
+
+  if (s < 10)
+    s = "0" + s;
+
+  return m + ":" + s;
 }
 
 function secondsToDhms(seconds) {

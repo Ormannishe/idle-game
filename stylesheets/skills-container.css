@@ -212,11 +212,21 @@
   background-color: #222222;
 }
 
+.smallAchievementContainer {
+  height: 50px;
+  width: 99%;
+  margin-top: 10px;
+  border: 2px solid white;
+  display: flex;
+  background-color: #222222;
+}
+
 .achievementLock {
   height: 80%;
   width: 8%;
   margin-left: 45%;
-  margin-top: 10px;;
+  top: 10%;
+  position: relative;
   background: transparent;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
@@ -297,7 +307,7 @@
   width: 99%;
 }
 
-.achievementProgress[value] {
+.achievementProgress[value], .smallAchievementProgress[value] {
   width: 99%;
   height: 25%;
   -webkit-appearance: none;
@@ -305,18 +315,23 @@
   text-align: center;
 }
 
-.achievementProgress[value]::-webkit-progress-bar {
+.achievementProgress[value]::-webkit-progress-bar, .smallAchievementProgress[value]::-webkit-progress-bar {
   background-color: #eee;
   border-radius: 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 
-.achievementProgress[value]::-webkit-progress-value {
+.achievementProgress[value]::-webkit-progress-value, .smallAchievementProgress[value]::-webkit-progress-value {
   background-color: #33cc33;
 }
 
 .achievementProgress::after {
   top: -17px;
+}
+
+.smallAchievementProgress::after {
+  font-size: 8px;
+  top: -8px;
 }
 
 /*

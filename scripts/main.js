@@ -17,7 +17,7 @@ var game;
 
 function init() {
   loadGame();
-  // addCheatTask();
+  addCheatTask();
   updateView();
 }
 

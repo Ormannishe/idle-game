@@ -508,6 +508,34 @@ function firstFameTrigger() {
   ---- Event Triggers -----
 */
 
+function addJobContext(instrument, jobType, location, taskNamePrefix) {
+  /*
+    This is a generic helper function for job events. Creates a job context for
+    the given jobType and adds it to the task list before playing the job tab
+    animation to notify the user that a new contract is available.
+  */
+  var bonusMoney = Math.round(Math.random() * game.jobs[instrument][jobType].variablePay);
+  var bonusFame = Math.round(Math.random() * game.jobs[instrument][jobType].variableFame);
+
+  if (taskNamePrefix == undefined)
+    taskNamePrefix = "";
+
+  var context = {
+    taskId: "workJobTask",
+    taskName: taskNamePrefix + location,
+    taskType: "job",
+    instrument: instrument,
+    jobType: jobType,
+    location: location,
+    bonusMoney: bonusMoney,
+    bonusFame: bonusFame,
+    timeToExpiration: game.jobs[instrument][jobType].timeToExpiration
+  };
+
+  addContract(context);
+  tabNotifyAnimation("jobTab", "taskActive");
+}
+
 function oddJobsEventTrigger(natural) {
   /*
     Event Trigger for Odd Job tasks. Odd Job tasks are Job Tasks which are
@@ -515,40 +543,21 @@ function oddJobsEventTrigger(natural) {
     small amount of money.
 
     This Event Trigger can only be triggered on a Natural Tick and will not
-    trigger if the player already has the maximum number of Contracts available
-    (default 5).
+    trigger if the player already has the maximum number of Contracts available.
 
-    This Event Trigger will add itself back into the trigger list (ie. events
-    continue to occur even after proccing once).
+    This Event Trigger will never return 'true'. This means it will never be
+    removed from the trigger list, and can be proc'd continuously once added.
   */
 
-  if (natural && game.player.jobs.oddJobs.numContracts < game.player.jobs.oddJobs.maxContracts) {
-    // The expected number of ticks this event takes to trigger
-    var avgTicks = game.jobs.oddJobs.baseOccurrenceRate;
+  if (natural && game.player.jobs.numContracts < game.player.jobs.maxContracts) {
+    var avgTicks = game.jobs.noInstrument.oddJobs.baseOccurrenceRate;
 
     if (Math.random() < 1 / avgTicks) {
+      var location = getValidJobLocation("noInstrument", "oddJobs")
+
       showUiElement("jobTab", "inline");
-      showUiElement("oddJobContainer", "block");
-
-      var validJobs = game.jobs.oddJobs.locations.filter(function(job) {
-        if (getContext(job) == undefined)
-          return job;
-      });
-
-      var job = validJobs[Math.floor(Math.random() * validJobs.length)];
-      var context = {
-        taskId: "oddJobsTask",
-        taskName: job,
-        taskType: "job",
-        instrument: "none"
-      };
-
       appendToOutputContainer("A neighbor comes by with an opportunity to make a little cash.");
-      tabNotifyAnimation("jobTab", "taskActive");
-      game.player.jobs.oddJobs.numContracts++;
-      addTask(context);
-      addTrigger(oddJobsEventTrigger);
-      return true;
+      addJobContext("noInstrument", "oddJobs", location);
     }
   }
 }
@@ -557,47 +566,31 @@ function DJEventTrigger(natural) {
   /*
     Event Trigger for DJ Job tasks. There are several types of DJ job tasks that
     are unlocked as the player raises their laptop level. (ie. Freelance,
-    Nightclub, etc.) This event will only add new DJ Jobs for the player's
-    current DJ job type.
+    Nightclub, etc.) This event will proc new DJ Jobs for all job types that
+    have been unlocked and are not being filtered.
 
     This Event Trigger can only be triggered on a Natural Tick and will not
-    trigger if the player already has the maximum number of Contracts available
-    (default 3).
+    trigger if the player already has the maximum number of Contracts available.
 
-    This Event Trigger will add itself back into the trigger list. (ie. events
-    continue to occur even after proccing once).
+    This Event Trigger will never return 'true'. This means it will never be
+    removed from the trigger list, and can be proc'd continuously once added.
   */
 
   if (natural) {
-    // Average number of ticks required to trigger this event
-    var jobType = game.player.jobs.laptop.jobType;
-    var avgTicks = getJobChance("laptop", jobType);
+    var jobTypes = game.player.jobs.laptop.unlockedJobTypes; // TODO: Remove filtered types
 
-    if (Math.random() < (1 / avgTicks)) {
-      if (game.player.jobs.laptop.numContracts < game.player.jobs.laptop.maxContracts) {
-        var taskPrefix = "DJ At ";
-        var location = getValidJobLocation("laptop", jobType, taskPrefix);
-        var bonusMoney = Math.round(Math.random() * game.jobs.laptop[jobType].variablePay);
-        var bonusFame = Math.round(Math.random() * game.jobs.laptop[jobType].variableFame);
+    jobTypes.forEach(function(jobType) {
+      var chance = getJobChance("laptop", jobType);
 
-        var context = {
-          taskId: "workJobTask",
-          taskName: taskPrefix + location,
-          taskType: "job",
-          instrument: "laptop",
-          jobType: jobType,
-          location: location.toLowerCase(),
-          bonusMoney: bonusMoney,
-          bonusFame: bonusFame
-        };
+      if (chance > Math.random()) {
+        if (game.player.jobs.numContracts < game.player.jobs.maxContracts) {
+          var taskNamePrefix = "DJ At ";
+          var location = getValidJobLocation("laptop", jobType, taskNamePrefix);
 
-        appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + location.toLowerCase() + "!");
-        tabNotifyAnimation("jobTab", "taskActive");
-        game.player.jobs.laptop.numContracts++;
-        addTask(context);
-        addTrigger(DJEventTrigger);
-        return true;
+          appendToOutputContainer("A client has contacted you with an opportunity to DJ for a " + location.toLowerCase() + "!");
+          addJobContext("laptop", jobType, location, taskNamePrefix)
+        }
       }
-    }
+    });
   }
 }
