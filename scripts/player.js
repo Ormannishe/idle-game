@@ -122,6 +122,12 @@ function Player() {
       moneyMod: 1.0,
       unlockedJobTypes: [],
       filteredJobTypes: []
+    },
+    noInstrument: {
+      procMod: 1.0,
+      moneyMod: 1.0,
+      unlockedJobTypes: ["oddJobs"],
+      filteredJobTypes: []
     }
   };
   this.skills = {
@@ -210,25 +216,37 @@ function updateCharacterName(name) {
   }
 }
 
-function filterCharacterJob(instrument, jobType) {
+function applyJobFilters() {
   /*
-    Add the given jobType to the filteredJobTypes list for the given instrument.
-  */
-  if (game.player.jobs[instrument] !== undefined) {
-    game.player.jobs[instrument].filteredJobTypes.push(jobType);
-  }
-}
+    To be called before closing the job management pop up.
+    Updates the player's job filter lists in accordance with the checkboxes they
+    have selected in the job management pop up.
 
-function unfilterCharacterJob(instrument, jobType) {
-  // TODO: Single function that checks if the checkbox is checked
-  // This is needed because we only draw the checkbox when we open the popup
-  /*
-    Add the given jobType to the filteredJobTypes list for the given instrument.
+    Closes the pop up box on completion.
   */
-  if (game.player.jobs[instrument] !== undefined) {
-    var index = game.player.jobs[instrument].filteredJobTypes.indexOf(jobType);
-    game.player.jobs[instrument].filteredJobTypes.splice(index, 1);
+  var playerJobs = game.player.jobs;
+
+  for (var instrument in game.jobs) {
+    game.player.jobs[instrument].filteredJobTypes = [];
+
+    for (var job in game.jobs[instrument]) {
+      if (playerJobs[instrument].unlockedJobTypes.indexOf(job) > -1) {
+        var checkbox = document.getElementById(instrument + job + "Checkbox");
+
+        if (checkbox.checked == false) {
+          game.player.jobs[instrument].filteredJobTypes.push(job);
+        }
+        else {
+          var index = game.player.jobs[instrument].filteredJobTypes.indexOf(job);
+
+          if (index > -1)
+            game.player.jobs[instrument].filteredJobTypes.splice(index, 1);
+        }
+      }
+    }
   }
+
+  closePopUp();
 }
 
 function removeCharacterResource(resource, amount) {

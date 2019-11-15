@@ -167,6 +167,14 @@ button:focus, input:focus {
   margin-top: 15px;
 }
 
+.popUpSubHeader {
+  text-align: left;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size: 13px;
+  width: 80%;
+}
+
 .popUpText {
   text-align: left;
   margin-bottom: 15px;
@@ -174,11 +182,27 @@ button:focus, input:focus {
   width: 80%;
 }
 
+.popUpSubText {
+  text-align: left;
+  float: left;
+  font-size: 12px;
+  position: relative;
+  top: 3px;
+  margin-bottom: 15px;
+  margin-right: 15px;
+}
+
 .popUpRow {
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.popUpSubRow {
+  overflow: hidden;
+  display: block;
+  width: 80%;
 }
 
 .popUpButton {
@@ -212,10 +236,6 @@ button:focus, input:focus {
   background-color: #333333;
 }
 
-.popUpCheckbox {
-  margin-bottom: 5px;
-}
-
 .popUpCheckbox[type=checkbox] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -224,6 +244,8 @@ button:focus, input:focus {
     font-size: 14px;
     background-color: #eee;
     margin-right: 5px;
+    float: left;
+    position: relative;
 }
 
 .popUpCheckbox[type=checkbox]:checked:after {

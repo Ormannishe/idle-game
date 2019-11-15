@@ -169,7 +169,7 @@ function updateJobs() {
           name: task.name,
           fame: task.jobFame,
           instrument: (task.instrument == "noInstrument" ? "none" : task.instrument),
-          wage: task.jobWage,
+          wage: "$" + task.jobWage,
           experience: task.jobExperience,
           timeToComplete: secondsToMinuteSeconds(task.timeToComplete),
           flavor: task.jobFlavor,
@@ -440,43 +440,39 @@ function manageJobsPopUp() {
     html += "</div>";
 
     for (var instrument in game.jobs) {
-      if (playerJobs[instrument] !== undefined &&
-          playerJobs[instrument].unlockedJobTypes.length > 0) {
+      if (playerJobs[instrument].unlockedJobTypes.length > 0) {
+        var title = instrument == "noInstrument" ? "Non-Instrument" : instrument;
+
         html += "<div class='popUpRow'>";
-        html += "<p class='popUpText'>" + capitalize(instrument) + "</p>"
+        html += "<p class='popUpSubHeader'>" + capitalize(title) + " Contracts</p>"
         html += "</div>";
         html += "<div class='popUpRow'>";
+        html += "<div class='popUpSubRow'>";
 
         for (var job in game.jobs[instrument]) {
-          if (playerJobs[instrument] !== undefined &&
-              playerJobs[instrument].unlockedJobTypes.indexOf(job) > -1) {
-            var htmlChecked = '';
-            var onclick = '';
+          if (playerJobs[instrument].unlockedJobTypes.indexOf(job) > -1) {
+            var htmlChecked = "";
 
-            if (playerJobs[instrument].filteredJobTypes.indexOf(job) > -1) {
-              onclick = "filterCharacterJob(\"" + instrument + "\", \"" + job + "\")";
-            }
-            else {
-              onclick = "unfilterCharacterJob(\"" + instrument + "\", \"" + job + "\")";
+            if (playerJobs[instrument].filteredJobTypes.indexOf(job) == -1) {
+              htmlChecked = "checked=''";
             }
 
-            html += "<input id='" + instrument + job + "Checkbox'" +
-                    "class='popUpCheckbox'" +
-                    "type='checkbox'" +
-                    "checked='" + htmlChecked + "'" +
+            html += "<input id='" + instrument + job + "Checkbox' " +
+                    "class='popUpCheckbox' " +
+                    "type='checkbox' " +
+                    htmlChecked +
                     "onClick='" + onclick + "'" +
                     "></input>";
 
-            html += "<p>" + job + "</p>"
+            html += "<p class='popUpSubText'>" + job + "</p>"
           }
         }
-
-        html += "</div>";
+        html += "</div></div>";
       }
     }
 
     html += "<div class='popUpRow'>";
-    html += "<button class='popUpButton' onclick='closePopUp()'>Done</button>";
+    html += "<button class='popUpButton' onclick='applyJobFilters()'>Done</button>";
     html += "</div>";
 
     document.getElementById("popUpContent").innerHTML = html;

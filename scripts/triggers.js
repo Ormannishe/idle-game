@@ -543,13 +543,15 @@ function oddJobsEventTrigger(natural) {
     small amount of money.
 
     This Event Trigger can only be triggered on a Natural Tick and will not
-    trigger if the player already has the maximum number of Contracts available.
+    trigger if the player already has the maximum number of Contracts available,
+    or if the player has opted to auto-decline this type of contract.
 
     This Event Trigger will never return 'true'. This means it will never be
     removed from the trigger list, and can be proc'd continuously once added.
   */
 
-  if (natural && game.player.jobs.numContracts < game.player.jobs.maxContracts) {
+  if (natural && game.player.jobs.numContracts < game.player.jobs.maxContracts
+      && game.player.jobs.noInstrument.filteredJobTypes.indexOf("oddJobs") == -1) {
     var avgTicks = game.jobs.noInstrument.oddJobs.baseOccurrenceRate;
 
     if (Math.random() < 1 / avgTicks) {
@@ -577,7 +579,10 @@ function DJEventTrigger(natural) {
   */
 
   if (natural) {
-    var jobTypes = game.player.jobs.laptop.unlockedJobTypes; // TODO: Remove filtered types
+    var jobTypes = game.player.jobs.laptop.unlockedJobTypes.filter(function(job) {
+      if (game.player.jobs.laptop.filteredJobTypes.indexOf(job) == -1)
+        return job;
+    });
 
     jobTypes.forEach(function(jobType) {
       var chance = getJobChance("laptop", jobType);

@@ -291,28 +291,6 @@ function Game() {
     }
   };
   this.jobs = {
-    noInstrument: {
-      oddJobs: {
-        level: 0,
-        baseOccurrenceRate: 100,
-        baseFame: 0,
-        variableFame: 0,
-        basePay: 20,
-        variablePay: 0,
-        baseXp: 0,
-        timeToComplete: 60,
-        timeToExpiration: 300,
-        completionText: "After an hour of labor, you take home a measly %moneyAmount% bucks.",
-        locations: [
-          "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
-          "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"
-        ],
-        flavors: {
-          "Shovel Snow": "Boy do the seasons change quickly around here.",
-          default: "Even the most famous of legends have humble beginnings."
-        }
-      },
-    },
     laptop: {
       freelance: {
         level: 1,
@@ -353,7 +331,7 @@ function Game() {
         flavors: {
           "Rampage": "This club is known for being particularly rowdy.",
           "Nebula Nightclub": "Rumor has it this club is a front for a lot of illegal activity.",
-          default: "'Thiss is my ssooooong!!'"
+          default: "It's true, this is her song."
         }
       }
     },
@@ -392,6 +370,28 @@ function Game() {
           default: "TODO"
         }
       }
+    },
+    noInstrument: {
+      oddJobs: {
+        level: 0,
+        baseOccurrenceRate: 100,
+        baseFame: 0,
+        variableFame: 0,
+        basePay: 20,
+        variablePay: 0,
+        baseXp: 0,
+        timeToComplete: 60,
+        timeToExpiration: 300,
+        completionText: "After an hour of labor, you take home a measly %moneyAmount% bucks.",
+        locations: [
+          "Mow Lawns", "Shovel Snow", "Yardwork", "Change Tires",
+          "Walk Dogs", "Babysitting", "Rake Leaves", "Clean Windows"
+        ],
+        flavors: {
+          "Shovel Snow": "Boy do the seasons change quickly around here.",
+          default: "Even the most famous of legends have humble beginnings."
+        }
+      },
     }
   };
   this.achievements = {
