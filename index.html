@@ -269,25 +269,13 @@
 				<progress id="studyTaskProgress" class='taskProgress' value='5' , max='10'></progress>
 			</div>
 			<div id="jobContent" class="taskContent">
-				<div id="jobContainer">
-					<div id="laptopJobContainer" class="studyContainer">
-						<p>DJ Contracts</p>
-						<p id="laptopJobFame" class="fameRate"></p>
-						<p id="laptopJobWage" class="wageRate"></p>
-						<p id="laptopJobProc" class="procRate"></p>
-						<div id="laptopJobTasks" class="taskHolder"></div>
+				<div id="jobsContentContainer">
+					<div id="jobsHeader">
+						<button id="manageJobsButton" onclick="manageJobsPopUp()">Manage Jobs</button>
+						<p id="numContractsDisplay">Available Contracts: 5/5</p>
 					</div>
-					<div id="keyboardJobContainer" class="studyContainer">
-						<p>Pianist Contracts</p>
-						<p id="keyboardJobFame" class="fameRate"></p>
-						<p id="keyboardJobWage" class="wageRate"></p>
-						<p id="keyboardJobProc" class="procRate"></p>
-						<div id="keyboardJobTasks" class="taskHolder"></div>
-					</div>
-					<div id="oddJobContainer" class="studyContainer">
-						<p>Odd Jobs</p>
-						<div id="oddJobTasks" class="taskHolder"></div>
-					</div>
+					<p id="noJobsLabel">No Contracts Available</p>
+					<div id="jobsContainer"></div>
 				</div>
 				<progress id="jobTaskProgress" class='taskProgress' value='5' , max='10'></progress>
 			</div>
@@ -373,6 +361,12 @@
 								<p>Show numbers on progress bars.</p>
 							</div>
 						</div>
+						<div class="optionContainer">
+							<button id="compactAchievementButton" class="optionButtonOff" onclick="toggleCompactAchievements()">OFF</button>
+							<div class=optionsTextContainer>
+								<p>Display acheivements in a more compact view. (Requires reload)</p>
+							</div>
+						</div>
 					</div>
 					<div id="saveOptions">
 						<div class="optionContainer">
@@ -436,6 +430,32 @@
 		</div>
 	</div>
 </script>
+<script id="jobTemplate" type="text/template">
+	<div id="{{name}}Job" class="jobContainer">
+		<div id="{{name}}JobHeader" class="jobHeader">
+			<p id="{{name}}JobTitle" class="jobTitle">{{name}}</p>
+			<div id="{{name}}JobLevel" class="jobLevelContainer">
+				<div id="{{name}}LevelOne" class="jobStar"></div>
+				<div id="{{name}}LevelTwo" class="jobStar"></div>
+				<div id="{{name}}LevelThree" class="jobStar"></div>
+			</div>
+			<p id="{{name}}JobOfferTime" class="jobExpirationTimer">Contract Expires In: {{offerTime}}</p>
+		</div>
+		<div id="{{name}}JobDetails" class="jobDetails">
+			<div id="{{name}}JobDetailContainer" class="jobDetailContainer">
+				<p id="{{name}}JobFame" class="jobFameDetails">Fame: {{fame}}</p>
+				<p id="{{name}}JobWage" class="jobWageDetails">Wage: {{wage}}</p>
+				<p id="{{name}}JobExperience" class="jobExperienceDetails">Experience: {{experience}} ({{instrument}})</p>
+				<p id="{{name}}JobLength" class="jobLengthDetails">Time To Complete: {{timeToComplete}}</p>
+			</div>
+			<div id="{{name}}JobButtonContainer" class="jobButtonContainer">
+				<button id="{{name}}AcceptButton" class="jobAcceptButton" onclick="doTask('{{name}}')">Work</button>
+				<button id="{{name}}DeclineButton" class="jobDeclineButton" onclick="removeContract('{{name}}')">Decline</button>
+			</div>
+		</div>
+		<div id="{{name}}JobFlavor" class="jobFlavor">{{flavor}}</div>
+	</div>
+</script>
 <script id="achievementTemplate" type="text/template">
 	<div id="{{name}}Achievement" class="achievementContainer">
 		<div id="{{name}}AchievementLock" class="achievementLock"></div>
@@ -452,6 +472,23 @@
 			<p id="{{name}}AchievementDescription" class="achievementDescription">{{description}}</p>
 			<progress id="{{name}}AchievementProgress" class='achievementProgress' value='0' , max='{{amount}}'></progress>
 			<p id="{{name}}AchievementFlavor" class="achievementFlavor">{{flavor}}</p>
+		</div>
+	</div>
+</script>
+<script id="smallAchievementTemplate" type="text/template">
+	<div id="{{name}}Achievement" class="smallAchievementContainer">
+		<div id="{{name}}AchievementLock" class="achievementLock"></div>
+		<div id="{{name}}ImgContainer" class="achievementImgContainer">
+			<div class="achievementRankContainer">
+				<button id="{{name}}Bronze" class="bronzeRank"></button>
+				<button id="{{name}}Silver" class="silverRank"></button>
+				<button id="{{name}}Gold" class="goldRank"></button>
+				<button id="{{name}}Platinum" class="platinumRank"></button>
+			</div>
+		</div>
+		<div id="{{name}}ContentContainer" class="achievementContentContainer">
+			<p id="{{name}}AchievementDescription" class="achievementDescription">{{description}}</p>
+			<progress id="{{name}}AchievementProgress" class='smallAchievementProgress' value='0' , max='{{amount}}'></progress>
 		</div>
 	</div>
 </script>

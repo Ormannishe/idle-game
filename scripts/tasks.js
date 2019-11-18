@@ -155,7 +155,7 @@ function finishTask(task) {
     game.player.stats[task.instrument].studiesCompleted++;
   }
   else if (task.type == "job") {
-    if (task.instrument !== "none")
+    if (task.instrument !== "noInstrument")
       game.player.stats[task.instrument].workCompleted++;
   }
   else {
@@ -299,7 +299,12 @@ function addToStats(category, stat, amount) {
     'general' or an instrument. Stat should be the specific stat to update by
     the given amount.
   */
-  game.player.stats[category][stat] += amount;
+  if (category !== "noInstrument") {
+    if (amount == undefined)
+      amount = 1;
+
+    game.player.stats[category][stat] += amount;
+  }
 }
 
 function awardHiddenAchievement(achievementId) {
@@ -311,6 +316,26 @@ function awardHiddenAchievement(achievementId) {
     unlockAchievement(achievementId);
     awardAchievement(achievementId);
   }
+}
+
+function addContract(context) {
+  /*
+    Given a task context, add the context to the context list, then increment
+    the player's 'numContracts'. The given taskName should have a taskType of 'job'.
+  */
+  addTask(context);
+  game.player.jobs.numContracts++;
+  updateJobs();
+}
+
+function removeContract(taskName) {
+  /*
+    Given a task name, remove the associated context from the context list, then
+    decrement the player's 'numContracts'. The given taskName should have a taskType of 'job'.
+  */
+  removeTask(taskName);
+  game.player.jobs.numContracts--;
+  updateJobs();
 }
 
 /* ------ TASKS ------
@@ -616,39 +641,56 @@ function upgradeStudyTask(context) {
   ---- Job Tasks -----
 */
 
-function oddJobsTask(context) {
+function workJobTask(context) {
   /*
-    Odd Jobs are the starting job of the player. This task is simply a way to
-    earn money early on and is replaced with other opportunities as the player
-    increases their skill levels.
+    This task becomes available when a Job Event is triggered. There are various
+    types of work available for all instruments (ie. Laptop Freelance work).
+
+    Completion of the task rewards Fame, Money and XP for the given instrument,
+    where amounts are determined by the type of work.
   */
-  var jobAttributes = game.jobs.oddJobs;
-  var updateContractsFn = function() {
-    game.player.jobs.oddJobs.numContracts--;
-  };
+  var jobAttributes = game.jobs[context.instrument][context.jobType];
+  var playerAttributes = game.player.jobs[context.instrument];
+  var moneyReward = jobAttributes.basePay + context.bonusMoney;
+  var fameReward = jobAttributes.baseFame + context.bonusFame;
+  var outputText = jobAttributes.completionText;
+  var flavor = jobAttributes.flavors[context.location];
+
+  // If the player has unlocked job related bonuses, apply them
+  if (playerAttributes !== undefined) {
+    moneyReward = Math.round(moneyReward * playerAttributes.moneyMod);
+  }
+
+  // Update Output Text with correct values
+  outputText = outputText.replace("%location%", context.location.toLowerCase());
+  outputText = outputText.replace("%moneyAmount%", moneyReward);
+
+  // Use default flavor if no flavor text is available for the given location
+  if (flavor == undefined) {
+    flavor = jobAttributes.flavors.default;
+  }
 
   var finishFns = [
-    partial(addResource, "money", jobAttributes.basePay),
-    partial(appendToOutputContainer, "After an hour of labor, you take home a measly " + jobAttributes.basePay + " bucks."),
-    updateContractsFn,
-    partial(addToStats, "general", "oddJobsCompleted", 1)
+    partial(addXp, context.instrument, jobAttributes.baseXp),
+    partial(addResource, "money", moneyReward),
+    partial(addResource, "fame", fameReward),
+    partial(appendToOutputContainer, outputText),
+    partial(removeContract, context.taskName),
+    partial(addToStats, context.instrument, "workMoney", moneyReward)
   ];
-
-  var tooltip = {
-    "description": "Rewards $" + jobAttributes.basePay + ".",
-    "cost": {
-      "Time": jobAttributes.timeToComplete
-    },
-    "flavor": "Even the most famous of legends have humble beginnings."
-  };
 
   return {
     name: context.taskName,
     type: context.taskType,
     instrument: context.instrument,
     finishFns: finishFns,
+    jobLevel: jobAttributes.level,
+    jobFame: fameReward,
+    jobWage: moneyReward,
+    jobExperience: jobAttributes.baseXp,
+    jobFlavor: flavor,
     timeToComplete: jobAttributes.timeToComplete,
-    tooltip: tooltip
+    timeToExpiration: context.timeToExpiration
   };
 }
 
@@ -691,11 +733,11 @@ function advanceDJCareerTask(context) {
   };
 
   var updateJobTypeFn = function() {
-    game.player.jobs.laptop.jobType = jobType;
+    game.player.jobs.laptop.unlockedJobTypes.push(jobType);
 
     if (context.level == 1) {
+      showUiElement("jobTab", "inline");
       addTrigger(DJEventTrigger);
-      tabNotifyAnimation("jobTab", "taskActive");
     }
   };
 
@@ -705,8 +747,6 @@ function advanceDJCareerTask(context) {
   ];
 
   var startFns = [
-    partial(showUiElement, "jobTab", "inline"),
-    partial(showUiElement, "laptopJobContainer", "block"),
     partial(removeResource, "samples", requiredSamples),
     partial(appendToOutputContainer, outputText),
     updateJobTypeFn
@@ -725,71 +765,6 @@ function advanceDJCareerTask(context) {
     checkFns: checkFns,
     startFns: startFns,
     tooltip: tooltip
-  };
-}
-
-function workJobTask(context) {
-  /*
-    This task becomes available when a Job Event is triggered. There are various
-    types of work available for all instruments (ie. Freelance work).
-
-    Completion of the task rewards Fame, Money and XP for the given instrument,
-    where amounts are determined by the type of work.
-  */
-  var taskAttributes = game.jobs[context.instrument][context.jobType];
-  var playerAttributes = game.player.jobs[context.instrument];
-  var moneyReward = Math.round((taskAttributes.basePay + context.bonusMoney) * playerAttributes.moneyMod);
-  var fameReward = taskAttributes.baseFame + context.bonusFame;
-  var outputText;
-  var flavor;
-
-  var updateContractsFn = function() {
-    game.player.jobs[context.instrument].numContracts--;
-  };
-
-  switch (context.instrument) {
-    case "laptop":
-      switch (context.jobType) {
-        case "freelance":
-          outputText = "After a few hours work at a " + context.location + ", you manage to make $" + moneyReward + "!";
-          flavor = "Turns out, parties are a lot less fun when you're working.";
-          break;
-        case "nightclub":
-          outputText = "After a crazy night at " + context.location + ", you manage to make a solid $" + moneyReward + "!";
-          flavor = "Thiss isss myyy sooooooooong!";
-          break;
-      };
-      break;
-    case "keyboard":
-      return null; // for now
-    default:
-      return null;
-  };
-
-  var finishFns = [
-    partial(addXp, context.instrument, taskAttributes.baseXp),
-    partial(addResource, "money", moneyReward),
-    partial(addResource, "fame", fameReward),
-    partial(appendToOutputContainer, outputText),
-    updateContractsFn,
-    partial(addToStats, context.instrument, "workMoney", moneyReward)
-  ];
-
-  var tooltip = {
-    "description": "Rewards " + fameReward + " Fame, $" + moneyReward + " and " + taskAttributes.baseXp + " " + context.instrument + " XP.",
-    "cost": {
-      "Time": taskAttributes.timeToComplete
-    },
-    "flavor": flavor
-  };
-
-  return {
-    name: context.taskName,
-    type: context.taskType,
-    instrument: context.instrument,
-    finishFns: finishFns,
-    tooltip: tooltip,
-    timeToComplete: taskAttributes.timeToComplete
   };
 }
 

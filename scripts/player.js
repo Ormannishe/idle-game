@@ -103,23 +103,31 @@ function Player() {
     }
   };
   this.jobs = {
-    oddJobs: {
-      maxContracts: 5,
-      numContracts: 0
-    },
+    numContracts: 0,
+    maxContracts: 5,
     laptop: {
-      jobType: undefined,
       procMod: 1.0,
       moneyMod: 1.0,
-      maxContracts: 3,
-      numContracts: 0
+      unlockedJobTypes: [],
+      filteredJobTypes: []
+    },
+    vocal: {
+      procMod: 1.0,
+      moneyMod: 1.0,
+      unlockedJobTypes: [],
+      filteredJobTypes: []
     },
     keyboard: {
-      jobType: undefined,
       procMod: 1.0,
       moneyMod: 1.0,
-      maxContracts: 3,
-      numContracts: 0
+      unlockedJobTypes: [],
+      filteredJobTypes: []
+    },
+    noInstrument: {
+      procMod: 1.0,
+      moneyMod: 1.0,
+      unlockedJobTypes: ["oddJobs"],
+      filteredJobTypes: []
     }
   };
   this.skills = {
@@ -160,7 +168,6 @@ function Player() {
       fameLifetime: 0,
       moneyLifetime: 0,
       tasksCompleted: 0,
-      oddJobsCompleted: 0,
       songsCreated: 0
     },
     laptop: {
@@ -192,7 +199,8 @@ function Player() {
     }
   };
   this.options = {
-    progressNumbers: false
+    progressNumbers: false,
+    compactAchievements: false
   }
 };
 
@@ -206,6 +214,33 @@ function updateCharacterName(name) {
     game.player.name = name;
     document.getElementById("stageName").innerHTML = game.player.name;
   }
+}
+
+function applyJobFilters() {
+  /*
+    To be called before closing the job management pop up.
+    Updates the player's job filter lists in accordance with the checkboxes they
+    have selected in the job management pop up.
+
+    Closes the pop up box on completion.
+  */
+  var playerJobs = game.player.jobs;
+
+  for (var instrument in game.jobs) {
+    game.player.jobs[instrument].filteredJobTypes = [];
+
+    for (var job in game.jobs[instrument]) {
+      if (playerJobs[instrument].unlockedJobTypes.indexOf(job) > -1) {
+        var checkbox = document.getElementById(instrument + job + "Checkbox");
+
+        if (checkbox.checked == false) {
+          game.player.jobs[instrument].filteredJobTypes.push(job);
+        }
+      }
+    }
+  }
+
+  closePopUp();
 }
 
 function removeCharacterResource(resource, amount) {
@@ -260,15 +295,20 @@ function removeResource(resource, amount) {
 }
 
 function addXp(skill, amount) {
-  game.player.skills[skill].xp += amount;
-  game.player.stats[skill].xpGained += amount;
+  if (skill !== "noInstrument") {
+    if (amount == undefined)
+      amount = 1;
 
-  while (game.player.skills[skill].toNextLevel <= game.player.skills[skill].xp) {
-    game.player.skills[skill].xp -= game.player.skills[skill].toNextLevel;
-    game.player.skills[skill].level++;
-    game.player.level++;
-    game.player.skills[skill].toNextLevel = Math.round(game.player.skills[skill].toNextLevel * game.player.skills[skill].nextLevelXpRatio);
-    appendToOutputContainer("Your " + skill + " skill has reached level " + game.player.skills[skill].level + "!");
+    game.player.skills[skill].xp += amount;
+    game.player.stats[skill].xpGained += amount;
+
+    while (game.player.skills[skill].toNextLevel <= game.player.skills[skill].xp) {
+      game.player.skills[skill].xp -= game.player.skills[skill].toNextLevel;
+      game.player.skills[skill].level++;
+      game.player.level++;
+      game.player.skills[skill].toNextLevel = Math.round(game.player.skills[skill].toNextLevel * game.player.skills[skill].nextLevelXpRatio);
+      appendToOutputContainer("Your " + skill + " skill has reached level " + game.player.skills[skill].level + "!");
+    }
   }
 }
 
@@ -298,6 +338,7 @@ function initAchievement(achievementId) {
     object based on the achievement Mustache Template. Once created, the object
     is appended to the achievementContent container.
   */
+  var template = "#achievementTemplate";
   var rank = game.achievements[achievementId].ranks[0];
   var data = {
     name: achievementId,
@@ -306,7 +347,11 @@ function initAchievement(achievementId) {
     flavor: game.achievements[achievementId][rank].flavor
   };
 
-  $("#achievementContent").append(Mustache.render($("#achievementTemplate").html(), data));
+  if (game.player.options.compactAchievements == true) {
+    template = "#smallAchievementTemplate";
+  }
+
+  $("#achievementContent").append(Mustache.render($(template).html(), data));
 
   if (game.player.achievements[achievementId] !== undefined)
     updateAchievement(achievementId, game.player.achievements[achievementId].level);
@@ -364,7 +409,9 @@ function updateAchievement(achievementId, level) {
   if (rank !== undefined) {
     progress.max = achievement[rank].amount;
     document.getElementById(achievementId + "AchievementDescription").innerHTML = achievement[rank].description;
-    document.getElementById(achievementId + "AchievementFlavor").innerHTML = achievement[rank].flavor;
+
+    if (game.player.options.compactAchievements !== true)
+      document.getElementById(achievementId + "AchievementFlavor").innerHTML = achievement[rank].flavor;
   }
   else {
     var description = document.getElementById(achievementId + "AchievementDescription");
