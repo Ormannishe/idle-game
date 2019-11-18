@@ -236,12 +236,6 @@ function applyJobFilters() {
         if (checkbox.checked == false) {
           game.player.jobs[instrument].filteredJobTypes.push(job);
         }
-        else {
-          var index = game.player.jobs[instrument].filteredJobTypes.indexOf(job);
-
-          if (index > -1)
-            game.player.jobs[instrument].filteredJobTypes.splice(index, 1);
-        }
       }
     }
   }
