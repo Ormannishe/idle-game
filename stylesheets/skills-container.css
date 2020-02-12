@@ -5,7 +5,7 @@
 #characterTabContainer {
   width: 100%;
   overflow: hidden;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 #characterTab, #optionTab, #achievementTab {
@@ -19,15 +19,15 @@
 }
 
 .characterActive {
-  background-color: var(--my-background-color);
+  background-color: var(--background-color);
 }
 
 .character {
-  background-color: #444444
+  background-color: var(--highlight-color);
 }
 
 .character:hover {
-  background-color: #555555;
+  background-color: var(--high-highlight-color);
 }
 
 /* Hide non-active tab content by default */
@@ -47,7 +47,7 @@
 */
 
 #characterStatus {
-  border-bottom: 2px solid #222222;
+  border-bottom: 2px solid var(--lowlight-color);
   padding-bottom: 10px;
   width: 99%;
 }
@@ -106,7 +106,7 @@
 }
 
 .statusContainer > progress[value]::-webkit-progress-bar {
-  background-color: #222;
+  background-color: var(--lowlight-color);
   border-radius: 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
@@ -191,7 +191,7 @@
 }
 
 .skill > progress[value]::-webkit-progress-value {
-  background-color: #33cc33;
+  background-color: var(--progress-color);
 }
 
 .skill > progress::after {
@@ -209,7 +209,7 @@
   margin-top: 10px;
   border: 2px solid white;
   display: flex;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .smallAchievementContainer {
@@ -218,7 +218,7 @@
   margin-top: 10px;
   border: 2px solid white;
   display: flex;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .achievementLock {
@@ -246,7 +246,7 @@
 .achievementImg {
   height: 50px;
   width: 100%;
-  background-color: blue;
+  background-color: blue; /* TODO: replace with images */
   margin-bottom: 5px;
 }
 
@@ -322,7 +322,7 @@
 }
 
 .achievementProgress[value]::-webkit-progress-value, .smallAchievementProgress[value]::-webkit-progress-value {
-  background-color: #33cc33;
+  background-color: var(--progress-color);
 }
 
 .achievementProgress::after {
@@ -339,7 +339,7 @@
 */
 
 #saveOptions {
-  border-top: 2px solid #222222;
+  border-top: 2px solid var(--lowlight-color);
   margin-top: 6px;
   margin-bottom: 10px;
   width: 99%;
@@ -355,12 +355,12 @@
   font-size: 12px;
   border: 1px solid white;
   color: white;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .energyButton:hover, .optionButtonOn:hover, .saveOptionButton:hover {
   cursor: pointer;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 .optionButtonOff {
@@ -373,12 +373,12 @@
   font-size: 12px;
   border: 1px solid #cccccc;
   color: #cccccc;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 .optionButtonOff:hover {
   cursor: pointer;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .optionContainer {
@@ -402,7 +402,7 @@
   margin-bottom: 10px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 2px solid #222222;
+  border-top: 2px solid var(--lowlight-color);
 }
 
 .statHeading {

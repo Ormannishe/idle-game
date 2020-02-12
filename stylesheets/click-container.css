@@ -3,7 +3,7 @@
 */
 
 #clickContainer {
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 #instrumentTabContainer {
@@ -40,7 +40,7 @@
 }
 
 .beatProgress > progress[value]::-webkit-progress-value {
-  background-color: #33cc33;
+  background-color: var(--progress-color);
 }
 
 .beatProgress > progress::after {
@@ -74,23 +74,23 @@
 }
 
 .instrumentActive {
-  background-color: var(--my-background-color);
+  background-color: var(--background-color);
 }
 
 .instrument {
-  background-color: #444444;
+  background-color: var(--highlight-color);
   display: none;
 }
 
 .instrument:hover {
-  background-color: #555555;
+  background-color: var(--high-highlight-color);
 }
 
 .instrumentContent {
   padding-left: 6px;
   display: block;
-  background-color: var(--my-background-color);
-  border: 1px solid var(--my-background-color);
+  background-color: var(--background-color);
+  border: 1px solid var(--background-color);
   height: 93%;
   color: white;
   display: none;
@@ -156,7 +156,7 @@
   height: 40%;
   width: 5%;
   overflow: hidden;
-  border: 3px solid #222222;
+  border: 3px solid var(--lowlight-color);
   float: right;
   margin-right: 2.5%;
   margin-top: 10%;
@@ -186,7 +186,7 @@
 #beatButtonContainer > button {
   border: 1px solid white;
   color: white;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
   width: 15%;
   height: 85%;
   font-size: 12px;
@@ -194,7 +194,7 @@
 
 #beatButtonContainer > button:hover {
   cursor: pointer;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 /* Sub-genres */

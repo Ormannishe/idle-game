@@ -5,18 +5,18 @@
 .validTask {
   border: 1px solid white;
   color: white;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .invalidTask {
   border: 1px solid #cccccc;
   color: #cccccc;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 .validTask:hover {
   cursor: pointer;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 /*
@@ -47,7 +47,7 @@
 
 #taskProgressContainer > button:hover {
   cursor: pointer;
-  color: red;
+  color: var(--warning-color);
 }
 
 #taskProgress[value] {
@@ -71,7 +71,7 @@
 }
 
 .taskProgress[value]::-webkit-progress-value {
-  background-color: #33cc33;
+  background-color: var(--progress-color);
 }
 
 .taskProgress::after { /* Do not show progress numbers on the study/job tab progress bars */
@@ -91,7 +91,7 @@
 #taskTabContainer {
   width: 100%;
   overflow: hidden;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 #upgradeTab, #studyTab, #jobTab {
@@ -105,15 +105,15 @@
 }
 
 .taskActive {
-  background-color: var(--my-background-color);
+  background-color: var(--background-color);
 }
 
 .task {
-  background-color: #444444
+  background-color: var(--highlight-color);
 }
 
 .task:hover {
-  background-color: #555555;
+  background-color: var(--high-highlight-color);
 }
 
 .taskContent {
@@ -203,14 +203,14 @@
 }
 
 .fameRate {
-  color: #ff751a;
+  color: var(--fame-color);
   font-size: 12px;
   margin-right: 6px;
   display: inline;
 }
 
 .wageRate {
-  color: #00bb00;
+  color: var(--money-color);
   font-size: 12px;
   margin-right: 6px;
   display: inline;
@@ -247,12 +247,12 @@
   float: left;
   border: 1px solid white;
   color: white;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 #manageJobsButton:hover {
   cursor: pointer;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 #numContractsDisplay {
@@ -275,7 +275,7 @@
   padding-right: 5px;
   padding-top: 3px;
   border: 2px solid white;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .jobHeader {
@@ -336,11 +336,11 @@
 }
 
 .jobFameDetails {
-  color: #ff751a;
+  color: var(--fame-color);
 }
 
 .jobWageDetails {
-  color: #00bb00;
+  color: var(--money-color);
 }
 
 .jobExperienceDetails {
@@ -361,25 +361,25 @@
 }
 
 .jobAcceptButton {
-  border: 1px solid #00bb00;
-  color: #00bb00;
+  border: 1px solid var(--money-color);
+  color: var(--money-color);
 }
 
 .jobAcceptButton:hover {
   cursor: pointer;
-  border: 1px solid #00ff00;
-  color: #00ff00;
+  border: 1px solid #00ff00; /* Money Lowlight */
+  color: #00ff00; /* Money Lowlight */
 }
 
 .jobDeclineButton {
-  border: 1px solid #BB0000;
-  color: #BB0000;
+  border: 1px solid #BB0000; /* Warning Lowlight */
+  color: #BB0000; /* Warning Lowlight */
 }
 
 .jobDeclineButton:hover {
   cursor: pointer;
-  border: 1px solid #FF0000;
-  color: #FF0000;
+  border: 1px solid var(--warning-color);
+  color: var(--warning-color);
 }
 
 .jobAcceptButton, .jobDeclineButton {
@@ -388,7 +388,7 @@
   margin-right: 10px;
   margin-left: 10px;
   font-size: 12px;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .jobFlavor {

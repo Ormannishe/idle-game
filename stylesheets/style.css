@@ -1,6 +1,6 @@
 * {
   font-size: 14px;
-  font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", "Consolas", "Courier New", Courier, monospace, "Times New Roman";
+  font-family: "Courier";
 }
 
 *,
@@ -13,12 +13,26 @@
 }
 
 :root {
-  --my-background-color: #333333;
-  --my-highlight-color: #fff;
-  --my-prompt-color: #f92672; }
+  --low-lowlight-color: #111111;
+  --lowlight-color: #222222;
+  --background-color: #333333;
+  --highlight-color: #444444;
+  --high-highlight-color: #555555;
+  --notify-color: orange;
+  --warning-color: red;
+  --progress-color: #33cc33;
+  --fame-color: #ff751a;
+  --money-color: #00bb00;
+  --beat-color: #0066ff;
+  --sample-color: #3399ff;
+  --lyric-color: #C39BD3;
+  --stanza-color: #8E44AD;
+  --note-color: #ffff66;
+  --measure-color: #ffcc66;
+}
 
 body {
-  background-color: var(--my-background-color);
+  background-color: var(--background-color);
   overflow: hidden;
 }
 
@@ -79,7 +93,7 @@ button:focus, input:focus {
   z-index: 100;
   visibility: hidden;
   overflow: hidden;
-  background: #111111;
+  background: var(--low-lowlight-color);
   opacity: 0.95;
   color: #ffffff;
   border: 1px solid white;
@@ -137,7 +151,7 @@ button:focus, input:focus {
   z-index: 10; /* On top of everything except tooltips */
   border: 2px solid white;
   color: white;
-  background-color: var(--my-background-color);
+  background-color: var(--background-color);
   left: 25%;
   top: 15%;
   width: 50%;
@@ -158,7 +172,7 @@ button:focus, input:focus {
 
 .closePopUp:hover {
   cursor: pointer;
-  color: red;
+  color: var(--warning-color);
 }
 
 .popUpHeader {
@@ -215,7 +229,7 @@ button:focus, input:focus {
   font-size: 12px;
   border: 1px solid white;
   color: white;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
 }
 
 .disabledPopUpButton {
@@ -228,12 +242,12 @@ button:focus, input:focus {
   font-size: 12px;
   border: 1px solid #cccccc;
   color: #cccccc;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 .popUpButton:hover {
   cursor: pointer;
-  background-color: #333333;
+  background-color: var(--background-color);
 }
 
 .popUpCheckbox[type=checkbox] {
@@ -251,7 +265,7 @@ button:focus, input:focus {
 .popUpCheckbox[type=checkbox]:checked:after {
     position: relative;
     left: 3px;
-    color: #333333;
+    color: var(--background-color);
     content: "\2713"; /* check mark */
 }
 
@@ -291,12 +305,12 @@ button:focus, input:focus {
   z-index: 5; /* On top of regular content, below the normal popup and tooltips */
   border: 2px solid white;
   color: white;
-  background-color: var(--my-background-color);
+  background-color: var(--background-color);
   left: 35%;
   top: 100%;
   width: 30%;
   height: 13%;
-  background-color: #222222;
+  background-color: var(--lowlight-color);
   opacity: 0;
 }
 
@@ -374,9 +388,9 @@ button:focus, input:focus {
 }
 
 @keyframes backgroundColorNotify {
-  0% { background-color: #444444;}
-  50% { background-color: orange;}
-  100% { background-color: #444444;}
+  0% { background-color: #444444; }
+  50% { background-color: var(--notify-color); }
+  100% { background-color: #444444; }
 }
 
 /* Error Animation */
@@ -386,8 +400,8 @@ button:focus, input:focus {
 }
 
 @keyframes backgroundColorError {
-	0% { background-color: red;}
-	100% { background-color: white;}
+	0% { background-color: var(--warning-color); }
+	100% { background-color: white; }
 }
 
 .fontColorError {
@@ -396,8 +410,8 @@ button:focus, input:focus {
 }
 
 @keyframes fontColorError {
-	0% { color: red;}
-	100% { color: white;}
+	0% { color: var(--warning-color); }
+	100% { color: white; }
 }
 
 /* Created Resource Animation */
